@@ -11,8 +11,6 @@ public class CreateGroupInMicrosoftGraphHandler(IMediator mediator) : IEventHand
     {
         var command = new CreateGroupCommand(data.AggregateId, data.Name, data.Description, data.IsActive);
 
-        mediator.Send(command, token);
-
-        return Task.CompletedTask;
+        return mediator.Send(command, token);
     }
 }

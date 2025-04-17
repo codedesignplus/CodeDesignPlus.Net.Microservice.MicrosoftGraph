@@ -6,6 +6,3 @@ global using CodeDesignPlus.Net.Serializers;
 global using System.Text.RegularExpressions;
 global using NodaTime;
 
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.DomainEvents;
-
-

@@ -6,4 +6,4 @@ global using System.Text;
 global using CodeDesignPlus.Net.Serializers;
 global using NodaTime;
 
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.DataTransferObjects;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.DataTransferObjects;

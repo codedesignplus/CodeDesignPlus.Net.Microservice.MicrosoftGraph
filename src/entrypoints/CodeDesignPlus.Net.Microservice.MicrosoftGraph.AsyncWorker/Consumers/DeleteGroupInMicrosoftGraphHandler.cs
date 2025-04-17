@@ -11,8 +11,6 @@ public class DeleteGroupInMicrosoftGraphHandler(IMediator mediator) : IEventHand
     {
         var command = new DeleteGroupCommand(data.AggregateId);
         
-        mediator.Send(command, token);
-
-        return Task.CompletedTask;
+        return mediator.Send(command, token);
     }
 }

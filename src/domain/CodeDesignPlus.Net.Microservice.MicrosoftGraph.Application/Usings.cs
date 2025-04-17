@@ -12,7 +12,6 @@ global using CodeDesignPlus.Net.Serializers;
 global using NodaTime;
 global using CodeDesignPlus.Net.Cache.Abstractions;
 
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.DataTransferObjects;
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;

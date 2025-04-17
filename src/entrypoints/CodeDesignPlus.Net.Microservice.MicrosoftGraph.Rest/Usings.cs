@@ -13,19 +13,13 @@ global using C = CodeDesignPlus.Net.Core.Abstractions.Models.Criteria;
 global using CodeDesignPlus.Net.Serializers;
 global using NodaTime;
 
-
-
-
-
-
-
-
-
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Commands.CreateGraph;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Commands.UpdateGraph;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Commands.DeleteGraph;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Queries.GetGraphById;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Queries.GetAllGraph;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Commands.CreateGroup;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Commands.DeleteGroup;
-global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Graph.Commands.UpdateGroup;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Commands.CreateGroup;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Commands.DeleteGroup;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Commands.UpdateGroup;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateIdentity;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.DeleteUser;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateContactInfo;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateJob;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateProfile;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.AddGroupToUser;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.RemoveGroupToUser;

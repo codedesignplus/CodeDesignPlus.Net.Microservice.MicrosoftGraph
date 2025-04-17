@@ -24,9 +24,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\domain\CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure\CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Consumers\" />
-    <Folder Include="DomainEvents/Users/" />
-    <Folder Include="DomainEvents\" />
-  </ItemGroup>
 </Project>

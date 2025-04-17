@@ -1,6 +1,7 @@
 ﻿using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Options;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphRequests;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
 using Microsoft.Graph;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure
@@ -17,7 +18,7 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure
 
             services.AddSingleton<IGraphClient, GraphClient>();
 
-            services.AddSingleton<IGraphRequests, IdentityServer>();
+            services.AddSingleton<IIdentityServer, IdentityServer>();
         }
     }
 }

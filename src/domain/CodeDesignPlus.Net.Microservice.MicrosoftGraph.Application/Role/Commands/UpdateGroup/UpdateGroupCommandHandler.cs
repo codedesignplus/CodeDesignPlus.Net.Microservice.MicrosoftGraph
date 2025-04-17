@@ -16,7 +16,7 @@ public class UpdateGroupCommandHandler(IRoleRepository repository, IMapper mappe
 
         ApplicationGuard.IsNull(groupExist, Errors.GroupNotFoundInIdentityServer);
 
-        await identityServer.UpdateRoleAsync(role.IdIdentityServer, mapper.Map<Domain.Models.Role>(request), cancellationToken);
+        await identityServer.UpdateGroupAsync(role.IdIdentityServer, mapper.Map<Domain.Models.Role>(request), cancellationToken);
 
         role.Update(request.Name, request.Description, request.IsActive);
 
