@@ -1,14 +1,15 @@
 ms-base:
+  environment: Staging
   replicaCount: 1
 
   image:
-    repository: codedesignplus/ms-archetype-grpc
+    repository: codedesignplus/ms-archetype-worker
     pullPolicy: IfNotPresent
     tag: "v0.1.0-alpha.100"
 
   imagePullSecrets: []
-  fullnameOverride: "ms-archetype-grpc"
-  nameOverride: "ms-archetype-grpc"
+  fullnameOverride: "ms-archetype-worker"
+  nameOverride: "ms-archetype-worker"
 
   serviceAccount:
     create: true
