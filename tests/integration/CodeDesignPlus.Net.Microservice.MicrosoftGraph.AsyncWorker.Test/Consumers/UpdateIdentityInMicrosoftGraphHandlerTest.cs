@@ -1,4 +1,5 @@
 using System;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Roles;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
@@ -7,7 +8,8 @@ using Moq;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Consumers;
 
-public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) : ConsumerServerBase(server)
+
+public class UpdateIdentityInMicrosoftGraphHandler(Server<Program> server) : ConsumerServerBase(server)
 {
     private readonly Domain.Models.ContactInfo contactInfo = new()
     {
@@ -35,12 +37,10 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) :
     public async Task Pusblish_Consumer_Success()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
-        var roleAggregate = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "Admin", "This role is for admin", true);
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
-        var roleRepository = this.Services.GetRequiredService<IRoleRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var domainEvent = new RoleAddedToUserDomainEvent(userAggregate.Id, "Joe Doe", "Admin");
+        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var domainEvent = new UserUpdatedDomainEvent(userAggregate.Id, "Joe New", "Doe New", "joe-new@fake.com", "3105631234", "Joe New Doe New", false);
 
         var userModel = new Domain.Models.User
         {
@@ -55,43 +55,32 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) :
             IsActive = true,
         };
 
-        var groupModel = new Domain.Models.Role
-        {
-            Id = roleAggregate.IdIdentityServer,
-            Name = "Admin",
-            Description = "This role is for admin",
-            IsActive = true,
-        };
-
         this.IdentityServerMock
             .Setup(x => x.GetUserByIdAsync(userModel.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userModel);
 
         this.IdentityServerMock
-            .Setup(x => x.AddUserToGroupAsync(userModel.Id, groupModel.Id, It.IsAny<CancellationToken>()));
+            .Setup(x => x.UpdateUserAsync(userModel.Id, It.IsAny<Domain.Models.User>(), It.IsAny<CancellationToken>()));
 
         await userRepository.CreateAsync(userAggregate, CancellationToken.None);
-        await roleRepository.CreateAsync(roleAggregate, CancellationToken.None);
 
         // Act
         _ = pubsub.PublishAsync(domainEvent, CancellationToken.None);
 
         // Assert
-        var user = await Retry(async () => {
-            var item = await userRepository.FindAsync<UserAggregate>(domainEvent.AggregateId, CancellationToken.None);
+        await Task.Delay(TimeSpan.FromSeconds(5));
 
-            if(item != null && !item.IdRoles.Any(x => x == roleAggregate.IdIdentityServer))
-                return null;
-
-            return item;
-        });
-
-        Assert.NotNull(user);
-        Assert.Contains(user.IdRoles, x => x == roleAggregate.IdIdentityServer);
-
-        this.IdentityServerMock.Verify(m => m.AddUserToGroupAsync(userModel.Id, groupModel.Id, It.IsAny<CancellationToken>()), Times.Once);
-
+        this.IdentityServerMock.Verify(m => m.UpdateUserAsync(
+            userModel.Id, 
+            It.Is<Domain.Models.User>(x =>
+                x.FirstName == domainEvent.FirstName &&
+                x.LastName == domainEvent.LastName &&
+                x.DisplayName == domainEvent.DisplayName &&
+                x.Email == domainEvent.Email &&
+                x.Phone == domainEvent.Phone &&
+                x.IsActive == domainEvent.IsActive
+            ),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
-
 }
 

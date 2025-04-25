@@ -16,7 +16,7 @@ public class RemoveGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server
         City = "City",
         State = "State",
         Country = "Country",
-        PostalCode = "12345",
+        ZipCode = "12345",
         Phone = "3105631234",
         Email = ["joee.doe@fake.com"]
     };
@@ -53,7 +53,7 @@ public class RemoveGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server
             LastName = "Doe",
             DisplayName = "Joe Doe",
             Email = "joe@fake.com",
-            PhoneNumber = "3105631234",
+            Phone = "3105631234",
             Contact = contactInfo,
             Job = jobInfo,
             IsActive = true,
@@ -82,7 +82,7 @@ public class RemoveGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server
 
         // Assert
         var user = await Retry(async () => {
-            var item = await roleRepository.FindAsync<UserAggregate>(domainEvent.AggregateId, CancellationToken.None);
+            var item = await userRepository.FindAsync<UserAggregate>(domainEvent.AggregateId, CancellationToken.None);
 
             if(item != null && item.IdRoles.Any(x => x == roleAggregate.IdIdentityServer))
                 return null;

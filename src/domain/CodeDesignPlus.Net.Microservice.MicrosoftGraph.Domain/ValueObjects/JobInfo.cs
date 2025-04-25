@@ -1,5 +1,4 @@
-using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 

@@ -196,7 +196,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             DisplayName = user.DisplayName,
             GivenName = user.FirstName,
             Surname = user.LastName,
-            MobilePhone = user.PhoneNumber,
+            MobilePhone = user.Phone,
             AccountEnabled = true
         };
 
@@ -258,7 +258,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             City = contact.City,
             State = contact.State,
             Country = contact.Country,
-            PostalCode = contact.PostalCode,
+            PostalCode = contact.ZipCode,
             BusinessPhones = contact.Phone != null ? [contact.Phone] : null,
             Mail = contact.Email?[0],
             OtherMails = contact.Email?[1..].ToList() ?? []

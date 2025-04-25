@@ -9,7 +9,7 @@ public class User
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string? Email { get; set; } = null!;
-    public string PhoneNumber { get; set; } = null!;
+    public string Phone { get; set; } = null!;
     public JobInfo Job { get; set; } = null!;
     public ContactInfo Contact { get; set; } = null!;
     public bool IsActive { get; set; }
@@ -21,7 +21,7 @@ public class ContactInfo
     public string? City { get; set; }
     public string? State { get; set; }
     public string? Country { get; set; }
-    public string? PostalCode { get; set; }
+    public string? ZipCode { get; set; }
     public string? Phone { get; set; }
     public string[] Email { get; set; } = [];
 }

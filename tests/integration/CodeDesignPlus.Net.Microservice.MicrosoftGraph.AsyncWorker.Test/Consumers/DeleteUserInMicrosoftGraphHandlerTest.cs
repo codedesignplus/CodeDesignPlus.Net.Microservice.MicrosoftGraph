@@ -1,13 +1,15 @@
 using System;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.User;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;
 using Moq;
 
+
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Consumers;
 
-public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) : ConsumerServerBase(server)
+public class DeleteUserInMicrosoftGraphHandlerTest(Server<Program> server) : ConsumerServerBase(server)
 {
     private readonly Domain.Models.ContactInfo contactInfo = new()
     {
@@ -35,12 +37,10 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) :
     public async Task Pusblish_Consumer_Success()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
-        var roleAggregate = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "Admin", "This role is for admin", true);
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
-        var roleRepository = this.Services.GetRequiredService<IRoleRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var domainEvent = new RoleAddedToUserDomainEvent(userAggregate.Id, "Joe Doe", "Admin");
+        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var domainEvent = new UserDeletedDomainEvent(userAggregate.Id, "Joe", "Doe", "joe@fake.com", "3105631234", "Joe Doe", true);
 
         var userModel = new Domain.Models.User
         {
@@ -55,41 +55,32 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) :
             IsActive = true,
         };
 
-        var groupModel = new Domain.Models.Role
-        {
-            Id = roleAggregate.IdIdentityServer,
-            Name = "Admin",
-            Description = "This role is for admin",
-            IsActive = true,
-        };
-
         this.IdentityServerMock
             .Setup(x => x.GetUserByIdAsync(userModel.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userModel);
 
         this.IdentityServerMock
-            .Setup(x => x.AddUserToGroupAsync(userModel.Id, groupModel.Id, It.IsAny<CancellationToken>()));
+            .Setup(x => x.DeleteUserAsync(userModel.Id, It.IsAny<CancellationToken>()));
 
         await userRepository.CreateAsync(userAggregate, CancellationToken.None);
-        await roleRepository.CreateAsync(roleAggregate, CancellationToken.None);
 
         // Act
         _ = pubsub.PublishAsync(domainEvent, CancellationToken.None);
 
         // Assert
-        var user = await Retry(async () => {
+        var user = await Retry(async () =>
+        {
             var item = await userRepository.FindAsync<UserAggregate>(domainEvent.AggregateId, CancellationToken.None);
 
-            if(item != null && !item.IdRoles.Any(x => x == roleAggregate.IdIdentityServer))
+            if (item != null)
                 return null;
 
             return item;
         });
 
-        Assert.NotNull(user);
-        Assert.Contains(user.IdRoles, x => x == roleAggregate.IdIdentityServer);
+        Assert.Null(user);
 
-        this.IdentityServerMock.Verify(m => m.AddUserToGroupAsync(userModel.Id, groupModel.Id, It.IsAny<CancellationToken>()), Times.Once);
+        this.IdentityServerMock.Verify(m => m.DeleteUserAsync(userModel.Id, It.IsAny<CancellationToken>()), Times.Once);
 
     }
 

@@ -28,7 +28,7 @@ public class UserTest
             FirstName = firstName,
             LastName = lastName,
             Email = email,
-            PhoneNumber = phoneNumber,
+            Phone = phoneNumber,
             Job = job,
             Contact = contact,
             IsActive = isActive
@@ -40,7 +40,7 @@ public class UserTest
         Assert.Equal(firstName, user.FirstName);
         Assert.Equal(lastName, user.LastName);
         Assert.Equal(email, user.Email);
-        Assert.Equal(phoneNumber, user.PhoneNumber);
+        Assert.Equal(phoneNumber, user.Phone);
         Assert.Equal(job, user.Job);
         Assert.Equal(contact, user.Contact);
         Assert.Equal(isActive, user.IsActive);
@@ -57,7 +57,7 @@ public class UserTest
         Assert.Null(contactInfo.City);
         Assert.Null(contactInfo.State);
         Assert.Null(contactInfo.Country);
-        Assert.Null(contactInfo.PostalCode);
+        Assert.Null(contactInfo.ZipCode);
         Assert.Null(contactInfo.Phone);
         Assert.Empty(contactInfo.Email);
     }

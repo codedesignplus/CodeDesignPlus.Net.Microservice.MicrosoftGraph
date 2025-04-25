@@ -91,7 +91,7 @@ public class UpdateContactInfoCommandHandlerTest
             Address = "Stree 123",
             City = "City",
             State = "State",
-            PostalCode = "12345",
+            ZipCode = "12345",
             Country = "Country",
             Phone = "3105631234",
             Email = ["fake@info.com"]
