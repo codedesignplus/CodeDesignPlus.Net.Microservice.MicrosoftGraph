@@ -9,7 +9,7 @@ public class UpdateProfileInMicrosoftGraphHandler(IMediator mediator) : IEventHa
 {
     public Task HandleAsync(ProfileUpdatedDomainEvent data, CancellationToken token)
     {
-        var command = new UpdateProfileCommand(data.AggregateId, data.FirtName, data.LastName, data.DisplayName, data.Email, data.Phone, data.Contact, data.Job, data.IsActive);
+        var command = new UpdateProfileCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.Contact, data.Job, data.IsActive);
 
         return mediator.Send(command, token);
     }

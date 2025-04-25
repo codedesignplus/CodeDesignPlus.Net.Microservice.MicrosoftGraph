@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
-public class RoleAggregate(Guid id) : AggregateRoot(id)
+public class RoleAggregate(Guid id) : AggregateRootBase(id)
 {
     public Guid IdIdentityServer { get; private set; }
     public string Name { get; private set; } = null!;

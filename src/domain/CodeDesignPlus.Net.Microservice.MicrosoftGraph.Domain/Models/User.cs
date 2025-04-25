@@ -17,21 +17,21 @@ public class User
 
 public class ContactInfo
 {
-    public string? Address { get; private set; }
-    public string? City { get; private set; }
-    public string? State { get; private set; }
-    public string? Country { get; private set; }
-    public string? PostalCode { get; private set; }
-    public string? Phone { get; private set; }
-    public string[] Email { get; private set; } = [];
+    public string? Address { get; set; }
+    public string? City { get; set; }
+    public string? State { get; set; }
+    public string? Country { get; set; }
+    public string? PostalCode { get; set; }
+    public string? Phone { get; set; }
+    public string[] Email { get; set; } = [];
 }
 public class JobInfo
 {
-    public string? JobTitle { get; private set; }
-    public string? CompanyName { get; private set; }
-    public string? Department { get; private set; }
-    public string? EmployeeId { get; private set; }
-    public string? EmployeeType { get; private set; }
-    public Instant? EmployHireDate { get; private set; }
-    public string? OfficeLocation { get; private set; }
+    public string? JobTitle { get; set; }
+    public string? CompanyName { get; set; }
+    public string? Department { get; set; }
+    public string? EmployeeId { get; set; }
+    public string? EmployeeType { get; set; }
+    public Instant? EmployHireDate { get; set; }
+    public string? OfficeLocation { get; set; }
 }

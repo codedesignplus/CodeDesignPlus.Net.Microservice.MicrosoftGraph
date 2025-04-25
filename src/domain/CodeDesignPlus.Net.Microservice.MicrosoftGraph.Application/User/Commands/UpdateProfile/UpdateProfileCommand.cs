@@ -10,5 +10,11 @@ public class Validator : AbstractValidator<UpdateProfileCommand>
     public Validator()
     {
         RuleFor(x => x.Id).NotEmpty().NotNull();
+        RuleFor(x => x.FirstName).NotEmpty().NotNull();
+        RuleFor(x => x.LastName).NotEmpty().NotNull();
+        RuleFor(x => x.Email).NotEmpty().NotNull().EmailAddress();
+        RuleFor(x => x.Phone).NotEmpty().NotNull();
+        RuleFor(x => x.Contact).NotEmpty().NotNull();
+        RuleFor(x => x.Job).NotEmpty().NotNull();
     }
 }

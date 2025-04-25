@@ -28,7 +28,6 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Repositories/" />
     <Folder Include="ValueObjects/" />
   </ItemGroup>

@@ -1,4 +1,9 @@
-namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Default.Test.Validations;
+using System.Reflection;
+using CodeDesignPlus.Net.Core.Abstractions;
+using CodeDesignPlus.Net.xUnit.Microservice.Attributes;
+using CodeDesignPlus.Net.xUnit.Microservice.Utils.Reflection;
+
+namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.DomainEvents;
 
 /// <summary>
 /// A class for validating domain events.
@@ -9,7 +14,7 @@ public class DomainEventTest
     /// Validates that domain events can be created using the constructor and their properties can be set and retrieved correctly.
     /// </summary>
     [Theory]
-    [DomainEvent<Domain.Errors>(false)]
+    [DomainEvent<Program>(false)]
     public void DomainEvent_Constructor_ShouldSetAndRetrievePropertiesCorrectly(Type domainEvent, object instance, Dictionary<ParameterInfo, object> data)
     {
         // Assert
@@ -27,7 +32,7 @@ public class DomainEventTest
     /// Validates that domain events can be created using the named constructor with custom values.
     /// </summary>
     [Theory]
-    [DomainEvent<Domain.Errors>(true)]
+    [DomainEvent<Program>(true)]
     public void DomainEvent_CreateMethod_ShouldCreateInstanceWithCustomValues(Type domainEvent, object instance, Dictionary<ParameterInfo, object> values)
     {
         // Assert

@@ -2,9 +2,9 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
-public class UserAggregate(Guid id) : AggregateRoot(id)
+public class UserAggregate(Guid id) : AggregateRootBase(id)
 {    
-    public Guid[] IdRoleAggregate { get; private set; } = [];
+    public Guid[] IdRoles { get; private set; } = [];
 
     public static UserAggregate Create(Guid id)
     {
@@ -15,21 +15,21 @@ public class UserAggregate(Guid id) : AggregateRoot(id)
         };
     }
 
-    public void AddRole(Guid idRoleAggregate)
+    public void AddRole(Guid idRoleIdentityServer)
     {
-        DomainGuard.GuidIsEmpty(idRoleAggregate, Errors.IdIsInvalid);
+        DomainGuard.GuidIsEmpty(idRoleIdentityServer, Errors.IdIsInvalid);
 
-        DomainGuard.IsTrue(IdRoleAggregate.Contains(idRoleAggregate), Errors.RoleAlreadyAdded);
+        DomainGuard.IsTrue(IdRoles.Contains(idRoleIdentityServer), Errors.RoleAlreadyAdded);
 
-        IdRoleAggregate = [.. IdRoleAggregate, idRoleAggregate];
+        IdRoles = [.. IdRoles, idRoleIdentityServer];
     }
 
-    public void RemoveRole(Guid idRoleAggregate)
+    public void RemoveRole(Guid idRoleIdentityServer)
     {
-        DomainGuard.GuidIsEmpty(idRoleAggregate, Errors.IdIsInvalid);
+        DomainGuard.GuidIsEmpty(idRoleIdentityServer, Errors.IdIsInvalid);
 
-        DomainGuard.IsFalse(IdRoleAggregate.Contains(idRoleAggregate), Errors.RoleCannotBeRemoved);
+        DomainGuard.IsFalse(IdRoles.Contains(idRoleIdentityServer), Errors.RoleCannotBeRemoved);
 
-        IdRoleAggregate = [.. IdRoleAggregate.Where(x => x != idRoleAggregate)];
+        IdRoles = [.. IdRoles.Where(x => x != idRoleIdentityServer)];
     }
 }

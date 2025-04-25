@@ -10,7 +10,7 @@ public class UpdateIdentityInMicrosoftGraphHandler(IMediator mediator) : IEventH
 {
     public Task HandleAsync(UserUpdatedDomainEvent data, CancellationToken token)
     {
-        var command = new UpdateIdentityCommand(data.AggregateId, data.FirtName, data.LastName, data.DisplayName, data.Email, data.Phone, data.IsActive);
+        var command = new UpdateIdentityCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.IsActive);
 
         return mediator.Send(command, token);
     }

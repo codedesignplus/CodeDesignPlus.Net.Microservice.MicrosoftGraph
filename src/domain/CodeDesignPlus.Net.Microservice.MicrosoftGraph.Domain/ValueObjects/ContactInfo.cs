@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
@@ -17,6 +18,7 @@ public sealed partial class ContactInfo
     {
     }
 
+    [JsonConstructor]
     public ContactInfo(string address, string city, string state, string country, string zipCode, string phone, string[] email)
     {
         Address = address;

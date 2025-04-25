@@ -14,7 +14,7 @@ public class CreateGroupCommandHandler(IRoleRepository repository, IMapper mappe
 
         var groupExist = await identityServer.GetGroupByNameAsync(request.Name, cancellationToken);
 
-        ApplicationGuard.IsNull(groupExist, Errors.GroupAlreadyExistsInIdentityServer);
+        ApplicationGuard.IsNotNull(groupExist, Errors.GroupAlreadyExistsInIdentityServer);
 
         var group = await identityServer.CreateGroupAsync(mapper.Map<Domain.Models.Role>(request), cancellationToken);
 

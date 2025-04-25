@@ -8,5 +8,6 @@ public class Validator : AbstractValidator<RemoveGroupToUserCommand>
     public Validator()
     {
         RuleFor(x => x.Id).NotEmpty().NotNull();
+        RuleFor(x => x.Role).NotEmpty().NotNull();
     }
 }

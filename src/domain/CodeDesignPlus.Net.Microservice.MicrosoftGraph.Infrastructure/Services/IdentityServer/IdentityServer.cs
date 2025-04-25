@@ -1,15 +1,24 @@
-using System;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 using MapsterMapper;
-using Microsoft.Graph.Connections.Item.Groups;
 using Microsoft.Graph.Models;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
 
+/// <summary>
+/// Implementation of the IIdentityServer interface for managing identity server operations, including groups, users, and their relationships. 
+/// </summary>
+/// <param name="graph">The Graph client for interacting with Microsoft Graph API.</param>
+/// <param name="mapper">The mapper for mapping between domain models and Graph models.</param>
+/// <param name="logger">The logger for logging errors and information.</param>
 public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<IdentityServer> logger) : IIdentityServer
 {
+    /// <summary>
+    /// Retrieves a list of all groups.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of roles.</returns>
     public async Task<List<Role>> GetGroupsAsync(CancellationToken cancellationToken)
     {
         var response = await graph.Client.Groups.GetAsync(cancellationToken: cancellationToken);
@@ -19,6 +28,12 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return groups;
     }
 
+    /// <summary>
+    /// Retrieves a group by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the group.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the role.</returns>
     public async Task<Role> GetGroupByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         try
@@ -41,6 +56,12 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return null!;
     }
 
+    /// <summary>
+    /// Retrieves a group by its name.
+    /// </summary>
+    /// <param name="name">The name of the group.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the role.</returns>
     public async Task<Role> GetGroupByNameAsync(string name, CancellationToken cancellationToken)
     {
         var response = await graph.Client.Groups.GetAsync(cancellationToken: cancellationToken);
@@ -55,6 +76,12 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return role;
     }
 
+    /// <summary>
+    /// Creates a new group.
+    /// </summary>
+    /// <param name="role">The role object representing the group to create.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the created role.</returns>
     public async Task<Role> CreateGroupAsync(Role role, CancellationToken cancellationToken)
     {
         var group = new Group
@@ -75,6 +102,13 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return mapper.Map<Role>(response);
     }
 
+    /// <summary>
+    /// Updates an existing group.
+    /// </summary>
+    /// <param name="id">The unique identifier of the group to update.</param>
+    /// <param name="role">The updated role object.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the updated role.</returns>
     public async Task<Role> UpdateGroupAsync(Guid id, Role role, CancellationToken cancellationToken)
     {
         var group = new Group
@@ -94,11 +128,22 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return mapper.Map<Role>(response);
     }
 
+    /// <summary>
+    /// Deletes a group by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the group to delete.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteGroupAsync(Guid id, CancellationToken cancellationToken)
     {
         await graph.Client.Groups[id.ToString()].DeleteAsync(cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Retrieves a list of all users.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of users.</returns>
     public async Task<List<Domain.Models.User>> GetUsersAsync(CancellationToken cancellationToken)
     {
         var users = await graph.Client.Users.GetAsync(cancellationToken: cancellationToken);
@@ -106,6 +151,12 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return mapper.Map<List<Domain.Models.User>>(users?.Value ?? []);
     }
 
+    /// <summary>
+    /// Retrieves a user by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the user.</returns>
     public async Task<Domain.Models.User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         try
@@ -131,6 +182,13 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return null!;
     }
 
+    /// <summary>
+    /// Updates an existing user.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user to update.</param>
+    /// <param name="user">The updated user object.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateUserAsync(Guid id, Domain.Models.User user, CancellationToken cancellationToken)
     {
         var updateUser = new Microsoft.Graph.Models.User
@@ -145,11 +203,24 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Deletes a user by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user to delete.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DeleteUserAsync(Guid id, CancellationToken cancellationToken)
     {
         return graph.Client.Users[id.ToString()].DeleteAsync(cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Adds a user to a group.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task AddUserToGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken)
     {
         var requestBody = new ReferenceCreate
@@ -160,11 +231,25 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return graph.Client.Groups[groupId.ToString()].Members.Ref.PostAsync(requestBody, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Removes a user from a group.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task RemoveUserFromGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken)
     {
         return graph.Client.Groups[groupId.ToString()].Members[userId.ToString()].Ref.DeleteAsync(cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Updates the contact information of a user.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="contact">The updated contact information.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateContactInfoAsync(Guid id, ContactInfo contact, CancellationToken cancellationToken)
     {
         var updateUser = new Microsoft.Graph.Models.User
@@ -182,6 +267,13 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Updates the job information of a user.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="job">The updated job information.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateJobInfoAsync(Guid id, JobInfo job, CancellationToken cancellationToken)
     {
         var updateUser = new Microsoft.Graph.Models.User

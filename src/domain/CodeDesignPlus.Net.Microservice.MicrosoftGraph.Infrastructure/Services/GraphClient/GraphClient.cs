@@ -4,30 +4,37 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Options;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 
+/// <summary>
+/// Implementation of the IGraphClient interface for interacting with Microsoft Graph API.
+/// </summary>
 public class GraphClient : IGraphClient
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GraphClient"/> class.
+    /// </summary>
     public GraphServiceClient Client { get; private set; } = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GraphClient"/> class with the specified options.
+    /// </summary>
+    /// <param name="graphOptions">The options for configuring the Graph client.</param>
     public GraphClient(IOptions<GraphOptions> graphOptions)
     {
-        // The client credentials flow requires that you request the
-        // /.default scope, and pre-configure your permissions on the
-        // app registration in Azure. An administrator must grant consent
-        // to those permissions beforehand.
-        var scopes = new[] { "https://graph.microsoft.com/.default" };
+        ArgumentNullException.ThrowIfNull(graphOptions);
 
-
-        // using Azure.Identity;
         var options = new ClientSecretCredentialOptions
         {
             AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
         };
 
-        // https://learn.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
         var clientSecretCredential = new ClientSecretCredential(
-            graphOptions.Value.TenantId, graphOptions.Value.ClientId, graphOptions.Value.ClientSecret, options);
+            graphOptions.Value.TenantId,
+            graphOptions.Value.ClientId,
+            graphOptions.Value.ClientSecret,
+            options
+        );
 
-        var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+        var graphClient = new GraphServiceClient(clientSecretCredential, graphOptions.Value.Scopes);
 
         this.Client = graphClient;
     }

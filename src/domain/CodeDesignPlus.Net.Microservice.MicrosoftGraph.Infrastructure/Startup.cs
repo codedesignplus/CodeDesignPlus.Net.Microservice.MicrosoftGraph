@@ -17,7 +17,6 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure
                 .ValidateDataAnnotations();
 
             services.AddSingleton<IGraphClient, GraphClient>();
-
             services.AddSingleton<IIdentityServer, IdentityServer>();
         }
     }

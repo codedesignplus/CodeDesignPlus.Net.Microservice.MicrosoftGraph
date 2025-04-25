@@ -31,4 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\domain\CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure\CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\IdentityServer\" />
+  </ItemGroup>
 </Project>

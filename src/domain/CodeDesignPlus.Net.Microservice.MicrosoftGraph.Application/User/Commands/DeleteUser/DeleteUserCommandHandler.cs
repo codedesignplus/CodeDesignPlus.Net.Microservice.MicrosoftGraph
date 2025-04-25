@@ -10,7 +10,7 @@ public class DeleteUserCommandHandler(IUserRepository repository, IIdentityServe
 
         var aggregate = await repository.FindAsync<UserAggregate>(request.Id, cancellationToken);
 
-        ApplicationGuard.IsNull(aggregate, Errors.RoleNotFound);
+        ApplicationGuard.IsNull(aggregate, Errors.UserNotFound);
 
         var userExist = await  identityServer.GetUserByIdAsync(aggregate.Id, cancellationToken);
 

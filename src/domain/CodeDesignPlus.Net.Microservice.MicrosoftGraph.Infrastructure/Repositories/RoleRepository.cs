@@ -1,7 +1,7 @@
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Repositories;
 
-public class GraphRepository(IServiceProvider serviceProvider, IOptions<MongoOptions> mongoOptions, ILogger<GraphRepository> logger)
+public class RoleRepository(IServiceProvider serviceProvider, IOptions<MongoOptions> mongoOptions, ILogger<RoleRepository> logger)
     : RepositoryBase(serviceProvider, mongoOptions, logger), IRoleRepository
 {
     public Task<RoleAggregate> GetByNameAsync(string name, CancellationToken cancellationToken)

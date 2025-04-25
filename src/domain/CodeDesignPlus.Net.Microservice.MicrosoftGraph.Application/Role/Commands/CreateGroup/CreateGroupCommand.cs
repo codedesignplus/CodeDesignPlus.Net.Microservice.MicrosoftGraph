@@ -8,5 +8,7 @@ public class Validator : AbstractValidator<CreateGroupCommand>
     public Validator()
     {
         RuleFor(x => x.Id).NotEmpty().NotNull();
+        RuleFor(x => x.Name).NotEmpty().NotNull();
+        RuleFor(x => x.Description).NotEmpty().NotNull();
     }
 }

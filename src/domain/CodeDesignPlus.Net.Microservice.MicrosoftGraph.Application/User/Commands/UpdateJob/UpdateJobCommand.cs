@@ -10,5 +10,6 @@ public class Validator : AbstractValidator<UpdateJobCommand>
     public Validator()
     {
         RuleFor(x => x.Id).NotEmpty().NotNull();
+        RuleFor(x => x.Job).NotEmpty().NotNull();
     }
 }

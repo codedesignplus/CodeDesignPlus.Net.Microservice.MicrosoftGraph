@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
@@ -17,6 +18,7 @@ public sealed partial class JobInfo
 
     }
 
+    [JsonConstructor]
     public JobInfo(string jobTitle, string companyName, string department, string employeeId, string employeeType, Instant employHireDate, string officeLocation)
     {
         JobTitle = jobTitle;
