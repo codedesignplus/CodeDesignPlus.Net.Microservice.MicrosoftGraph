@@ -97,16 +97,16 @@ ms-base:
     hosts:
       - services.codedesignplus.com
     gateways:
-      - services-gateway
+      - istio-ingress/services-gateway
     http:
-    - name: ms-archetype
+    - name: ms-microsoftgraph
       match:
       - uri:
-          prefix: /ms-archetype/
+          prefix: /ms-microsoftgraph/
       rewrite:
         uri: /
       route:
       - destination:
-          host: ms-archetype-rest.default.svc.cluster.local
+          host: ms-microsoftgraph-rest.urbancore.svc.cluster.local
           port:
             number: 5000
