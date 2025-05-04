@@ -3,13 +3,13 @@ ms-base:
   replicaCount: 1
 
   image:
-    repository: codedesignplus/ms-archetype-worker
+    repository: codedesignplus/ms-microsoftgraph-rest
     pullPolicy: IfNotPresent
     tag: "v0.1.0-alpha.100"
 
   imagePullSecrets: []
-  fullnameOverride: "ms-archetype-worker"
-  nameOverride: "ms-archetype-worker"
+  fullnameOverride: "ms-microsoftgraph-rest"
+  nameOverride: "ms-microsoftgraph-rest"
 
   serviceAccount:
     create: true
@@ -92,4 +92,21 @@ ms-base:
   affinity: {}
 
   virtualService: 
-    create: false
+    create: true
+    namespace: istio-ingress
+    hosts:
+      - services.codedesignplus.com
+    gateways:
+      - istio-ingress/istio-gateway
+    http:
+    - name: ms-microsoftgraph
+      match:
+      - uri:
+          prefix: /ms-microsoftgraph/
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: ms-microsoftgraph-rest.urbancore.svc.cluster.local
+          port:
+            number: 5000
