@@ -37,10 +37,6 @@ ms-base:
         port: 5000
         targetPort: http
         protocol: TCP
-      - name: grpc
-        port: 5001
-        targetPort: grpc
-        protocol: TCP
 
   ingress:
     enabled: false
