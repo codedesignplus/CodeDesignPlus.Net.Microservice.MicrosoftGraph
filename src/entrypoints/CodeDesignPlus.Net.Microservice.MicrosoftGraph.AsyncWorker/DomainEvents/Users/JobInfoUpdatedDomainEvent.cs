@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
-[EventKey<UserAggregate>(1, "JobInfoUpdatedDomainEvent", "ms-users")]
+[EventKey<UserAggregate>(1, "JobInfoUpdatedDomainEvent", "ms-users-rest")]
 public class JobInfoUpdatedDomainEvent(
     Guid aggregateId,
     JobInfo job,

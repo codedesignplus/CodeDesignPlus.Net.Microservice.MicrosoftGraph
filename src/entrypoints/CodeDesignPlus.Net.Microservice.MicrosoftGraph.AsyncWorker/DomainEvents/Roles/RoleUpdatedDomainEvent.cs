@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Roles;
 
-[EventKey<RoleAggregate>(1, "RoleUpdatedDomainEvent", "ms-roles")]
+[EventKey<RoleAggregate>(1, "RoleUpdatedDomainEvent", "ms-roles-rest")]
 public class RoleUpdatedDomainEvent(
     Guid aggregateId,
     string name,
