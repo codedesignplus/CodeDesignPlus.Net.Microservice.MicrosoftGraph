@@ -1,6 +1,6 @@
-namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.User;
+namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
-[EventKey<UserAggregate>(1, "RoleRemovedToUser", "ms-users-rest")]
+[EventKey<UserAggregate>(1, "RoleRemovedToUserDomainEvent", "ms-users-rest")]
 public class RoleRemovedToUserDomainEvent(
      Guid aggregateId,
      string displayName,

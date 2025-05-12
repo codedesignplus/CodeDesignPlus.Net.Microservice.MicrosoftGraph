@@ -12,7 +12,6 @@ public class GraphOptionsTest
         // Arrange
         var options = new GraphOptions
         {
-            Url = "https://graph.microsoft.com",
             ClientId = "valid-client-id",
             ClientSecret = "valid-client-secret",
             TenantId = "valid-tenant-id",
@@ -37,7 +36,6 @@ public class GraphOptionsTest
 
         // Assert
         Assert.NotEmpty(validationResults);
-        Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.Url)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.ClientId)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.ClientSecret)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.TenantId)));

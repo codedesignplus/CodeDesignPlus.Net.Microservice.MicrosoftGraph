@@ -6,11 +6,6 @@ public class GraphOptions
 {
     public const string Section = "Graph";
     /// <summary>
-    /// The URL of the Graph API.
-    /// </summary>
-    [Required]
-    public string Url { get; set; } = null!;
-    /// <summary>
     /// The URL of the Graph API for the tenant.
     /// </summary>
     [Required]
