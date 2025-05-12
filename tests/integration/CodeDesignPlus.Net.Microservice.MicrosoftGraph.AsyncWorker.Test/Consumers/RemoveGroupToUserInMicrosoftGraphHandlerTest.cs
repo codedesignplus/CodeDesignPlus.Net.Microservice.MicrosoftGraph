@@ -1,5 +1,3 @@
-using System;
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.User;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Helpers;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;

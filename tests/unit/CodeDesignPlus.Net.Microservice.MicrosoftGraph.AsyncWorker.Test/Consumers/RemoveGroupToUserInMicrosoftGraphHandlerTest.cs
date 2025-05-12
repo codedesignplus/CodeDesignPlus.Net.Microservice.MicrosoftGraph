@@ -1,7 +1,7 @@
 
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.RemoveGroupToUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Consumers;
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.User;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 using MediatR;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Consumers;
