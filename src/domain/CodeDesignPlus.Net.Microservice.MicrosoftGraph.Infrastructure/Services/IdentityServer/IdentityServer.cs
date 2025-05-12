@@ -90,7 +90,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             DisplayName = role.Name,
             Description = role.Description,
             MailEnabled = false,
-            MailNickname = role.Name,
+            MailNickname = role.Name.Replace(" ", "").ToLower(),
             SecurityEnabled = true
         };
 
@@ -116,7 +116,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             DisplayName = role.Name,
             Description = role.Description,
             MailEnabled = false,
-            MailNickname = role.Name,
+            MailNickname = role.Name.Replace(" ", "").ToLower(),
             SecurityEnabled = true
         };
 
