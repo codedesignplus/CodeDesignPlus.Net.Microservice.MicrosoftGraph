@@ -259,10 +259,16 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             State = contact.State,
             Country = contact.Country,
             PostalCode = contact.ZipCode,
-            BusinessPhones = contact.Phone != null ? [contact.Phone] : null,
-            Mail = contact.Email?[0],
-            OtherMails = contact.Email?[1..].ToList() ?? []
         };
+
+        if (!string.IsNullOrEmpty(contact.Phone))
+            updateUser.BusinessPhones = [contact.Phone];
+
+        if (contact.Email != null)
+            updateUser.Mail = contact.Email[0];
+
+        if (contact.Email != null && contact.Email.Length > 1)
+            updateUser.OtherMails = [.. contact.Email[1..]];
 
         return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
     }
