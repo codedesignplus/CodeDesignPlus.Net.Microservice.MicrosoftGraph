@@ -1,5 +1,3 @@
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
-
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
 public class UserAggregate(Guid id) : AggregateRootBase(id)
@@ -10,9 +8,7 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
 
-        return new UserAggregate(id)
-        {
-        };
+        return new UserAggregate(id);
     }
 
     public void AddRole(Guid idRoleIdentityServer)

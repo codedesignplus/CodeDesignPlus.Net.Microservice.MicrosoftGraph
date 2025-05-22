@@ -12,4 +12,6 @@ public class Errors: IErrorCodes
     public const string UserNotExistInIdentityServer = "206 : The user does not exist in IdentityServer";
 
     public const string UserNotFound = "207 : The user was not found";
+
+    public const string UserAlreadyExists = "208 : The user already exists";
 }
