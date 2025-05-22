@@ -35,7 +35,7 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) :
     public async Task Pusblish_Consumer_Success()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(),"joe@fake.com");
         var roleAggregate = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "Admin", "This role is for admin", true);
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var roleRepository = this.Services.GetRequiredService<IRoleRepository>();

@@ -37,7 +37,7 @@ public class UpdateProfileInMicrosoftGraphHandlerTest(Server<Program> server) : 
         // Arrange
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joee.doenew@fake.com");
         var domainEvent = new ProfileUpdatedDomainEvent(userAggregate.Id, "Joe New", "Doe New", "joe-new@fake.com", "3105631234", "Joe New Doe New", false, Domain.ValueObjects.ContactInfo.Create(
             "Street 123 New",
             "City New",

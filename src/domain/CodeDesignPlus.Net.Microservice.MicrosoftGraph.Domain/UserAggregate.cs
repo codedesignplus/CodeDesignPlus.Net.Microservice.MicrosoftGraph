@@ -2,11 +2,13 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
 public class UserAggregate(Guid id) : AggregateRootBase(id)
 {    
+    public string Email { get; private set; } = null!;
     public Guid[] IdRoles { get; private set; } = [];
 
-    public static UserAggregate Create(Guid id)
+    public static UserAggregate Create(Guid id, string email)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
+        DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
 
         return new UserAggregate(id);
     }

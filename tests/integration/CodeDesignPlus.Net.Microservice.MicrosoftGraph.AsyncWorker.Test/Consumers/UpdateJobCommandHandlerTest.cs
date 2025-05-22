@@ -37,7 +37,7 @@ public class UpdateJobCommandHandlerTest(Server<Program> server) : ConsumerServe
         // Arrange
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joee.doenew@fake.com");
         var domainEvent = new JobInfoUpdatedDomainEvent(userAggregate.Id, Domain.ValueObjects.JobInfo.Create(
             "Software Engineer New",
             "Tech Company New",

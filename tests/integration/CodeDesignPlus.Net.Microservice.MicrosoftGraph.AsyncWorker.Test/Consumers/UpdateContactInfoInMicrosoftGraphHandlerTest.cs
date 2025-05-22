@@ -37,7 +37,7 @@ public class UpdateContactInfoInMicrosoftGraphHandlerTest(Server<Program> server
         // Arrange
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joee.doenew@fake.com");
         var domainEvent = new ContactInfoUpdatedDomainEvent(userAggregate.Id, Domain.ValueObjects.ContactInfo.Create(
             "Street 123 New",
             "City New",

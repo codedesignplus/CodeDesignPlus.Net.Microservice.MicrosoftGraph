@@ -13,7 +13,7 @@ public class UserAggregateTest
         var id = Guid.NewGuid();
 
         // Act
-        var userAggregate = UserAggregate.Create(id);
+        var userAggregate = UserAggregate.Create(id, "joe@fake.com");
 
         // Assert
         Assert.NotNull(userAggregate);
@@ -27,7 +27,7 @@ public class UserAggregateTest
         var id = Guid.Empty;
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.Create(id));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.Create(id, "joe@fake.com"));
 
         Assert.Equal(Errors.IdIsInvalid.GetMessage(), exception.Message);
         Assert.Equal(Errors.IdIsInvalid.GetCode(), exception.Code);
@@ -38,7 +38,7 @@ public class UserAggregateTest
     public void AddRole_ValidRole_AddsRole()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var roleId = Guid.NewGuid();
 
         // Act
@@ -52,7 +52,7 @@ public class UserAggregateTest
     public void AddRole_DuplicateRole_ThrowsException()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var roleId = Guid.NewGuid();
         userAggregate.AddRole(roleId);
 
@@ -68,7 +68,7 @@ public class UserAggregateTest
     public void RemoveRole_ValidRole_RemovesRole()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var roleId = Guid.NewGuid();
         userAggregate.AddRole(roleId);
 
@@ -83,7 +83,7 @@ public class UserAggregateTest
     public void RemoveRole_NonExistentRole_ThrowsException()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var roleId = Guid.NewGuid();
 
         // Act & Assert

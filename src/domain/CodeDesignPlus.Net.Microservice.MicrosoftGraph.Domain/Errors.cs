@@ -10,5 +10,7 @@ public class Errors: IErrorCodes
     public const string ObjectIdIsInvalid = "105 : The object id is invalid";
 
     public const string RoleAlreadyAdded = "106 : The role is already added"; 
-    public const string RoleCannotBeRemoved = "107 : The role cannot be removed"; 
+    public const string RoleCannotBeRemoved = "107 : The role cannot be removed";
+
+    public const string EmailIsInvalid = "108 : The email is invalid";
 }

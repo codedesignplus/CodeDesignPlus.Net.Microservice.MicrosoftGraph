@@ -52,7 +52,7 @@ public class DeleteUserCommandHandlerTest
     {
         // Arrange
         var request = new DeleteUserCommand(Guid.NewGuid());
-        var userAggregate = UserAggregate.Create(request.Id);
+        var userAggregate = UserAggregate.Create(request.Id, "joe@fake.com");
 
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
@@ -74,7 +74,7 @@ public class DeleteUserCommandHandlerTest
     {
         // Arrange
         var request = new DeleteUserCommand(Guid.NewGuid());
-        var userAggregate = UserAggregate.Create(request.Id);
+        var userAggregate = UserAggregate.Create(request.Id, "joe@fake.com");
 
         var userModel = new Domain.Models.User() { Id = userAggregate.Id };
 

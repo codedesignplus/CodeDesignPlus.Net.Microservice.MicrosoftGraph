@@ -71,6 +71,14 @@ public interface IIdentityServer
     Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Creates a new user.
+    /// </summary>
+    /// <param name="user">The user object representing the user to create.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task CreateUserAsync(Domain.Models.User user, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Updates an existing user.
     /// </summary>
     /// <param name="id">The unique identifier of the user to update.</param>

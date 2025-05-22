@@ -9,7 +9,7 @@ public class CreateUserHandler(IMediator mediator) : IEventHandler<UserCreatedDo
 {
     public Task HandleAsync(UserCreatedDomainEvent data, CancellationToken token)
     {
-        var command = new CreateUserCommand(data.AggregateId);
+        var command = new CreateUserCommand(data.AggregateId, data.FirstName, data.LastName, data.Email, data.Phone, data.DisplayName, data.IsActive);
 
         return mediator.Send(command, token);
     }

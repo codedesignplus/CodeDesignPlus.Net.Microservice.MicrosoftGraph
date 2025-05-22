@@ -39,7 +39,7 @@ public class RemoveGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server
         var roleRepository = this.Services.GetRequiredService<IRoleRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
         var roleAggregate = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "Admin", "This role is for admin", true);
-        var userAggregate = UserAggregate.Create(Guid.NewGuid());
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var domainEvent = new RoleRemovedToUserDomainEvent(userAggregate.Id, "Joe Doe", "Admin");
 
         userAggregate.AddRole(roleAggregate.IdIdentityServer);

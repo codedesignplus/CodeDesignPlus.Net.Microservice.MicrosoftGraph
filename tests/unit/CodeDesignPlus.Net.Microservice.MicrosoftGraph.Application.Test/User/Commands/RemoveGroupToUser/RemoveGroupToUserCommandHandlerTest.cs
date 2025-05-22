@@ -53,7 +53,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid());
+        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var request = new RemoveGroupToUserCommand(user.Id, "TestRole");
 
         userRepositoryMock
@@ -75,7 +75,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_RemovesUserFromGroupAndUpdatesUser()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid());
+        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         user.AddRole(role.IdIdentityServer);
 
@@ -104,7 +104,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_GroupNotFoundInRole_UsesIdentityServerGroup()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid());
+        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
         var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         user.AddRole(role.IdIdentityServer);
         var request = new RemoveGroupToUserCommand(user.Id, role.Name);

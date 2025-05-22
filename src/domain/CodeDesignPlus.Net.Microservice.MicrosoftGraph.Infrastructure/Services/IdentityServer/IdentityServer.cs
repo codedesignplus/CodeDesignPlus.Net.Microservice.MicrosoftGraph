@@ -2,6 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 using MapsterMapper;
+using Microsoft.Graph.Me.SendMail;
 using Microsoft.Graph.Models;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
@@ -180,6 +181,73 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         }
 
         return null!;
+    }
+
+    /// <summary>
+    /// Creates a new user.
+    /// </summary>
+    /// <param name="user">The user object representing the user to create.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task CreateUserAsync(Domain.Models.User user, CancellationToken cancellationToken)
+    {
+        var passwordTemporary = Guid.NewGuid().ToString();
+
+        var newUser = new Microsoft.Graph.Models.User
+        {
+            DisplayName = user.DisplayName,
+            GivenName = user.FirstName,
+            Surname = user.LastName,
+            MobilePhone = user.Phone,
+            AccountEnabled = user.IsActive,
+            MailNickname = user.Email.Replace(" ", "").ToLower(),
+            UserPrincipalName = user.Email,
+            PasswordProfile = new PasswordProfile
+            {
+                ForceChangePasswordNextSignIn = true,
+                Password = passwordTemporary
+            }
+        };
+
+        await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
+
+        await SendPassowrdTemporaryAsync(passwordTemporary, user.Email, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends a temporary password to the user's email address.
+    /// </summary>
+    /// <param name="passwordTemporary">The temporary password to be sent.</param>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>>A task that represents the asynchronous operation.</returns>
+    private async Task SendPassowrdTemporaryAsync(string passwordTemporary, string email, CancellationToken cancellationToken)
+    {
+        var requestBody = new SendMailPostRequestBody
+        {
+            Message = new Message
+            {
+                Subject = "Temporary Password",
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Text,
+                    Content = $"Your temporary password is: {passwordTemporary}",
+                },
+                ToRecipients =
+                [
+                    new Recipient
+                    {
+                        EmailAddress = new EmailAddress
+                        {
+                            Address = email,
+                        },
+                    },
+                ]
+            },
+            SaveToSentItems = false,
+        };
+
+        await graph.Client.Me.SendMail.PostAsync(requestBody, cancellationToken: cancellationToken);
     }
 
     /// <summary>
