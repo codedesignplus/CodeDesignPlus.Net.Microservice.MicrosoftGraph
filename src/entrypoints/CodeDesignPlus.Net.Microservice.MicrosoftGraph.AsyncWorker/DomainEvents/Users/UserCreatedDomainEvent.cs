@@ -1,6 +1,4 @@
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
-
-namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents;
+namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
 [EventKey<UserAggregate>(1, "UserCreatedDomainEvent", "ms-users-rest")]
 public class UserCreatedDomainEvent : UserBaseDomainEvent
