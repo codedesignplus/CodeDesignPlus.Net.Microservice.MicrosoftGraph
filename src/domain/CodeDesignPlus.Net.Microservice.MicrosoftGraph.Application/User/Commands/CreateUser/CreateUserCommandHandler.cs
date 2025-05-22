@@ -8,7 +8,7 @@ public class CreateUserCommandHandler(IUserRepository repository) : IRequestHand
 
         var exist = await repository.ExistsAsync<UserAggregate>(request.Id, cancellationToken);
 
-        ApplicationGuard.IsNotNull(exist, Errors.UserAlreadyExists);
+        ApplicationGuard.IsTrue(exist, Errors.UserAlreadyExists);
 
         var user = UserAggregate.Create(request.Id);
 
