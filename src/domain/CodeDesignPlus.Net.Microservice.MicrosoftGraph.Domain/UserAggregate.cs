@@ -5,12 +5,17 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     public string Email { get; private set; } = null!;
     public Guid[] IdRoles { get; private set; } = [];
 
-    public static UserAggregate Create(Guid id, string email)
+    public UserAggregate(Guid id, string email) : this(id)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
 
-        return new UserAggregate(id);
+        Email = email;
+    }
+
+    public static UserAggregate Create(Guid id, string email)
+    {
+        return new UserAggregate(id, email);
     }
 
     public void AddRole(Guid idRoleIdentityServer)

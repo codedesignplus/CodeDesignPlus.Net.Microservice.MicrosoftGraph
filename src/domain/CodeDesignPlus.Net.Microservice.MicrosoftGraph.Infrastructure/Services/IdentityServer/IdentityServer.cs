@@ -2,8 +2,8 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 using MapsterMapper;
-using Microsoft.Graph.Me.SendMail;
 using Microsoft.Graph.Models;
+using Microsoft.Graph.Users.Item.SendMail;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
 
@@ -193,15 +193,18 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     {
         var passwordTemporary = Guid.NewGuid().ToString();
 
+        var mailNickname = user.Email.Split('@')[0];
+
         var newUser = new Microsoft.Graph.Models.User
         {
+            Id = user.Id.ToString(),
             DisplayName = user.DisplayName,
             GivenName = user.FirstName,
             Surname = user.LastName,
             MobilePhone = user.Phone,
             AccountEnabled = user.IsActive,
-            MailNickname = user.Email.Replace(" ", "").ToLower(),
-            UserPrincipalName = user.Email,
+            MailNickname = mailNickname,
+            UserPrincipalName = mailNickname + "@codedesignplusdevelopment.onmicrosoft.com",
             PasswordProfile = new PasswordProfile
             {
                 ForceChangePasswordNextSignIn = true,
@@ -209,9 +212,9 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             }
         };
 
-        await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
+        var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
 
-        await SendPassowrdTemporaryAsync(passwordTemporary, user.Email, cancellationToken);
+        await SendPassowrdTemporaryAsync(response?.Id, passwordTemporary, user.Email, cancellationToken);
     }
 
     /// <summary>
@@ -221,7 +224,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <param name="email">The email address of the user.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>>A task that represents the asynchronous operation.</returns>
-    private async Task SendPassowrdTemporaryAsync(string passwordTemporary, string email, CancellationToken cancellationToken)
+    private async Task SendPassowrdTemporaryAsync(string? id, string passwordTemporary, string email, CancellationToken cancellationToken)
     {
         var requestBody = new SendMailPostRequestBody
         {
@@ -247,7 +250,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             SaveToSentItems = false,
         };
 
-        await graph.Client.Me.SendMail.PostAsync(requestBody, cancellationToken: cancellationToken);
+        await graph.Client.Users[id].SendMail.PostAsync(requestBody, cancellationToken: cancellationToken);
     }
 
     /// <summary>
