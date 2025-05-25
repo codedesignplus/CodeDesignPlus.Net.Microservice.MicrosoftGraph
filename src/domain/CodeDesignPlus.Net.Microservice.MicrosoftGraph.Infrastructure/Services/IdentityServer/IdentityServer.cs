@@ -191,8 +191,6 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateUserAsync(Domain.Models.User user, CancellationToken cancellationToken)
     {
-        var passwordTemporary = Guid.NewGuid().ToString();
-
         var mailNickname = user.Email.Split('@')[0];
 
         var newUser = new Microsoft.Graph.Models.User
@@ -208,13 +206,13 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             PasswordProfile = new PasswordProfile
             {
                 ForceChangePasswordNextSignIn = true,
-                Password = passwordTemporary
+                Password = user.Password
             }
         };
 
         var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
 
-        await SendPassowrdTemporaryAsync(response?.Id, passwordTemporary, user.Email, cancellationToken);
+        //await SendPassowrdTemporaryAsync(response?.Id, passwordTemporary, user.Email, cancellationToken);
     }
 
     /// <summary>

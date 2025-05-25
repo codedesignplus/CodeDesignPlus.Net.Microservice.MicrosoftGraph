@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUser;
 
-public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper, IIdentityServer identityServer) : IRequestHandler<CreateUserCommand>
+public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper, IIdentityServer identityServer, IPubSub pubSub) : IRequestHandler<CreateUserCommand>
 {
     public async Task Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -17,5 +17,7 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
         await repository.CreateAsync(user, cancellationToken);
 
         await identityServer.CreateUserAsync(mapper.Map<Domain.Models.User>(request), cancellationToken);
+
+        await pubSub.PublishAsync(user.GetAndClearEvents(), cancellationToken);
     }
 }
