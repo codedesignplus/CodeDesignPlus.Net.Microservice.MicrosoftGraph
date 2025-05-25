@@ -44,7 +44,7 @@ jobs:
     with:
       project-name: CodeDesignPlus.Net.Microservice.MicrosoftGraph
       microservice-name: ms-microsoftgraph
-      enable-rest: false
+      enable-rest: true
       enable-grpc: false
       enable-worker: true
       environment: ${{ github.event.inputs.environment }}
