@@ -12,7 +12,7 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
 
         ApplicationGuard.IsTrue(exist, Errors.UserAlreadyExists);
 
-        var user = UserAggregate.Create(request.Id, request.Email);
+        var user = UserAggregate.Create(request.Id, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, request.Password, request.IsActive);
 
         await repository.CreateAsync(user, cancellationToken);
 

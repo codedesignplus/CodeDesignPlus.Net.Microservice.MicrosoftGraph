@@ -1,21 +1,39 @@
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.DomainEvents;
+
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
 public class UserAggregate(Guid id) : AggregateRootBase(id)
 {    
     public string Email { get; private set; } = null!;
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public string Phone { get; private set; } = null!;
+    public string? DisplayName { get; private set; } = null!;
     public Guid[] IdRoles { get; private set; } = [];
 
-    public UserAggregate(Guid id, string email) : this(id)
+    public UserAggregate(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string password, bool isActive) : this(id)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
+        DomainGuard.IsNullOrEmpty(firstName, Errors.FirstNameIsRequired);
+        DomainGuard.IsNullOrEmpty(lastName, Errors.LastNameIsRequired);
+        DomainGuard.IsNullOrEmpty(phone, Errors.PhoneIsRequired);
+        DomainGuard.IsNullOrEmpty(password, Errors.PasswordIsRequired);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
 
         Email = email;
+        FirstName = firstName;
+        LastName = lastName;
+        Phone = phone;
+        DisplayName = displayName;
+        IsActive = isActive;
+        CreatedAt = SystemClock.Instance.GetCurrentInstant();
+
+        this.AddEvent(UserCreatedDomainEvent.Create(id, firstName, lastName, email, phone, displayName, password, isActive));
     }
 
-    public static UserAggregate Create(Guid id, string email)
+    public static UserAggregate Create(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string password, bool isActive)
     {
-        return new UserAggregate(id, email);
+        return new UserAggregate(id, firstName, lastName, email, phone, displayName, password, isActive);
     }
 
     public void AddRole(Guid idRoleIdentityServer)

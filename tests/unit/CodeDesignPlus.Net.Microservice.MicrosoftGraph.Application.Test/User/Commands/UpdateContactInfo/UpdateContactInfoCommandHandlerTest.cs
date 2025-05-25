@@ -58,7 +58,7 @@ public class UpdateContactInfoCommandHandlerTest
     {
         // Arrange
         var request = new UpdateContactInfoCommand(Guid.NewGuid(), Domain.ValueObjects.ContactInfo.Create("Stree 123", "City", "State", "12345", "Country", "3105631234", ["fake@fake.com"]));
-        var user = UserAggregate.Create(request.Id, "joe@fake.com");
+        var user = UserAggregate.Create(request.Id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var cancellationToken = CancellationToken.None;
 
         repositoryMock
@@ -82,7 +82,7 @@ public class UpdateContactInfoCommandHandlerTest
     {
         // Arrange
         var request = new UpdateContactInfoCommand(Guid.NewGuid(), Domain.ValueObjects.ContactInfo.Create("Stree 123", "City", "State", "12345", "Country", "3105631234", ["fake@fake.com"]));
-        var user = UserAggregate.Create(request.Id, "joe@fake.com");
+        var user = UserAggregate.Create(request.Id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var cancellationToken = CancellationToken.None;
 
         var userModel = new Domain.Models.User() { Id = user.Id };

@@ -53,7 +53,7 @@ public class UpdateIdentityCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsUserNotExistInIdentityServerException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", true);
 
         repositoryMock
@@ -75,7 +75,7 @@ public class UpdateIdentityCommandHandlerTest
     public async Task Handle_ValidRequest_UpdatesUserSuccessfully()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", true);
         var mappedUser = new Domain.Models.User();
 

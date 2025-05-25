@@ -53,7 +53,7 @@ public class AddGroupToUserCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsUserNotExistInIdentityServerException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var request = new AddGroupToUserCommand(user.Id, "TestRole");
 
         userRepositoryMock
@@ -75,7 +75,7 @@ public class AddGroupToUserCommandHandlerTest
     public async Task Handle_RoleExists_AddsUserToGroupAndUpdatesUser()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         var request = new AddGroupToUserCommand(user.Id, role.Name);
         var userModel = new Domain.Models.User { Id = user.Id };
@@ -102,7 +102,7 @@ public class AddGroupToUserCommandHandlerTest
     public async Task Handle_RoleDoesNotExist_AddsUserToGroupAndUpdatesUser()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var group = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         var request = new AddGroupToUserCommand(user.Id, group.Name);
         var userModel = new Domain.Models.User { Id = user.Id };

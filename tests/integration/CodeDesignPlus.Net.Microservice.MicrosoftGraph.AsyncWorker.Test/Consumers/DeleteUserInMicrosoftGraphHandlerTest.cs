@@ -38,7 +38,7 @@ public class DeleteUserInMicrosoftGraphHandlerTest(Server<Program> server) : Con
         // Arrange
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "joe@fake.com");
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "123456", true);
         var domainEvent = new UserDeletedDomainEvent(userAggregate.Id, "Joe", "Doe", "joe@fake.com", "3105631234", "Joe Doe", true);
 
         var userModel = new Domain.Models.User

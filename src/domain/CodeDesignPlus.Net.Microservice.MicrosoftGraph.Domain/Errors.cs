@@ -13,4 +13,9 @@ public class Errors: IErrorCodes
     public const string RoleCannotBeRemoved = "107 : The role cannot be removed";
 
     public const string EmailIsInvalid = "108 : The email is invalid";
+
+    public const string FirstNameIsRequired = "109 : The first name is required";
+    public const string LastNameIsRequired = "110 : The last name is required";
+    public const string PhoneIsRequired = "111 : The phone is required";
+    public const string PasswordIsRequired = "112 : The password is required";
 }
