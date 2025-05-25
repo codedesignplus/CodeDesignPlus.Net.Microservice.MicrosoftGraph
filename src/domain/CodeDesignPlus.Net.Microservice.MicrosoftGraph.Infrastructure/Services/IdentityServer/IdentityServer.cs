@@ -214,7 +214,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             [
                 new() {
                     SignInType = "emailAddress",
-                    //Issuer = "codedesignplusdevelopment.onmicrosoft.com",
+                    Issuer = "codedesignplusdevelopment.onmicrosoft.com",
                     IssuerAssignedId = mailNickname,
                 },
             ],
