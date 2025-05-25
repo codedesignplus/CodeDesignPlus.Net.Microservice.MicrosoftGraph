@@ -202,13 +202,24 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             MobilePhone = user.Phone,
             AccountEnabled = user.IsActive,
             MailNickname = mailNickname,
-            UserPrincipalName = mailNickname + "@codedesignplusdevelopment.onmicrosoft.com",
+            //UserPrincipalName = mailNickname + "@codedesignplusdevelopment.onmicrosoft.com",
             PasswordProfile = new PasswordProfile
             {
                 ForceChangePasswordNextSignIn = true,
                 Password = user.Password
-            }
+            },
+            PasswordPolicies = "DisablePasswordExpiration",
+            CreationType = "LocalAccount",
+            Identities =
+            [
+                new() {
+                    SignInType = "emailAddress",
+                    //Issuer = "codedesignplusdevelopment.onmicrosoft.com",
+                    IssuerAssignedId = mailNickname,
+                },
+            ],
         };
+
 
         var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
 
