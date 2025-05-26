@@ -1,4 +1,5 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Options;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 using MapsterMapper;
@@ -13,7 +14,8 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services
 /// <param name="graph">The Graph client for interacting with Microsoft Graph API.</param>
 /// <param name="mapper">The mapper for mapping between domain models and Graph models.</param>
 /// <param name="logger">The logger for logging errors and information.</param>
-public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<IdentityServer> logger) : IIdentityServer
+/// <param name="graphOptions">The options for configuring the Graph client.</param>
+public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<IdentityServer> logger, IOptions<GraphOptions> graphOptions) : IIdentityServer
 {
     /// <summary>
     /// Retrieves a list of all groups.
@@ -202,7 +204,6 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             MobilePhone = user.Phone,
             AccountEnabled = user.IsActive,
             MailNickname = mailNickname,
-            //UserPrincipalName = mailNickname + "@codedesignplusdevelopment.onmicrosoft.com",
             PasswordProfile = new PasswordProfile
             {
                 ForceChangePasswordNextSignIn = true,
@@ -214,52 +215,13 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             [
                 new() {
                     SignInType = "emailAddress",
-                    Issuer = "codedesignplusdevelopment.onmicrosoft.com",
+                    Issuer = graphOptions.Value.IssuerIdentity,
                     IssuerAssignedId = user.Email,
                 },
             ],
         };
 
-
-        var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
-
-        //await SendPassowrdTemporaryAsync(response?.Id, passwordTemporary, user.Email, cancellationToken);
-    }
-
-    /// <summary>
-    /// Sends a temporary password to the user's email address.
-    /// </summary>
-    /// <param name="passwordTemporary">The temporary password to be sent.</param>
-    /// <param name="email">The email address of the user.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>>A task that represents the asynchronous operation.</returns>
-    private async Task SendPassowrdTemporaryAsync(string? id, string passwordTemporary, string email, CancellationToken cancellationToken)
-    {
-        var requestBody = new SendMailPostRequestBody
-        {
-            Message = new Message
-            {
-                Subject = "Temporary Password",
-                Body = new ItemBody
-                {
-                    ContentType = BodyType.Text,
-                    Content = $"Your temporary password is: {passwordTemporary}",
-                },
-                ToRecipients =
-                [
-                    new Recipient
-                    {
-                        EmailAddress = new EmailAddress
-                        {
-                            Address = email,
-                        },
-                    },
-                ]
-            },
-            SaveToSentItems = false,
-        };
-
-        await graph.Client.Users[id].SendMail.PostAsync(requestBody, cancellationToken: cancellationToken);
+        await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
     }
 
     /// <summary>

@@ -24,4 +24,9 @@ public class GraphOptions
     /// /// The URL of the Graph API for the tenant.
     /// </summary>
     public string[] Scopes { get; set; } = ["https://graph.microsoft.com/.default"];
+    /// <summary>
+    /// Specifies the issuer of the identity
+    /// </summary>
+    [Required]
+    public string IssuerIdentity { get; set; } = null!;
 }
