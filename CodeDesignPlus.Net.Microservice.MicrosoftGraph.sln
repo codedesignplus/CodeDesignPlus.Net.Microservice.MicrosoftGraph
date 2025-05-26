@@ -40,15 +40,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeDesignPlus.Net.Microser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Test", "tests\unit\CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Test\CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Test.csproj", "{86BB4D11-6C2F-44CA-B7DF-527FDFE79959}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{9C6578E7-E4FE-79BB-1635-F363CC1E80DD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E7A3C856-6834-D657-F2F0-05592DF2DDE9}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
-		.github\workflows\chart.yaml = .github\workflows\chart.yaml
-		.github\workflows\build.yml = .github\workflows\build.yml
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker", "src\entrypoints\CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker\CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.csproj", "{B6FC781E-23C6-420E-BC69-6CAABFED2580}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test", "tests\unit\CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test\CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.csproj", "{EF93F024-B883-40CE-8838-5BEE061C30D8}"
@@ -241,7 +232,6 @@ Global
 		{07011B4D-501F-490B-9174-A2434B071E79} = {5769C6DB-68E8-4A8C-B43A-243401CDB4A2}
 		{B190F800-89F0-43CD-B9BD-3EDD0C2E4B37} = {5769C6DB-68E8-4A8C-B43A-243401CDB4A2}
 		{86BB4D11-6C2F-44CA-B7DF-527FDFE79959} = {5769C6DB-68E8-4A8C-B43A-243401CDB4A2}
-		{E7A3C856-6834-D657-F2F0-05592DF2DDE9} = {9C6578E7-E4FE-79BB-1635-F363CC1E80DD}
 		{B6FC781E-23C6-420E-BC69-6CAABFED2580} = {EBFDC2CC-2318-45BC-B619-8754439D2541}
 		{EF93F024-B883-40CE-8838-5BEE061C30D8} = {5769C6DB-68E8-4A8C-B43A-243401CDB4A2}
 		{9A50F623-700B-4C73-B8E9-1D9A172588E8} = {C19E3964-BDFB-41E0-B86C-CA90E3E5F335}

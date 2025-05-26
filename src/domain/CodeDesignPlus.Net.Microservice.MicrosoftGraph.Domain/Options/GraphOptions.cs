@@ -29,4 +29,9 @@ public class GraphOptions
     /// </summary>
     [Required]
     public string IssuerIdentity { get; set; } = null!;
+    /// <summary>
+    /// Specifies the secret used for encrypting and decrypting values in the transit secret engine.
+    /// </summary>
+    [Required]
+    public string SecretTransit { get; set; } = null!;
 }
