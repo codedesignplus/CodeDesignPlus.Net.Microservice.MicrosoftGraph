@@ -1,12 +1,15 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Options;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Vault.Abstractions;
+using CodeDesignPlus.Net.Vault.Abstractions.Options;
 using Microsoft.Extensions.Options;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUser;
 
-public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper, IIdentityServer identityServer, IPubSub pubSub, IVaultTransit vaultTransit, IOptions<GraphOptions> options) : IRequestHandler<CreateUserCommand>
+public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper, IIdentityServer identityServer, IPubSub pubSub, IVaultTransit vaultTransit, IOptions<VaultOptions> options) : IRequestHandler<CreateUserCommand>
 {
+    private const string KEY_SECRET_CONTEXT = "vault_transit_password_temp";
+
     public async Task Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
@@ -15,8 +18,7 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
 
         ApplicationGuard.IsTrue(exist, Errors.UserAlreadyExists);
 
-        var password = GenerateRandomPassword();
-        var (key, ciphertext)  = await vaultTransit.EncryptAsync(password, options.Value.SecretTransit);
+        (string password, string key, string ciphertext) = await GeneratePasswordAsync();
 
         var userAggregate = UserAggregate.Create(request.Id, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, key, ciphertext, request.IsActive);
 
@@ -28,6 +30,18 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
         await identityServer.CreateUserAsync(user, cancellationToken);
 
         await pubSub.PublishAsync(userAggregate.GetAndClearEvents(), cancellationToken);
+    }
+
+    private async Task<(string password, string key, string ciphertext)> GeneratePasswordAsync()
+    {
+        var isValidContext = options.Value.Transit.SecretContexts.TryGetValue(KEY_SECRET_CONTEXT, out var secretContext);
+
+        DomainGuard.IsTrue(isValidContext, Errors.SecretContextNotFound);
+
+        var password = GenerateRandomPassword();
+
+        var (key, ciphertext) = await vaultTransit.EncryptAsync(password, secretContext);
+        return (password, key, ciphertext);
     }
 
     private static string GenerateRandomPassword()

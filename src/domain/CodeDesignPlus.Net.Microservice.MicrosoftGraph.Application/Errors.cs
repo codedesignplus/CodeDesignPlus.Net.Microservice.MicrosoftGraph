@@ -14,4 +14,6 @@ public class Errors: IErrorCodes
     public const string UserNotFound = "207 : The user was not found";
 
     public const string UserAlreadyExists = "208 : The user already exists";
+
+    public const string SecretContextNotFound = "209 : The secret context was not found";
 }
