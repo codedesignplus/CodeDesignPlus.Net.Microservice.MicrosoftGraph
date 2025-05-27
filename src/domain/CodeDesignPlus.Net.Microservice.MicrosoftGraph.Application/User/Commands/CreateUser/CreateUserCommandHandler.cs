@@ -36,7 +36,7 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
     {
         var isValidContext = options.Value.Transit.SecretContexts.TryGetValue(KEY_SECRET_CONTEXT, out var secretContext);
 
-        DomainGuard.IsTrue(isValidContext, Errors.SecretContextNotFound);
+        DomainGuard.IsFalse(isValidContext, Errors.SecretContextNotFound);
 
         var password = GenerateRandomPassword();
 
