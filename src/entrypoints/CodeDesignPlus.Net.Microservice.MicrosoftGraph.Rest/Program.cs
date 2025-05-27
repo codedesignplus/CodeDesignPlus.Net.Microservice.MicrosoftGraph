@@ -8,9 +8,10 @@ using CodeDesignPlus.Net.Microservice.Commons.MediatR;
 using CodeDesignPlus.Net.Redis.Cache.Extensions;
 using CodeDesignPlus.Net.Vault.Extensions;
 using NodaTime.Serialization.SystemTextJson;
+using OpenTelemetry.Trace;
 
 
-    var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
@@ -27,7 +28,10 @@ builder.Services.AddCors();
 builder.Services.AddVault(builder.Configuration);
 builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddMongo<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Startup>(builder.Configuration);
-builder.Services.AddObservability(builder.Configuration, builder.Environment);
+builder.Services.AddObservability(builder.Configuration, builder.Environment, null, x =>
+{
+    x.AddRabbitMQInstrumentation();
+});
 builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddRabbitMQ<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Startup>(builder.Configuration);
 builder.Services.AddMapster();

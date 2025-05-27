@@ -10,6 +10,7 @@ using CodeDesignPlus.Net.Redis.Extensions;
 using CodeDesignPlus.Net.Security.Extensions;
 using CodeDesignPlus.Net.Vault.Extensions;
 using Mapster;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -29,7 +30,10 @@ builder.Services.AddMapster();
 builder.Services.AddFluentValidation();
 builder.Services.AddMediatR<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Startup>();
 builder.Services.AddHealthChecksServices();
-builder.Services.AddObservability(builder.Configuration, builder.Environment);
+builder.Services.AddObservability(builder.Configuration, builder.Environment, null, x =>
+{
+    x.AddRabbitMQInstrumentation();
+});
 
 var app = builder.Build();
 
