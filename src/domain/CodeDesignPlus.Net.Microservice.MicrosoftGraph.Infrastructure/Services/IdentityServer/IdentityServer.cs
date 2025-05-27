@@ -1,10 +1,10 @@
+using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Options;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 using MapsterMapper;
 using Microsoft.Graph.Models;
-using Microsoft.Graph.Users.Item.SendMail;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
 
@@ -191,7 +191,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <param name="user">The user object representing the user to create.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task CreateUserAsync(Domain.Models.User user, CancellationToken cancellationToken)
+    public async Task<Guid> CreateUserAsync(Domain.Models.User user, CancellationToken cancellationToken)
     {
         var mailNickname = user.Email.Split('@')[0];
 
@@ -221,7 +221,11 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             ],
         };
 
-        await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
+        var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
+
+        InfrastructureGuard.IsNull(response, Errors.UserCreationFailed);
+
+        return Guid.Parse(response!.Id!);
     }
 
     /// <summary>

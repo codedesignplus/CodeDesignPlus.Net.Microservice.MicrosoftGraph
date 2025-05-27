@@ -1,7 +1,13 @@
+
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Repositories;
 
-public class UserRepository(IServiceProvider serviceProvider, IOptions<MongoOptions> mongoOptions, ILogger<UserRepository> logger) 
+public class UserRepository(IServiceProvider serviceProvider, IOptions<MongoOptions> mongoOptions, ILogger<UserRepository> logger)
     : RepositoryBase(serviceProvider, mongoOptions, logger), IUserRepository
 {
-   
+    public async Task<bool> ExistsAsync(string email, CancellationToken cancellationToken)
+    {
+        var item = await this.GetCollection<UserAggregate>().FindAsync(x => x.Email == email, cancellationToken: cancellationToken);
+
+        return await item.AnyAsync(cancellationToken);
+    }
 }

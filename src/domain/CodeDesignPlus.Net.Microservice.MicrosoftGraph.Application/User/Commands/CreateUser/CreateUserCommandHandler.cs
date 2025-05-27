@@ -14,20 +14,20 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
     {
         ApplicationGuard.IsNull(request, Errors.InvalidRequest);
 
-        var exist = await repository.ExistsAsync<UserAggregate>(request.Id, cancellationToken);
+        var exist = await repository.ExistsAsync(request.Email, cancellationToken);
 
         ApplicationGuard.IsTrue(exist, Errors.UserAlreadyExists);
 
         (string password, string key, string ciphertext) = await GeneratePasswordAsync();
 
-        var userAggregate = UserAggregate.Create(request.Id, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, key, ciphertext, request.IsActive);
-
-        await repository.CreateAsync(userAggregate, cancellationToken);
-
         var user = mapper.Map<Domain.Models.User>(request);
         user.Password = password;
 
-        await identityServer.CreateUserAsync(user, cancellationToken);
+        var idUser = await identityServer.CreateUserAsync(user, cancellationToken);
+
+        var userAggregate = UserAggregate.Create(idUser, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, key, ciphertext, request.IsActive);
+
+        await repository.CreateAsync(userAggregate, cancellationToken);
 
         await pubSub.PublishAsync(userAggregate.GetAndClearEvents(), cancellationToken);
     }
@@ -36,7 +36,7 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
     {
         var isValidContext = options.Value.Transit.SecretContexts.TryGetValue(KEY_SECRET_CONTEXT, out var secretContext);
 
-        DomainGuard.IsFalse(isValidContext, Errors.SecretContextNotFound);
+        ApplicationGuard.IsFalse(isValidContext, Errors.SecretContextNotFound);
 
         var password = GenerateRandomPassword();
 
