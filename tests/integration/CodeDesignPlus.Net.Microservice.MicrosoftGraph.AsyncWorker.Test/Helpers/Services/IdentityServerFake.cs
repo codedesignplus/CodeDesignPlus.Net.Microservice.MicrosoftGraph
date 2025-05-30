@@ -154,12 +154,12 @@ public class IdentityServerFake : IIdentityServer
         return null!;
     }
 
-    public Task CreateUserAsync(User user, CancellationToken cancellationToken)
+    public Task<Guid> CreateUserAsync(User user, CancellationToken cancellationToken)
     {
         CreateUserInvokeHistory.Add(user.Id.ToString(), [user, cancellationToken]);
 
         if (User != null && User.Id == user.Id)
-            return Task.FromResult(user);
+            return Task.FromResult(user.Id);
 
         return null!;
     }
