@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
-[EventKey<UserAggregate>(1, "RoleAddedToUserDomainEvent", "ms-users-rest")]
+[EventKey<UserAggregate>(1, "RoleAddedToUserDomainEvent", "ms-users")]
 public class RoleAddedToUserDomainEvent(
      Guid aggregateId,
      string? displayName,

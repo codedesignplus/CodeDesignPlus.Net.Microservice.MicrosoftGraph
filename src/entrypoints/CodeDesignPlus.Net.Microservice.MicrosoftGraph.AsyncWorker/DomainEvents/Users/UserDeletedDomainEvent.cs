@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
-[EventKey<UserAggregate>(1, "UserDeletedDomainEvent", "ms-users-rest")]
+[EventKey<UserAggregate>(1, "UserDeletedDomainEvent", "ms-users")]
 public class UserDeletedDomainEvent : UserBaseDomainEvent
 {
     public UserDeletedDomainEvent(

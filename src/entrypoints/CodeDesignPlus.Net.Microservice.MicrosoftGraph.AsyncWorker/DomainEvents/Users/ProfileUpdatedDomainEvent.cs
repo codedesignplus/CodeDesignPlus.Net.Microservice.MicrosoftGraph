@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
-[EventKey<UserAggregate>(1, "ProfileUpdatedDomainEvent", "ms-users-rest")]
+[EventKey<UserAggregate>(1, "ProfileUpdatedDomainEvent", "ms-users")]
 public class ProfileUpdatedDomainEvent : UserBaseDomainEvent
 {
     public ContactInfo Contact { get; }
