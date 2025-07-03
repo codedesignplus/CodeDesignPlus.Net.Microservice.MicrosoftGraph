@@ -18,6 +18,7 @@ public class UserController(IMediator mediator, IMapper mapper) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto data, CancellationToken cancellationToken)
     {
+        data.IsActive = true; 
         await mediator.Send(mapper.Map<CreateUserCommand>(data), cancellationToken);
 
         return NoContent();
