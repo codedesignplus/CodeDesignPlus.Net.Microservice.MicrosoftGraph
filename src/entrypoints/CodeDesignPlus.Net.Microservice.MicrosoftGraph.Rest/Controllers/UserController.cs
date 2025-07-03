@@ -18,8 +18,30 @@ public class UserController(IMediator mediator, IMapper mapper) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto data, CancellationToken cancellationToken)
     {
-        data.IsActive = true; 
         await mediator.Send(mapper.Map<CreateUserCommand>(data), cancellationToken);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Replicate a user from an external source.
+    /// </summary>
+    /// <param name="data">Data for replicating the user.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <response code="204">User replicated successfully.</response>
+    /// <response code="400">Bad request if the input data is invalid.</response>
+    /// <response code="401">Unauthorized if the user is not authenticated.</response>
+    /// <response code="403">Forbidden if the user does not have permission to replicate users.</response>
+    /// <response code="500">Internal server error if an unexpected error occurs.</response>
+    [HttpPost("replicate-user")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
+    public async Task<IActionResult> ReplicateUser([FromBody] ReplicateUserDto data, CancellationToken cancellationToken)
+    {
+        await mediator.Send(mapper.Map<ReplicateUserCommand>(data), cancellationToken);
 
         return NoContent();
     }
