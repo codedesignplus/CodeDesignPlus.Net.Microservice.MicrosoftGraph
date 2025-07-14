@@ -9,7 +9,7 @@ public class UserAggregateTest
         var id = Guid.NewGuid();
 
         // Act
-        var userAggregate = UserAggregate.Create(id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var userAggregate = UserAggregate.Create(id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
 
         // Assert
         Assert.NotNull(userAggregate);
@@ -23,7 +23,7 @@ public class UserAggregateTest
         var id = Guid.Empty;
 
         // Act & Assert
-        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.Create(id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe",  "key", "cipher", true));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.Create(id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe",  "key", "cipher", false, true));
 
         Assert.Equal(Errors.IdIsInvalid.GetMessage(), exception.Message);
         Assert.Equal(Errors.IdIsInvalid.GetCode(), exception.Code);
@@ -34,7 +34,7 @@ public class UserAggregateTest
     public void AddRole_ValidRole_AddsRole()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var roleId = Guid.NewGuid();
 
         // Act
@@ -48,7 +48,7 @@ public class UserAggregateTest
     public void AddRole_DuplicateRole_ThrowsException()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var roleId = Guid.NewGuid();
         userAggregate.AddRole(roleId);
 
@@ -64,7 +64,7 @@ public class UserAggregateTest
     public void RemoveRole_ValidRole_RemovesRole()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var roleId = Guid.NewGuid();
         userAggregate.AddRole(roleId);
 
@@ -79,7 +79,7 @@ public class UserAggregateTest
     public void RemoveRole_NonExistentRole_ThrowsException()
     {
         // Arrange
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var roleId = Guid.NewGuid();
 
         // Act & Assert

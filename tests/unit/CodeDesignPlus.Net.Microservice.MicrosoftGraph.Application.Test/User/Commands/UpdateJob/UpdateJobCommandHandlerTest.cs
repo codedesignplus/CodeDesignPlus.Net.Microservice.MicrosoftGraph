@@ -53,7 +53,7 @@ public class UpdateJobCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsUserNotExistInIdentityServerError()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var request = new UpdateJobCommand(user.Id, Domain.ValueObjects.JobInfo.Create("Software Engineer", "Tech Company", "It", "123456", "Full Time", SystemClock.Instance.GetCurrentInstant(), "Remote"));
 
         repositoryMock
@@ -75,7 +75,7 @@ public class UpdateJobCommandHandlerTest
     public async Task Handle_ValidRequest_UpdatesJobInfo()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", true);
+        var user = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var request = new UpdateJobCommand(user.Id, Domain.ValueObjects.JobInfo.Create("Software Engineer", "Tech Company", "It", "123456", "Full Time", SystemClock.Instance.GetCurrentInstant(), "Remote"));
         var userModel = new Domain.Models.User { Id = user.Id };
         var jobModel = new Domain.Models.JobInfo { 

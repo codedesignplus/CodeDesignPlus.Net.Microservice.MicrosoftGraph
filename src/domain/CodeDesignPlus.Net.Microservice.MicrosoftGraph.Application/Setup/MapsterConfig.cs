@@ -7,6 +7,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.A
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.DeleteUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.RemoveGroupToUser;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.ReplicateUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateContactInfo;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateIdentity;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateJob;
@@ -33,6 +34,7 @@ public static class MapsterConfigGraph
         TypeAdapterConfig<RoleAggregate, RoleDto>.NewConfig();
 
         TypeAdapterConfig<CreateUserDto, CreateUserCommand>.NewConfig();
+        TypeAdapterConfig<ReplicateUserDto, ReplicateUserCommand>.NewConfig();
         TypeAdapterConfig<UpdateIdentityDto, UpdateIdentityCommand>.NewConfig();
         TypeAdapterConfig<UpdateContactInfoDto, UpdateContactInfoCommand>.NewConfig();
         TypeAdapterConfig<UpdateJobDto, UpdateJobCommand>.NewConfig();
