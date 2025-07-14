@@ -223,7 +223,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
 
         var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
 
-        InfrastructureGuard.IsNull(response, Errors.UserCreationFailed);
+        InfrastructureGuard.IsNull(response!, Errors.UserCreationFailed);
 
         return Guid.Parse(response!.Id!);
     }
