@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 
 /// <summary>
@@ -22,6 +24,26 @@ public class UserController(IMediator mediator, IMapper mapper) : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("replicate-user-v2")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
+    public async Task<IActionResult> ReplicateUser(CancellationToken cancellationToken)
+    {
+        var authorizationHeader = HttpContext.Request.Headers.Authorization.FirstOrDefault();
+        var body = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
+
+        var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserController>>();
+
+        logger.LogWarning("Replicating user with authorization header: {AuthorizationHeader}", authorizationHeader);
+        logger.LogWarning("Request body: {RequestBody}", body);
+
+        return Ok();
+    }    
 
     /// <summary>
     /// Replicate a user from an external source.
