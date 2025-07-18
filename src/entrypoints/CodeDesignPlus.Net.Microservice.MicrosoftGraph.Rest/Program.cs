@@ -66,7 +66,7 @@ app.UseHttpsRedirection();
 
 //app.UseAuth();
 
-app.MapControllers().RequireAuthorization();
+app.MapControllers(); //.RequireAuthorization();
 
 await app.RunAsync();
 
