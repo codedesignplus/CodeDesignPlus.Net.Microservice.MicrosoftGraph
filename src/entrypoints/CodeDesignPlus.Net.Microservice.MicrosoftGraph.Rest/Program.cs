@@ -64,7 +64,7 @@ app.UseCoreSwagger();
 
 app.UseHttpsRedirection();
 
-app.UseAuth();
+//app.UseAuth();
 
 app.MapControllers().RequireAuthorization();
 
