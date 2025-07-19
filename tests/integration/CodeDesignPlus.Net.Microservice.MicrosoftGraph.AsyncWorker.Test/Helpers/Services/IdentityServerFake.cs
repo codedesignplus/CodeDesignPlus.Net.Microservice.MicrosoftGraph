@@ -20,6 +20,7 @@ public class IdentityServerFake : IIdentityServer
     public Dictionary<string, object[]> GetGroupByNameInvokeHistory { get; } = [];
     public Dictionary<string, object[]> GetGroupsInvokeHistory { get; } = [];
     public Dictionary<string, object[]> GetUserByIdInvokeHistory { get; } = [];
+    public Dictionary<string, object[]> GetUserByEmailInvokeHistory { get; } = [];
     public Dictionary<string, object[]> GetUsersInvokeHistory { get; } = [];
     public Dictionary<string, object[]> RemoveUserFromGroupInvokeHistory { get; } = [];
     public Dictionary<string, object[]> UpdateContactInfoInvokeHistory { get; } = [];
@@ -160,6 +161,16 @@ public class IdentityServerFake : IIdentityServer
 
         if (User != null && User.Id == user.Id)
             return Task.FromResult(user.Id);
+
+        return null!;
+    }
+
+    public Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        GetUserByIdInvokeHistory.Add(email, [email, cancellationToken]);
+
+        if (User != null && User.Email == email)
+            return Task.FromResult(User)!;
 
         return null!;
     }
