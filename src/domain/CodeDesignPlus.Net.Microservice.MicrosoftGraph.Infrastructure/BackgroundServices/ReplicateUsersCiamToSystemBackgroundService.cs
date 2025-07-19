@@ -17,19 +17,19 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
 
             foreach (var user in users)
             {
-                var userCiam = identityServer.GetUserByEmailAsync(user.Email, stoppingToken);
+                var userCiam = await identityServer.GetUserByEmailAsync(user.Email, stoppingToken);
 
                 if (userCiam == null)
                     continue;
 
                 var command = new ReplicateUserCommand(
-                    user.Id,
-                    user.FirstName,
-                    user.LastName,
-                    user.Email,
-                    user.Phone,
-                    user.DisplayName,
-                    user.IsActive
+                    userCiam.Id,
+                    userCiam.FirstName,
+                    userCiam.LastName,
+                    userCiam.Email,
+                    userCiam.Phone,
+                    userCiam.DisplayName,
+                    userCiam.IsActive
                 );
 
                 await mediator.Send(command, stoppingToken);
