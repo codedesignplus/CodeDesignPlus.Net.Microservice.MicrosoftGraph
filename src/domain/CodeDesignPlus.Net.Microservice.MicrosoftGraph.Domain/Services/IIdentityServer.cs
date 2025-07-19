@@ -71,6 +71,14 @@ public interface IIdentityServer
     Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Retrieves a user by their email address.
+    /// </summary>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the user.</returns>
+    Task<Domain.Models.User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Creates a new user.
     /// </summary>
     /// <param name="user">The user object representing the user to create.</param>

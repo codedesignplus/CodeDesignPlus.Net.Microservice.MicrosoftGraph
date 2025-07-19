@@ -12,6 +12,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.U
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateIdentity;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateJob;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateProfile;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Commands.CreateUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Setup;
@@ -47,5 +48,7 @@ public static class MapsterConfigGraph
         TypeAdapterConfig<CreateGroupDto, CreateGroupCommand>.NewConfig();
         TypeAdapterConfig<UpdateGroupDto, UpdateGroupCommand>.NewConfig();
         TypeAdapterConfig<DeleteGroupDto, DeleteGroupCommand>.NewConfig();
+
+        TypeAdapterConfig<CreateUserCiamDto, CreateUserCiamCommand>.NewConfig();
     }
 }

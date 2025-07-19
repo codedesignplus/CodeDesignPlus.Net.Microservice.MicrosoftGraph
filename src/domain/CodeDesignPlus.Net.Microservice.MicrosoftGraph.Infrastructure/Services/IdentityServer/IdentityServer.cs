@@ -186,6 +186,28 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     }
 
     /// <summary>
+    /// Retrieves a user by their email address.
+    /// </summary>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the user.</returns>
+    public async Task<Domain.Models.User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var response = await graph.Client.Users.GetAsync((requestConfiguration) =>
+        {
+            requestConfiguration.QueryParameters.Filter = $"mail eq '{email}'";
+            requestConfiguration.QueryParameters.Select = ["id", "displayName", "givenName", "surname", "mobilePhone", "postalCode", "identities", "accountEnabled"];
+        }, cancellationToken: cancellationToken);
+
+        var user = response?.Value?.FirstOrDefault();
+
+        if (user == null)
+            return null!;
+
+        return mapper.Map<Domain.Models.User>(user);
+    }
+
+    /// <summary>
     /// Creates a new user.
     /// </summary>
     /// <param name="user">The user object representing the user to create.</param>
