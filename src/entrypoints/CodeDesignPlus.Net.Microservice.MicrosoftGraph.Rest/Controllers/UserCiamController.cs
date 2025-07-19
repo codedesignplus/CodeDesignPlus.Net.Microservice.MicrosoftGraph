@@ -1,4 +1,7 @@
+using CodeDesignPlus.Net.Exceptions;
+using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Commands.CreateUser;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
@@ -38,10 +41,9 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    public async Task<IActionResult> CreateUser([FromBody] OnAttributeCollectionSubmitRequest request, CancellationToken cancellationToken)
+    public async Task<OnAttributeCollectionSubmitResponse> CreateUser([FromBody] OnAttributeCollectionSubmitRequest request, CancellationToken cancellationToken)
     {
-        if (request.Data.UserSignUpInfo == null )
-            return BadRequest(new ProblemDetails { Title = "Invalid user sign-up information", Detail = "User sign-up information is missing or invalid." });
+        InfrastructureGuard.IsNull(request.Data.UserSignUpInfo!, Errors.InvalidSignUpInfo);
 
         var displayName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "displayName").Value?.Value;
         var givenName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "givenName").Value?.Value;
@@ -49,19 +51,15 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
         var phone = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key.Contains("phone")).Value?.Value;
         var email = request.Data.UserSignUpInfo.Identities.FirstOrDefault(x => x.SignInType == "emailAddress")?.IssuerAssignedId;
 
-        if(string.IsNullOrEmpty(displayName))
+        if (string.IsNullOrEmpty(displayName))
             displayName = $"{givenName} {surname}";
 
-        if (string.IsNullOrEmpty(email))
-            return BadRequest(new ProblemDetails { Title = "Invalid email", Detail = "Email is required for user creation." });
+        InfrastructureGuard.IsNullOrEmpty(email!, Errors.EmailIsRequired);
+        InfrastructureGuard.IsNullOrEmpty(givenName!, Errors.GivenNameIsRequired);
+        InfrastructureGuard.IsNullOrEmpty(surname!, Errors.SurnameIsRequired);
+        InfrastructureGuard.IsNullOrEmpty(phone!, Errors.PhoneIsRequired);
 
-        if (string.IsNullOrEmpty(givenName) || string.IsNullOrEmpty(surname))
-            return BadRequest(new ProblemDetails { Title = "Invalid name", Detail = "Given name and surname are required for user creation." });
-
-        if (string.IsNullOrEmpty(phone))
-            return BadRequest(new ProblemDetails { Title = "Invalid phone", Detail = "Phone number is required for user creation." });
-
-        await mediator.Send(new CreateUserCiamCommand(givenName, surname, email, phone, displayName, true), cancellationToken);
+        await mediator.Send(new CreateUserCiamCommand(givenName!, surname!, email!, phone!, displayName!, true), cancellationToken);
 
         var actions = new List<ContinueWithDefaultBehavior>
         {
@@ -77,7 +75,7 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
             }
         };
 
-        return Ok(response);
+        return response;
     }
 
 }
