@@ -47,8 +47,6 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
 
         var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserCiamController>>();
 
-        logger.LogWarning("Request received for OnAttributeCollectionSubmit: {@Request}", request);
-
         var displayName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "displayName").Value?.Value;
         var givenName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "givenName").Value?.Value;
         var surname = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "surname").Value?.Value;

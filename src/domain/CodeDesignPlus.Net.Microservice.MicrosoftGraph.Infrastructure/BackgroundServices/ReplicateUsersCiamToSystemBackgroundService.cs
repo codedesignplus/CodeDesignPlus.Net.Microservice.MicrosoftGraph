@@ -1,4 +1,5 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.ReplicateUser;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Commands.UpdateUserReplicate;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Queries.GetUsersPendingReplicate;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using MediatR;
@@ -20,7 +21,7 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
 
                 if (userCiam == null)
                     continue;
-                    
+
                 var command = new ReplicateUserCommand(
                     user.Id,
                     user.FirstName,
@@ -32,6 +33,10 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                 );
 
                 await mediator.Send(command, stoppingToken);
+
+                var updateCommand = new UpdateUserReplicateCommand(user.Id);
+                
+                await mediator.Send(updateCommand, stoppingToken);
             }
 
             await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
