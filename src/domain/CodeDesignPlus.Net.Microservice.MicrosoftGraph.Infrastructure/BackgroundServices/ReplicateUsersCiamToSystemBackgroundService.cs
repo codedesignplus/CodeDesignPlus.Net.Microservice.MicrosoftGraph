@@ -39,7 +39,7 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                 await mediator.Send(updateCommand, stoppingToken);
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }
     }
 }
