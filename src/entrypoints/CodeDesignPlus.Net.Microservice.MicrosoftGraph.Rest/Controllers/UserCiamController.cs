@@ -38,30 +38,28 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    public async Task<OnAttributeCollectionSubmitResponse> CreateUser([FromBody] OnAttributeCollectionSubmitRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateUser([FromBody] OnAttributeCollectionSubmitRequest request, CancellationToken cancellationToken)
     {
         if (request.Data.UserSignUpInfo == null )
-        {
-            throw new Exception("User sign-up information is missing or invalid.");
-        }
+            return BadRequest(new ProblemDetails { Title = "Invalid user sign-up information", Detail = "User sign-up information is missing or invalid." });
 
         var displayName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "displayName").Value?.Value;
         var givenName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "givenName").Value?.Value;
         var surname = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "surname").Value?.Value;
-        var phone = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "mobilePhone").Value?.Value;
+        var phone = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key.Contains("phone")).Value?.Value;
         var email = request.Data.UserSignUpInfo.Identities.FirstOrDefault(x => x.SignInType == "emailAddress")?.IssuerAssignedId;
 
         if(string.IsNullOrEmpty(displayName))
             displayName = $"{givenName} {surname}";
 
         if (string.IsNullOrEmpty(email))
-            throw new Exception("Email is required for user creation.");
+            return BadRequest(new ProblemDetails { Title = "Invalid email", Detail = "Email is required for user creation." });
 
         if (string.IsNullOrEmpty(givenName) || string.IsNullOrEmpty(surname))
-            throw new Exception("Given name and surname are required for user creation.");
+            return BadRequest(new ProblemDetails { Title = "Invalid name", Detail = "Given name and surname are required for user creation." });
 
         if (string.IsNullOrEmpty(phone))
-            throw new Exception("Phone number is required for user creation.");
+            return BadRequest(new ProblemDetails { Title = "Invalid phone", Detail = "Phone number is required for user creation." });
 
         await mediator.Send(new CreateUserCiamCommand(givenName, surname, email, phone, displayName, true), cancellationToken);
 
@@ -79,7 +77,7 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
             }
         };
 
-        return response;
+        return Ok(response);
     }
 
 }
