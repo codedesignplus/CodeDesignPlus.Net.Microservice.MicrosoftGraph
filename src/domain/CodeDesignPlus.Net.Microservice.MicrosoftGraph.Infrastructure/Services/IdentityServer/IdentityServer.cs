@@ -290,6 +290,23 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     }
 
     /// <summary>
+    /// Updates the phone number of a user by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="phone">The new phone number to set.</param>
+    /// <param name="cancellationToken"> A token to monitor for cancellation requests.</param>
+    /// <returns> A task that represents the asynchronous operation.</returns>
+    public async Task UpdateUserPhoneAsync(Guid id, string phone, CancellationToken cancellationToken)
+    {
+        var updateUser = new Microsoft.Graph.Models.User
+        {
+            MobilePhone = phone
+        };
+
+        await graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
     /// Deletes a user by their unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the user to delete.</param>

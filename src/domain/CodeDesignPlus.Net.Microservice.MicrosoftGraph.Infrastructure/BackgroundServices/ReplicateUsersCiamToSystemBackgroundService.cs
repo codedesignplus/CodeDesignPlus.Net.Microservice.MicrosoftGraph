@@ -22,6 +22,12 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                 if (userCiam == null)
                     continue;
 
+                if (string.IsNullOrEmpty(userCiam.Phone))
+                {
+                    await identityServer.UpdateUserPhoneAsync(userCiam.Id, user.Phone, stoppingToken);
+                    userCiam.Phone = user.Phone;
+                }
+
                 var command = new ReplicateUserCommand(
                     userCiam.Id,
                     userCiam.FirstName,
@@ -35,7 +41,7 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                 await mediator.Send(command, stoppingToken);
 
                 var updateCommand = new UpdateUserReplicateCommand(user.Id);
-                
+
                 await mediator.Send(updateCommand, stoppingToken);
             }
 

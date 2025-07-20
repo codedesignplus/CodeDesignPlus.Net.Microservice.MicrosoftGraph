@@ -63,6 +63,15 @@ public interface IIdentityServer
     Task<List<User>> GetUsersAsync(CancellationToken cancellationToken);
 
     /// <summary>
+    /// Updates the phone number of a user by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="phone">The new phone number to set.</param>
+    /// <param name="cancellationToken"> A token to monitor for cancellation requests.</param>
+    /// <returns> A task that represents the asynchronous operation.</returns>
+    Task UpdateUserPhoneAsync(Guid id, string phone, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Retrieves a user by their unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the user.</param>
