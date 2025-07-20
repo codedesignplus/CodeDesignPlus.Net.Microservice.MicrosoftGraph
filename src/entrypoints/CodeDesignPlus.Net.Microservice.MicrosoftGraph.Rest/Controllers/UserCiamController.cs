@@ -45,8 +45,6 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
     {
         InfrastructureGuard.IsNull(request.Data.UserSignUpInfo!, Errors.InvalidSignUpInfo);
 
-        var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserCiamController>>();
-
         var displayName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "displayName").Value?.Value;
         var givenName = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "givenName").Value?.Value;
         var surname = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key == "surname").Value?.Value;
@@ -61,11 +59,18 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
         InfrastructureGuard.IsNullOrEmpty(surname!, Errors.SurnameIsRequired);
         InfrastructureGuard.IsNullOrEmpty(phone!, Errors.PhoneIsRequired);
 
+        var attributes = new Dictionary<string, object>()
+        {
+            { "mobilephone", phone! }
+        };
+
         await mediator.Send(new CreateUserCiamCommand(givenName!, surname!, email!, phone!, displayName!, true), cancellationToken);
 
-        var actions = new List<ContinueWithDefaultBehavior>
-        {
-            new() { Type = "microsoft.graph.attributeCollectionSubmit.continueWithDefaultBehavior"}
+        var actions = new List<ModifiedAttributesAction>{
+            new() { 
+                Type = "microsoft.graph.attributeCollectionSubmit.modifyAttributeValues", 
+                Attributes = attributes 
+            }
         };
 
         var response = new OnAttributeCollectionSubmitResponse
