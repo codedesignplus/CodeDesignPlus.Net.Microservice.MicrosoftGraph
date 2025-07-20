@@ -173,9 +173,16 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             if (response == null)
                 return null!;
 
-            var user = mapper.Map<Domain.Models.User>(response);
-
-            return user;
+            return new Domain.Models.User
+            {
+                Id = Guid.Parse(response.Id!),
+                DisplayName = response.DisplayName!,
+                FirstName = response.GivenName!,
+                LastName = response.Surname!,
+                Phone = response.MobilePhone!,
+                Email = response.Identities?.FirstOrDefault()?.IssuerAssignedId ?? string.Empty,
+                IsActive = response.AccountEnabled ?? false
+            };
         }
         catch (Exception ex)
         {
@@ -206,7 +213,16 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         if (user == null)
             return null!;
 
-        return mapper.Map<Domain.Models.User>(user);
+        return new Domain.Models.User
+        {
+            Id = Guid.Parse(user.Id!),
+            DisplayName = user.DisplayName!,
+            FirstName = user.GivenName!,
+            LastName = user.Surname!,
+            Phone = user.MobilePhone!,
+            Email = user.Identities?.FirstOrDefault()?.IssuerAssignedId ?? string.Empty,
+            IsActive = user.AccountEnabled ?? false
+        };
     }
 
     /// <summary>
