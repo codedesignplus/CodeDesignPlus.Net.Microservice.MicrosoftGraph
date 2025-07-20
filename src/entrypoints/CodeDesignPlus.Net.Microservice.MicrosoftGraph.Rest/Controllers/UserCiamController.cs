@@ -61,7 +61,7 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
 
         var attributes = new Dictionary<string, object>()
         {
-            { "mobilephone", phone! }
+            { "user.mobilephone", phone! }
         };
 
         await mediator.Send(new CreateUserCiamCommand(givenName!, surname!, email!, phone!, displayName!, true), cancellationToken);
