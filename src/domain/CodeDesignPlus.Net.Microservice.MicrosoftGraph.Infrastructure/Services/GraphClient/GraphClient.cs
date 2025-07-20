@@ -12,7 +12,7 @@ public class GraphClient : IGraphClient
     /// <summary>
     /// Initializes a new instance of the <see cref="GraphClient"/> class.
     /// </summary>
-    public GraphServiceClient Client { get; private set; } = null!;
+    public GraphServiceClient Client { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GraphClient"/> class with the specified options.
