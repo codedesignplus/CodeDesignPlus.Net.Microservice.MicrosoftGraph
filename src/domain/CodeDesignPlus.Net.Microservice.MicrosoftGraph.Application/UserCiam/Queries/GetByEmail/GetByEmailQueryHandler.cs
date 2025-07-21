@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.DataTr
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Queries.GetByEmail;
 
-public class GetByEmailQueryHandler(IUserCiamRepository repository, IMapper mapper) : IRequestHandler<GetByEmailQuery, UserCiamDto>
+public class GetByEmailQueryHandler(IUserRepository repository, IMapper mapper) : IRequestHandler<GetByEmailQuery, UserCiamDto>
 {
     public async Task<UserCiamDto> Handle(GetByEmailQuery request, CancellationToken cancellationToken)
     {

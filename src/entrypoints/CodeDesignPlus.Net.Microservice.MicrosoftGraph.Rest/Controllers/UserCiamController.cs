@@ -96,6 +96,7 @@ public class UserCiamController(IMediator mediator) : ControllerBase
         var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserCiamController>>();
 
         logger.LogWarning("Token request: {Request}", requestBody);
+        logger.LogWarning("AuthenticationContext: {@AuthenticationContext}", request);
 
         var user = await mediator.Send(new GetByEmailQuery(request.Data.AuthenticationContext.User.Mail), cancellationToken);
 
