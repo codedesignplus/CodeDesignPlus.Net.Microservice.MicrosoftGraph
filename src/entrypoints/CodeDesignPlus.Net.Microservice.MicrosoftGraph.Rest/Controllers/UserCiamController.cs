@@ -3,6 +3,7 @@ using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Commands.CreateUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 
@@ -16,10 +17,9 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 /// that is configured in both the API and the Microsoft Entra custom extension settings.
 /// </remarks>
 /// <param name="mediator">The MediatR instance for dispatching commands.</param>
-/// <param name="mapper">The AutoMapper instance for object-to-object mapping.</param>
 [Route("api/[controller]")]
 [ApiController]
-public class UserCiamController(IMediator mediator, IMapper mapper) : ControllerBase
+public class UserCiamController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     /// Receives user attributes from an Entra External ID flow to temporarily create a user.
@@ -41,7 +41,7 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    public async Task<OnAttributeCollectionSubmitResponse> CreateUser([FromBody] OnAttributeCollectionSubmitRequest request, CancellationToken cancellationToken)
+    public async Task<OnAttributeCollectionSubmitResponse> CreateUser([FromBody] MicrosoftEntraExternalIdEventRequest<OnAttributeCollectionSubmitData> request, CancellationToken cancellationToken)
     {
         InfrastructureGuard.IsNull(request.Data.UserSignUpInfo!, Errors.InvalidSignUpInfo);
 
@@ -61,21 +61,50 @@ public class UserCiamController(IMediator mediator, IMapper mapper) : Controller
 
         await mediator.Send(new CreateUserCiamCommand(givenName!, surname!, email!, phone!, displayName!, true), cancellationToken);
 
-        var actions = new List<ContinueWithDefaultBehavior>
-        {
-            new() { Type = "microsoft.graph.attributeCollectionSubmit.continueWithDefaultBehavior"}
-        };
+        var response = OnAttributeCollectionSubmitResponse.Create();
 
-        var response = new OnAttributeCollectionSubmitResponse
-        {
-            Data = new Data
-            {
-                Type = "microsoft.graph.onAttributeCollectionSubmitResponseData",
-                Actions = actions
-            }
-        };
+        response.Data.Actions.Add(ContinueWithDefaultBehavior.Create());
 
         return response;
+    }
+
+    /// <summary>
+    /// Handles the custom claims provider token issuance event for Microsoft Entra External ID.
+    /// This endpoint is called when a token is issued for a user, allowing you to enrich or customize the token with additional claims.
+    /// </summary>
+    /// <remarks>
+    /// The custom claims provider token issuance event allows you to enrich or customize application tokens with information from external 
+    /// systems. This information that can't be stored as part of the user profile in Microsoft Entra directory.
+    /// </remarks>
+    /// <param name="request">The request containing the user sign-up information and other relevant data for token issuance.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <response code="200">The token issuance request was processed successfully.</response>
+    /// <response code="400">If the request data is invalid or required fields are missing.</response>
+    /// <response code="401">If the request is not properly authenticated (e.g., missing or invalid API Key).</response>
+    /// <response code="500">If an unexpected internal server error occurs.</response>
+    [HttpPost("TokenIssuanceRequest")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
+    public async Task<IActionResult> TokenIssuance([FromBody] MicrosoftEntraExternalIdEventRequest<TokenIssuanceData> request, CancellationToken cancellationToken)
+    {
+        var requestBody = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
+
+        var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserCiamController>>();
+
+        logger.LogInformation("Token request: {Request}", requestBody);
+
+
+        var correlationId = request.Data.AuthenticationContext.CorrelationId;
+
+        var response = TokenIssuanceResponse.Create();
+
+        response.Data.Actions.Add(ActionProviderClaim.Create("correlationId", correlationId));
+        response.Data.Actions.Add(ActionProviderClaim.Create("userId", "value"));
+
+        return Ok(response);
     }
 
 }

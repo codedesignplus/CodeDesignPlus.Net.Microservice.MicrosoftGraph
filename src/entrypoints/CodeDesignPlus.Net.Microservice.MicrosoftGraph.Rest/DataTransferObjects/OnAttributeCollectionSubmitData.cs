@@ -1,11 +1,7 @@
+using System;
 using Newtonsoft.Json;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
-
-public class OnAttributeCollectionSubmitRequest
-{
-    public OnAttributeCollectionSubmitData Data { get; set; } = null!;
-}
 
 public class OnAttributeCollectionSubmitData
 {

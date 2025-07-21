@@ -6,20 +6,22 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObject
 public class OnAttributeCollectionSubmitResponse
 {
     [JsonProperty("data")]
-    public required Data Data { get; set; }
+    public Data<ContinueWithDefaultBehavior> Data { get; private set; } = new Data<ContinueWithDefaultBehavior>
+    {
+        Type = "microsoft.graph.onAttributeCollectionSubmitResponseData",
+        Actions = []
+    };
 
+    public static OnAttributeCollectionSubmitResponse Create() => new OnAttributeCollectionSubmitResponse();
 }
 
 [JsonObject]
-public class Data {
+public class ContinueWithDefaultBehavior
+{
     [JsonProperty("@odata.type")]
-    public required string Type { get; set; }
-    [JsonProperty("actions")]
-    public List<ContinueWithDefaultBehavior> Actions { get; set; } = [];
-}
+    public string Type { get; set; } = "microsoft.graph.attributeCollectionSubmit.continueWithDefaultBehavior";
 
-[JsonObject]
-public class ContinueWithDefaultBehavior {
-    [JsonProperty("@odata.type")]
-	public required string Type { get; set; }
+    public static ContinueWithDefaultBehavior Create() => new();
+    
+    public static ContinueWithDefaultBehavior Create(string type) => new() { Type = type };
 }
