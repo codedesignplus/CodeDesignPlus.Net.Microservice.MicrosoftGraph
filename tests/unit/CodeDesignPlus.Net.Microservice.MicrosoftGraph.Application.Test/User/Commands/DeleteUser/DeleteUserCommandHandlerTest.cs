@@ -52,7 +52,7 @@ public class DeleteUserCommandHandlerTest
     {
         // Arrange
         var request = new DeleteUserCommand(Guid.NewGuid());
-        var userAggregate = UserAggregate.Create(request.Id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var userAggregate = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
 
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
@@ -62,7 +62,7 @@ public class DeleteUserCommandHandlerTest
             .ReturnsAsync((Domain.Models.User)null!);
 
         // Act & Assert
-        var exception =  await Assert.ThrowsAsync<CodeDesignPlusException>(() => handler.Handle(request, CancellationToken.None));
+        var exception = await Assert.ThrowsAsync<CodeDesignPlusException>(() => handler.Handle(request, CancellationToken.None));
 
         Assert.Equal(Errors.UserNotExistInIdentityServer.GetMessage(), exception.Message);
         Assert.Equal(Errors.UserNotExistInIdentityServer.GetCode(), exception.Code);
@@ -74,7 +74,7 @@ public class DeleteUserCommandHandlerTest
     {
         // Arrange
         var request = new DeleteUserCommand(Guid.NewGuid());
-        var userAggregate = UserAggregate.Create(request.Id, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var userAggregate = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
 
         var userModel = new Domain.Models.User() { Id = userAggregate.Id };
 

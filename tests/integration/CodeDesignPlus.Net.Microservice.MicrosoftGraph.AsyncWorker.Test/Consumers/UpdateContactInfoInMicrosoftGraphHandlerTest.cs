@@ -37,7 +37,7 @@ public class UpdateContactInfoInMicrosoftGraphHandlerTest(Server<Program> server
         // Arrange
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
         var domainEvent = new ContactInfoUpdatedDomainEvent(userAggregate.Id, Domain.ValueObjects.ContactInfo.Create(
             "Street 123 New",
             "City New",

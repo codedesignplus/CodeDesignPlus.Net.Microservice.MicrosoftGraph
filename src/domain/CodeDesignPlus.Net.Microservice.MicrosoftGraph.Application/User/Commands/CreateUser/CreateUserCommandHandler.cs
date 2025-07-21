@@ -23,9 +23,9 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
         var user = mapper.Map<Domain.Models.User>(request);
         user.Password = password;
 
-        var idUser = await identityServer.CreateUserAsync(user, cancellationToken);
+        var idIdentityProvider = await identityServer.CreateUserAsync(user, cancellationToken);
 
-        var userAggregate = UserAggregate.Create(idUser, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, key, ciphertext, false, request.IsActive);
+        var userAggregate = UserAggregate.Create(request.Id, idIdentityProvider, Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, key, ciphertext, false, request.IsActive);
 
         await repository.CreateAsync(userAggregate, cancellationToken);
 

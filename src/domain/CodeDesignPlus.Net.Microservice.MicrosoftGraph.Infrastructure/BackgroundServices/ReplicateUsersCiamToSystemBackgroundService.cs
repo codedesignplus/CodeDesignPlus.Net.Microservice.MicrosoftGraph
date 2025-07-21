@@ -29,7 +29,9 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                 }
 
                 var command = new ReplicateUserCommand(
+                    user.Id,
                     userCiam.Id,
+                    Domain.Enums.IdentityProvider.MicrosoftEntraExternalId,
                     userCiam.FirstName,
                     userCiam.LastName,
                     userCiam.Email,

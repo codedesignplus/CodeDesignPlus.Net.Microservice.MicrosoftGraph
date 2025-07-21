@@ -18,4 +18,7 @@ public class Errors: IErrorCodes
     public const string LastNameIsRequired = "110 : The last name is required";
     public const string PhoneIsRequired = "111 : The phone is required";
     public const string PasswordIsRequired = "112 : The password is required";
+
+    public const string IdIdentityProviderIsInvalid = "113 : The id identity provider is invalid";
+    public const string IdentityProviderIsInvalid = "114 : The identity provider is invalid";
 }

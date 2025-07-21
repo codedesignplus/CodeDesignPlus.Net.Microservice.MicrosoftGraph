@@ -10,7 +10,7 @@ public class ReplicateUserCommandHandler(IUserRepository repository, IPubSub pub
 
         ApplicationGuard.IsTrue(exist, Errors.UserAlreadyExists);
         
-        var userAggregate = UserAggregate.Create(request.Id, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, null, null, true, request.IsActive);
+        var userAggregate = UserAggregate.Create(request.Id, request.IdIdentityProvider, request.IdentityProvider, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, null, null, true, request.IsActive);
 
         await repository.CreateAsync(userAggregate, cancellationToken);
 
