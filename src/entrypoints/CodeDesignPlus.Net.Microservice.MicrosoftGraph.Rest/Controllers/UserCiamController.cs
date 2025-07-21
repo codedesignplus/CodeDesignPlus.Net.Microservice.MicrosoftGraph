@@ -1,6 +1,7 @@
 using CodeDesignPlus.Net.Exceptions;
 using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Commands.CreateUser;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Queries.GetByEmail;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -94,15 +95,18 @@ public class UserCiamController(IMediator mediator) : ControllerBase
 
         var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserCiamController>>();
 
-        logger.LogInformation("Token request: {Request}", requestBody);
+        logger.LogWarning("Token request: {Request}", requestBody);
 
+        var user = await mediator.Send(new GetByEmailQuery(request.Data.User.Mail), cancellationToken);
+
+        InfrastructureGuard.IsNotNull(user, Errors.UserNotFound);
 
         var correlationId = request.Data.AuthenticationContext.CorrelationId;
 
         var response = TokenIssuanceResponse.Create();
 
         response.Data.Actions.Add(ActionProviderClaim.Create("correlationId", correlationId));
-        response.Data.Actions.Add(ActionProviderClaim.Create("userId", "value"));
+        response.Data.Actions.Add(ActionProviderClaim.Create("userId", user.Id.ToString()));
 
         return Ok(response);
     }

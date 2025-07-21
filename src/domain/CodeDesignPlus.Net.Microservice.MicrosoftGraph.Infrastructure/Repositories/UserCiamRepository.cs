@@ -10,4 +10,11 @@ public class UserCiamRepository(IServiceProvider serviceProvider, IOptions<Mongo
 
         return collection.Find(x => !x.UserReplicated).ToListAsync(cancellationToken);
     }
+
+    public Task<UserCiamAggregate> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var collection = GetCollection<UserCiamAggregate>();
+
+        return collection.Find(x => x.Email == email && x.IsActive).FirstOrDefaultAsync(cancellationToken);
+    }
 }
