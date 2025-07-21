@@ -88,7 +88,7 @@ public class IdentityProviderController(IMediator mediator) : ControllerBase
     {
         var user = await mediator.Send(new GetByIdentityProviderIdQuery(request.Data.AuthenticationContext.User.Id), cancellationToken);
 
-        InfrastructureGuard.IsNotNull(user, Errors.UserNotFound);
+        InfrastructureGuard.IsNull(user, Errors.UserNotFound);
 
         var response = TokenIssuanceResponse.Create();
 
