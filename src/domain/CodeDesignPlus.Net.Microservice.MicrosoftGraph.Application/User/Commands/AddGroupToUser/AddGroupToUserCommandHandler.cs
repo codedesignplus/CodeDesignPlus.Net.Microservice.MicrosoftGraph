@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.AddGroupToUser;
 
-public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepository roleRepository, IIdentityServer identityServer) : IRequestHandler<AddGroupToUserCommand>
+public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepository roleRepository, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<AddGroupToUserCommand>
 {
     public async Task Handle(AddGroupToUserCommand request, CancellationToken cancellationToken)
     {
@@ -36,5 +36,7 @@ public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepos
         user.AddRole(idGroupIdentityServer);
 
         await repository.UpdateAsync(user, cancellationToken);
+
+        await cacheManager.RemoveAsync(user.IdentityProviderId.ToString());
     }
 }

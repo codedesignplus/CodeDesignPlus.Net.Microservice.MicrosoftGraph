@@ -5,7 +5,7 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
 public class UserAggregate(Guid id) : AggregateRootBase(id)
 {
-    public Guid IdIdentityProvider { get; private set; }
+    public Guid IdentityProviderId { get; private set; }
     public IdentityProvider IdentityProvider { get; private set; }
     public string Email { get; private set; } = null!;
     public string FirstName { get; private set; } = null!;
@@ -27,7 +27,7 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
 
         var aggregate = new UserAggregate(id)
         {
-            IdIdentityProvider = idIdentityProvider,
+            IdentityProviderId = idIdentityProvider,
             IdentityProvider = identityProvider,
             FirstName = firstName,
             LastName = lastName,

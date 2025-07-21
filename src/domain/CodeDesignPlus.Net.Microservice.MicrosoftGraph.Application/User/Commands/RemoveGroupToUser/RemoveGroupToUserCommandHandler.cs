@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.RemoveGroupToUser;
 
-public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IIdentityServer identityServer) : IRequestHandler<RemoveGroupToUserCommand>
+public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<RemoveGroupToUserCommand>
 {
     public async Task Handle(RemoveGroupToUserCommand request, CancellationToken cancellationToken)
     {
@@ -29,11 +29,13 @@ public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRo
             var group = await identityServer.GetGroupByNameAsync(request.Role, cancellationToken);
             idGroupIdentityServer = group.Id;
         }
-        
+
         await identityServer.RemoveUserFromGroupAsync(user.Id, idGroupIdentityServer, cancellationToken);
 
         user.RemoveRole(idGroupIdentityServer);
-        
+
         await userRepository.UpdateAsync(user, cancellationToken);
+
+        await cacheManager.RemoveAsync(user.IdentityProviderId.ToString());
     }
 }

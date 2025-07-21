@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateProfile;
 
-public class UpdateProfileCommandHandler(IUserRepository repository, IMapper mapper, IIdentityServer identityServer) : IRequestHandler<UpdateProfileCommand>
+public class UpdateProfileCommandHandler(IUserRepository repository, IMapper mapper, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<UpdateProfileCommand>
 {
     public async Task Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
@@ -21,5 +21,6 @@ public class UpdateProfileCommandHandler(IUserRepository repository, IMapper map
         await identityServer.UpdateUserAsync(user.Id, userModel, cancellationToken);
         await identityServer.UpdateContactInfoAsync(user.Id, userModel.Contact, cancellationToken);
         await identityServer.UpdateJobInfoAsync(user.Id, userModel.Job, cancellationToken);
+        await cacheManager.RemoveAsync(user.IdentityProviderId.ToString());
     }
 }
