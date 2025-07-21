@@ -1,3 +1,5 @@
+using CodeDesignPlus.Net.Security.Abstractions;
+
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 
 
@@ -10,6 +12,19 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 [ApiController]
 public class GroupController(IMediator mediator, IMapper mapper) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> Temp()
+    {
+        var user = HttpContext.RequestServices.GetRequiredService<IUserContext>();
+        var logger = HttpContext.RequestServices.GetRequiredService<ILogger<GroupController>>();
+
+        var accessToken = user.AccessToken;
+        logger.LogWarning("Access Token: {AccessToken}", accessToken);
+        logger.LogWarning("Oid: {UserId}, User ID: {UserId}, User Email: {@Emails}", user.Oid, user.IdUser, user.Emails);
+
+        return Ok(user);
+    }
+
     /// <summary>
     /// Create a new Group.
     /// </summary>
