@@ -19,7 +19,7 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.GuidIsEmpty(idIdentityProvider, Errors.IdIdentityProviderIsInvalid);
-        DomainGuard.IsTrue(Enum.IsDefined(identityProvider), Errors.IdentityProviderIsInvalid);
+        DomainGuard.IsTrue(identityProvider == IdentityProvider.None, Errors.IdentityProviderIsInvalid);
         DomainGuard.IsNullOrEmpty(firstName, Errors.FirstNameIsRequired);
         DomainGuard.IsNullOrEmpty(lastName, Errors.LastNameIsRequired);
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneIsRequired);
