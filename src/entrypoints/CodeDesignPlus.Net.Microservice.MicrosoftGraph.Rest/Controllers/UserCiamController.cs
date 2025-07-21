@@ -83,7 +83,7 @@ public class UserCiamController(IMediator mediator) : ControllerBase
     /// <response code="400">If the request data is invalid or required fields are missing.</response>
     /// <response code="401">If the request is not properly authenticated (e.g., missing or invalid API Key).</response>
     /// <response code="500">If an unexpected internal server error occurs.</response>
-    [HttpPost("TokenIssuanceRequest")]
+    [HttpPost("TokenIssuance")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
