@@ -1,10 +1,8 @@
-using CodeDesignPlus.Net.Exceptions;
 using CodeDesignPlus.Net.Exceptions.Guards;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Queries.GetByIdentityProviderId;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Commands.CreateUser;
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.UserCiam.Queries.GetByEmail;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 
@@ -20,16 +18,13 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 /// <param name="mediator">The MediatR instance for dispatching commands.</param>
 [Route("api/[controller]")]
 [ApiController]
-public class UserCiamController(IMediator mediator) : ControllerBase
+public class IdentityProviderController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     /// Receives user attributes from an Entra External ID flow to temporarily create a user.
     /// </summary>
     /// <remarks>
-    /// This endpoint is intended to be called by a Microsoft Entra custom authentication extension
-    /// during the 'OnAttributeCollectionSubmit' step of a user sign-up flow.
-    /// It processes the user data and returns a structured response to Entra to either continue the flow
-    /// or block it with a validation message.
+    /// The OnAttributeCollectionSubmit event occurs after the user enters and submits attributes. You can add actions such as validating or modifying the user's entries.
     /// </remarks>
     /// <param name="request">The payload sent by Microsoft Entra, containing the collected user attributes.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
@@ -91,22 +86,12 @@ public class UserCiamController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> TokenIssuance([FromBody] TokenIssuanceRequest request, CancellationToken cancellationToken)
     {
-        var requestBody = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
-
-        var logger = HttpContext.RequestServices.GetRequiredService<ILogger<UserCiamController>>();
-
-        logger.LogWarning("Token request: {Request}", requestBody);
-        logger.LogWarning("AuthenticationContext: {@AuthenticationContext}", request);
-
-        var user = await mediator.Send(new GetByEmailQuery(request.Data.AuthenticationContext.User.Mail), cancellationToken);
+        var user = await mediator.Send(new GetByIdentityProviderIdQuery(request.Data.AuthenticationContext.User.Id), cancellationToken);
 
         InfrastructureGuard.IsNotNull(user, Errors.UserNotFound);
 
-        var correlationId = request.Data.AuthenticationContext.CorrelationId;
-
         var response = TokenIssuanceResponse.Create();
 
-        response.Data.Actions.Add(ActionProviderClaim.Create("correlationId", correlationId));
         response.Data.Actions.Add(ActionProviderClaim.Create("userId", user.Id.ToString()));
 
         return Ok(response);

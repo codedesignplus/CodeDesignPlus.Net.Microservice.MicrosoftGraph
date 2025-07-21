@@ -12,10 +12,10 @@ public class UserRepository(IServiceProvider serviceProvider, IOptions<MongoOpti
     }
    
 
-    public Task<UserCiamAggregate> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    public Task<UserCiamAggregate> GetByIdentityProviderId(Guid id, CancellationToken cancellationToken)
     {
         var collection = GetCollection<UserCiamAggregate>();
 
-        return collection.Find(x => x.Email == email && x.IsActive).FirstOrDefaultAsync(cancellationToken);
+        return collection.Find(x => x.Id == id && x.IsActive).FirstOrDefaultAsync(cancellationToken);
     }
 }
