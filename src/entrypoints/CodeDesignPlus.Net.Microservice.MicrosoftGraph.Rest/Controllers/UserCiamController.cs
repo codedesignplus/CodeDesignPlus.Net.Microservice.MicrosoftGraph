@@ -97,7 +97,7 @@ public class UserCiamController(IMediator mediator) : ControllerBase
 
         logger.LogWarning("Token request: {Request}", requestBody);
 
-        var user = await mediator.Send(new GetByEmailQuery(request.Data.User.Mail), cancellationToken);
+        var user = await mediator.Send(new GetByEmailQuery(request.Data.AuthenticationContext.User.Mail), cancellationToken);
 
         InfrastructureGuard.IsNotNull(user, Errors.UserNotFound);
 

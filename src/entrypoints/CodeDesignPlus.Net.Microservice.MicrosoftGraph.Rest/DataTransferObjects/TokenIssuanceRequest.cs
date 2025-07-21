@@ -14,14 +14,14 @@ public class TokenIssuanceData
 
     [JsonProperty("authenticationContext")]
     public AuthenticationContext AuthenticationContext { get; set; } = null!;
-    [JsonProperty("user")]
-    public User User { get; set; } = null!;
 }
 
 public class AuthenticationContext
 {
     [JsonProperty("correlationId")]
     public required string CorrelationId { get; set; }
+    [JsonProperty("user")]
+    public User User { get; set; } = null!;
 }
 
 public class User
