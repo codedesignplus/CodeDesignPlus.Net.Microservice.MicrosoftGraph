@@ -4,6 +4,11 @@ using Newtonsoft.Json;
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
 
 
+public class TokenIssuanceRequest
+{
+    public TokenIssuanceData Data { get; set; } = null!;
+}
+
 public class TokenIssuanceData
 {
 

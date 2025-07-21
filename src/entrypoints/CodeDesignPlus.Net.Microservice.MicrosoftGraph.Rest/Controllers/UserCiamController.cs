@@ -42,7 +42,7 @@ public class UserCiamController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    public async Task<OnAttributeCollectionSubmitResponse> CreateUser([FromBody] MicrosoftEntraExternalIdEventRequest<OnAttributeCollectionSubmitData> request, CancellationToken cancellationToken)
+    public async Task<OnAttributeCollectionSubmitResponse> CreateUser([FromBody] OnAttributeCollectionSubmitRequest request, CancellationToken cancellationToken)
     {
         InfrastructureGuard.IsNull(request.Data.UserSignUpInfo!, Errors.InvalidSignUpInfo);
 
@@ -89,7 +89,7 @@ public class UserCiamController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
-    public async Task<IActionResult> TokenIssuance([FromBody] MicrosoftEntraExternalIdEventRequest<TokenIssuanceData> request, CancellationToken cancellationToken)
+    public async Task<IActionResult> TokenIssuance([FromBody] TokenIssuanceRequest request, CancellationToken cancellationToken)
     {
         var requestBody = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
 
