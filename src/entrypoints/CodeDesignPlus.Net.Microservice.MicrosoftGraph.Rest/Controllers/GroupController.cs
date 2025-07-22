@@ -20,9 +20,9 @@ public class GroupController(IMediator mediator, IMapper mapper) : ControllerBas
 
         var accessToken = user.AccessToken;
         logger.LogWarning("Access Token: {AccessToken}", accessToken);
-        logger.LogWarning("Oid: {UserId}, User ID: {UserId}, User Email: {@Emails}", user.Oid, user.IdUser, user.Emails);
+        logger.LogWarning("Oid: {Oid}, User ID: {UserId}, User Email: {@Emails}", user.Oid, user.IdUser, user.Emails);
 
-        return Ok(user);
+        return Ok();
     }
 
     /// <summary>
