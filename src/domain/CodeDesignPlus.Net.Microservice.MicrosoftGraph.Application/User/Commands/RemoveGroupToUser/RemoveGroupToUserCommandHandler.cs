@@ -30,7 +30,7 @@ public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRo
             idGroupIdentityServer = group.Id;
         }
 
-        await identityServer.RemoveUserFromGroupAsync(user.Id, idGroupIdentityServer, cancellationToken);
+        await identityServer.RemoveUserFromGroupAsync(user.IdentityProviderId, idGroupIdentityServer, cancellationToken);
 
         user.RemoveRole(idGroupIdentityServer);
 

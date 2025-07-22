@@ -16,7 +16,7 @@ public class DeleteUserCommandHandler(IUserRepository repository, IIdentityServe
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
-        await identityServer.DeleteUserAsync(aggregate.Id, cancellationToken);
+        await identityServer.DeleteUserAsync(aggregate.IdentityProviderId, cancellationToken);
 
         await repository.DeleteAsync<UserAggregate>(aggregate.Id, cancellationToken);
         

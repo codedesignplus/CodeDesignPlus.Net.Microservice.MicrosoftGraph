@@ -16,6 +16,6 @@ public class UpdateJobCommandHandler(IUserRepository repository, IMapper mapper,
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
-        await identityServer.UpdateJobInfoAsync(user.Id, mapper.Map<Domain.Models.JobInfo>(request.Job), cancellationToken);
+        await identityServer.UpdateJobInfoAsync(user.IdentityProviderId, mapper.Map<Domain.Models.JobInfo>(request.Job), cancellationToken);
     }
 }

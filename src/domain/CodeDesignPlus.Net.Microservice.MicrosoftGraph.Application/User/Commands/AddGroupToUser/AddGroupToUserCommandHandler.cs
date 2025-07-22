@@ -31,7 +31,7 @@ public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepos
             idGroupIdentityServer = group.Id;
         }
 
-        await identityServer.AddUserToGroupAsync(user.Id, idGroupIdentityServer, cancellationToken);
+        await identityServer.AddUserToGroupAsync(user.IdentityProviderId, idGroupIdentityServer, cancellationToken);
 
         user.AddRole(idGroupIdentityServer);
 

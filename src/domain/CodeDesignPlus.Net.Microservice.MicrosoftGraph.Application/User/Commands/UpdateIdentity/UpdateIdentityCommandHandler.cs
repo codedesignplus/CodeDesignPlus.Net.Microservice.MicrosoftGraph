@@ -17,6 +17,6 @@ public class UpdateIdentityCommandHandler(IUserRepository repository, IMapper ma
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
-        await identityServer.UpdateUserAsync(user.Id, mapper.Map<Domain.Models.User>(request), cancellationToken);
+        await identityServer.UpdateUserAsync(user.IdentityProviderId, mapper.Map<Domain.Models.User>(request), cancellationToken);
     }
 }

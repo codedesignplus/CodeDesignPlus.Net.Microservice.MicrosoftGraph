@@ -18,9 +18,9 @@ public class UpdateProfileCommandHandler(IUserRepository repository, IMapper map
 
         var userModel = mapper.Map<Domain.Models.User>(request);
 
-        await identityServer.UpdateUserAsync(user.Id, userModel, cancellationToken);
-        await identityServer.UpdateContactInfoAsync(user.Id, userModel.Contact, cancellationToken);
-        await identityServer.UpdateJobInfoAsync(user.Id, userModel.Job, cancellationToken);
+        await identityServer.UpdateUserAsync(user.IdentityProviderId, userModel, cancellationToken);
+        await identityServer.UpdateContactInfoAsync(user.IdentityProviderId, userModel.Contact, cancellationToken);
+        await identityServer.UpdateJobInfoAsync(user.IdentityProviderId, userModel.Job, cancellationToken);
         await cacheManager.RemoveAsync(user.IdentityProviderId.ToString());
     }
 }

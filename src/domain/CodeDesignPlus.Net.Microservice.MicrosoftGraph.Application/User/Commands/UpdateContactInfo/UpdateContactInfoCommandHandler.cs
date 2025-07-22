@@ -16,6 +16,6 @@ public class UpdateContactInfoCommandHandler(IUserRepository repository, IMapper
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
-        await identityServer.UpdateContactInfoAsync(user.Id, mapper.Map<Domain.Models.ContactInfo>(request.Contact), cancellationToken);
+        await identityServer.UpdateContactInfoAsync(user.IdentityProviderId, mapper.Map<Domain.Models.ContactInfo>(request.Contact), cancellationToken);
     }
 }
