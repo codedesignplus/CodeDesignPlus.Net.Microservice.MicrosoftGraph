@@ -1,5 +1,6 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.DeleteUser;
+using CodeDesignPlus.Net.Cache.Abstractions;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Test.User.Commands.DeleteUser;
 
@@ -13,7 +14,7 @@ public class DeleteUserCommandHandlerTest
     {
         repositoryMock = new Mock<IUserRepository>();
         identityServerMock = new Mock<IIdentityServer>();
-        handler = new DeleteUserCommandHandler(repositoryMock.Object, identityServerMock.Object);
+        handler = new DeleteUserCommandHandler(repositoryMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
     }
 
     [Fact]

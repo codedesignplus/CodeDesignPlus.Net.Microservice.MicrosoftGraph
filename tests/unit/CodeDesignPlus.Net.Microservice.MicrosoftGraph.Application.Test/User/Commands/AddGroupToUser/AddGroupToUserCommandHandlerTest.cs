@@ -1,5 +1,6 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.AddGroupToUser;
+using CodeDesignPlus.Net.Cache.Abstractions;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Test.User.Commands.AddGroupToUser;
 
@@ -15,7 +16,7 @@ public class AddGroupToUserCommandHandlerTest
         userRepositoryMock = new Mock<IUserRepository>();
         roleRepositoryMock = new Mock<IRoleRepository>();
         identityServerMock = new Mock<IIdentityServer>();
-        handler = new AddGroupToUserCommandHandler(userRepositoryMock.Object, roleRepositoryMock.Object, identityServerMock.Object);
+        handler = new AddGroupToUserCommandHandler(userRepositoryMock.Object, roleRepositoryMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
     }
 
     [Fact]

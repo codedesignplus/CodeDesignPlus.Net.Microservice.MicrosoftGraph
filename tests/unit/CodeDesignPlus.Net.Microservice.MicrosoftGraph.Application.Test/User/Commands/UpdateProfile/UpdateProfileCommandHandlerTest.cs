@@ -1,3 +1,4 @@
+using CodeDesignPlus.Net.Cache.Abstractions;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateProfile;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
@@ -15,7 +16,7 @@ public class UpdateProfileCommandHandlerTest
         repositoryMock = new Mock<IUserRepository>();
         mapperMock = new Mock<IMapper>();
         identityServerMock = new Mock<IIdentityServer>();
-        handler = new UpdateProfileCommandHandler(repositoryMock.Object, mapperMock.Object, identityServerMock.Object);
+        handler = new UpdateProfileCommandHandler(repositoryMock.Object, mapperMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
     }
 
     [Fact]
