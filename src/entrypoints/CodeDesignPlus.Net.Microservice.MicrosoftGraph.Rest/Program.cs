@@ -68,6 +68,19 @@ app.UseAuth();
 
 app.MapControllers().RequireAuthorization();
 
+
+app.Lifetime.ApplicationStopping.Register(() =>
+  {
+      Console.WriteLine("Application Stopping: Performing shutdown tasks...");
+      // Add your cleanup logic here, e.g.,
+      // - Close database connections
+      // - Flush logs
+      // - Dispose of unmanaged resources
+      // - Send notifications
+      Console.WriteLine("Application Stopping: Shutdown tasks completed.");
+  });
+
+
 try
 {
     await app.RunAsync();
