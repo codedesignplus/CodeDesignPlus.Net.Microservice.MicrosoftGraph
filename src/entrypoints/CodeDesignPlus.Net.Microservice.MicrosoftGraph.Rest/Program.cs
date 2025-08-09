@@ -68,7 +68,15 @@ app.UseAuth();
 
 app.MapControllers().RequireAuthorization();
 
-await app.RunAsync();
+try
+{
+    await app.RunAsync();
+}
+catch (System.Exception ex)
+{
+    Console.WriteLine(ex);
+}
+
 
 public partial class Program
 {
