@@ -14,7 +14,7 @@ using NodaTime.Serialization.JsonNet;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
-Serilog.Debugging.SelfLog.Enable(Console.Error);
+//Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 builder.Host.UseSerilog();
 
@@ -33,11 +33,11 @@ builder.Services.AddCors();
 builder.Services.AddVault(builder.Configuration);
 builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddMongo<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Startup>(builder.Configuration);
-builder.Services.AddObservability(builder.Configuration, builder.Environment, null, x =>
-{
-    x.AddRabbitMQInstrumentation();
-});
-builder.Services.AddLogger(builder.Configuration);
+// builder.Services.AddObservability(builder.Configuration, builder.Environment, null, x =>
+// {
+//     x.AddRabbitMQInstrumentation();
+// });
+//builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddRabbitMQ<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Startup>(builder.Configuration);
 builder.Services.AddMapster();
 builder.Services.AddFluentValidation();
@@ -47,6 +47,8 @@ builder.Services.AddCoreSwagger<Program>(builder.Configuration);
 builder.Services.AddCache(builder.Configuration);
 builder.Services.AddResources<Program>(builder.Configuration);
 builder.Services.AddHealthChecksServices();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(); 
 
 var app = builder.Build();
 
