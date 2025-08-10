@@ -16,7 +16,7 @@ var builder = WebApplication.CreateSlimBuilder(args);
 
 //Serilog.Debugging.SelfLog.Enable(Console.Error);
 
-builder.Host.UseSerilog();
+//builder.Host.UseSerilog();
 
 builder.Configuration.AddVault();
 
