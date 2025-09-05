@@ -18,7 +18,7 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 /// <param name="mediator">The MediatR instance for dispatching commands.</param>
 [Route("api/[controller]")]
 [ApiController]
-public class IdentityProviderController(IMediator mediator) : ControllerBase
+public class IdentityProviderController(IMediator mediator, ILogger logger) : ControllerBase
 {
     /// <summary>
     /// Receives user attributes from an Entra External ID flow to temporarily create a user.
@@ -86,6 +86,8 @@ public class IdentityProviderController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> TokenIssuance([FromBody] TokenIssuanceRequest request, CancellationToken cancellationToken)
     {
+        logger.LogWarning("TokenIssuance called with request: {@Request}", request);
+
         var user = await mediator.Send(new GetByIdentityProviderIdQuery(request.Data.AuthenticationContext.User.Id), cancellationToken);
 
         InfrastructureGuard.IsNull(user, Errors.UserNotFound);
