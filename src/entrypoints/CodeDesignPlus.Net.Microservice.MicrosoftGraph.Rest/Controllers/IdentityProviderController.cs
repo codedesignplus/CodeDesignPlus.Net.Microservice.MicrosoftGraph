@@ -86,8 +86,6 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> TokenIssuance([FromBody] TokenIssuanceRequest request, CancellationToken cancellationToken)
     {
-        logger.LogWarning("TokenIssuance called with request: {@Request}", request);
-
         var user = await mediator.Send(new GetByIdentityProviderIdQuery(request.Data.AuthenticationContext.User.Id), cancellationToken);
 
         InfrastructureGuard.IsNull(user, Errors.UserNotFound);

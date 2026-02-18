@@ -206,8 +206,6 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             requestConfiguration.QueryParameters.Select = ["id", "displayName", "givenName", "surname", "mobilePhone", "postalCode", "identities", "accountEnabled"];
         }, cancellationToken: cancellationToken);
 
-        logger.LogWarning("Response from GetUserByEmailAsync: {@Response}", response);
-
         var user = response?.Value?.FirstOrDefault();
 
         if (user == null)

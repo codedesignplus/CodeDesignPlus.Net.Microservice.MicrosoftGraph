@@ -34,7 +34,8 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
             Email = email,
             Phone = phone,
             DisplayName = displayName,
-            WasCreatedFromSSO = wasCreatedFromSSO
+            WasCreatedFromSSO = wasCreatedFromSSO,
+            IsActive = isActive
         };
 
         aggregate.AddEvent(UserCreatedDomainEvent.Create(id, firstName, lastName, email, phone, displayName, passwordKey, passwordCipher, wasCreatedFromSSO, isActive));
