@@ -10,7 +10,8 @@ public class UserCiamAggregate(Guid id) : AggregateRootBase(id)
     public bool WasCreatedFromSSO { get; private set; }
     public bool UserReplicated { get; private set; }
 
-    public UserCiamAggregate(Guid id, string firstName, string lastName, string email, string phone, string? displayName, bool wasCreatedFromSSO, bool isActive) : this(id)
+
+    public static UserCiamAggregate Create(Guid id, string firstName, string lastName, string email, string phone, string? displayName, bool wasCreatedFromSSO, bool isActive)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.IsNullOrEmpty(firstName, Errors.FirstNameIsRequired);
@@ -18,19 +19,19 @@ public class UserCiamAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneIsRequired);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
 
-        Email = email;
-        FirstName = firstName;
-        LastName = lastName;
-        Phone = phone;
-        DisplayName = displayName;
-        IsActive = isActive;
-        WasCreatedFromSSO = wasCreatedFromSSO;
-        CreatedAt = SystemClock.Instance.GetCurrentInstant();
-    }
+        var aggregate = new UserCiamAggregate(id)
+        {
+            Email = email,
+            FirstName = firstName,
+            LastName = lastName,
+            Phone = phone,
+            DisplayName = displayName,
+            IsActive = isActive,
+            WasCreatedFromSSO = wasCreatedFromSSO,
+            CreatedAt = SystemClock.Instance.GetCurrentInstant()
+        };
 
-    public static UserCiamAggregate Create(Guid id, string firstName, string lastName, string email, string phone, string? displayName, bool wasCreatedFromSSO, bool isActive)
-    {
-        return new UserCiamAggregate(id, firstName, lastName, email, phone, displayName, wasCreatedFromSSO, isActive);
+        return aggregate;
     }
 
     public void MarkAsReplicated()

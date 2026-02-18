@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.BackgroundServices;
 
-public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IIdentityServer identityServer) : BackgroundService
+public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IIdentityServer identityServer, ILogger<ReplicateUsersCiamToSystemBackgroundService> logger) : BackgroundService
 {
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -27,6 +27,8 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                     await identityServer.UpdateUserPhoneAsync(userCiam.Id, user.Phone, stoppingToken);
                     userCiam.Phone = user.Phone;
                 }
+
+                logger.LogWarning("Replicating user with email {Email} from CIAM to system, {@User}", user.Email, user);
 
                 var command = new ReplicateUserCommand(
                     user.Id,
