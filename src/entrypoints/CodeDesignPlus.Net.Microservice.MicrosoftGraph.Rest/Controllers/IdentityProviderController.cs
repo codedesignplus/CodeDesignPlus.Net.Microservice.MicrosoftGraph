@@ -18,7 +18,7 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 /// <param name="mediator">The MediatR instance for dispatching commands.</param>
 [Route("api/[controller]")]
 [ApiController]
-public class IdentityProviderController(IMediator mediator, ILogger<IdentityProviderController> logger) : ControllerBase
+public class IdentityProviderController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     /// Receives user attributes from an Entra External ID flow to temporarily create a user.
