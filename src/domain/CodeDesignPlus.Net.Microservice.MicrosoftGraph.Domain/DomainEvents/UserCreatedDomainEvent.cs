@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.DomainEvents;
 
-[EventKey<UserAggregate>(1, "UserCreatedDomainEvent", autoCreate: false)]
+[EventKey<UserAggregate>(1, "UserCreatedDomainEvent")]
 public class UserCreatedDomainEvent(
     Guid aggregateId,
     string firstName,
