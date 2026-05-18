@@ -38,7 +38,7 @@ A production-ready microservice for synchronizing roles and users between your s
 
 ## What is this microservice?
 
-The MicrosoftGraph microservice is the bridge between the Kappali platform and the Microsoft identity provider (Entra ID / Azure AD B2C). It solves the problem of keeping user accounts and roles in sync between the platform's internal database and the external identity provider that handles authentication (login, password recovery, MFA). When an administrator creates a user in the platform, this microservice automatically provisions the corresponding account in Microsoft Entra so the person can log in. It also handles custom authentication extensions (token enrichment, attribute validation during sign-up) and group/role assignments. It operates entirely in the background, driven by domain events from the Users and Roles microservices.
+The MicrosoftGraph microservice is the bridge between the platform and the Microsoft identity provider (Entra ID / Azure AD B2C). It solves the problem of keeping user accounts and roles in sync between the platform's internal database and the external identity provider that handles authentication (login, password recovery, MFA). When an administrator creates a user in the platform, this microservice automatically provisions the corresponding account in Microsoft Entra so the person can log in. It also handles custom authentication extensions (token enrichment, attribute validation during sign-up) and group/role assignments. It operates entirely in the background, driven by domain events from the Users and Roles microservices.
 
 ---
 
@@ -1363,12 +1363,12 @@ Helm charts are available in the `charts/` directory:
 # Install REST API
 helm install ms-microsoftgraph-rest ./charts/ms-microsoftgraph-rest \
   -f ./charts/ms-microsoftgraph-rest/Staging.yaml \
-  --namespace kappali
+  --namespace my-app
 
 # Install AsyncWorker
 helm install ms-microsoftgraph-worker ./charts/ms-microsoftgraph-worker \
   -f ./charts/ms-microsoftgraph-worker/Staging.yaml \
-  --namespace kappali
+  --namespace my-app
 ```
 
 ### Configuration Override
