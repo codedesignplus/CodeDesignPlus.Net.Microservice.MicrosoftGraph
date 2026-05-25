@@ -1,17 +1,24 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateJob;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Consumers;
 
 [QueueName("User", "updatejob")]
-public class UpdateJobInMicrosoftGraphHandler(IMediator mediator) : IEventHandler<JobInfoUpdatedDomainEvent>
+public class UpdateJobInMicrosoftGraphHandler(IMediator mediator, ILogger<UpdateJobInMicrosoftGraphHandler> logger) : IEventHandler<JobInfoUpdatedDomainEvent>
 {
-    public Task HandleAsync(JobInfoUpdatedDomainEvent data, CancellationToken token)
+    public async Task HandleAsync(JobInfoUpdatedDomainEvent data, CancellationToken token)
     {
-        var command = new UpdateJobCommand(data.AggregateId, data.Job);
+        try
+        {
+            var command = new UpdateJobCommand(data.AggregateId, data.Job);
 
-        return mediator.Send(command, token);
-        
+            await mediator.Send(command, token);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to process {EventName} for {AggregateId}. Likely already processed. Skipping.", nameof(JobInfoUpdatedDomainEvent), data.AggregateId);
+        }
     }
 }

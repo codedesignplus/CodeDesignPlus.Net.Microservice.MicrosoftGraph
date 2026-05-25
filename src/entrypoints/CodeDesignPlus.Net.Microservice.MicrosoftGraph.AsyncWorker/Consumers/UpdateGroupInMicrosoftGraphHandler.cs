@@ -1,16 +1,24 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Commands.UpdateGroup;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Roles;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Consumers;
 
 [QueueName("Graph", "updategroup")]
-public class UpdateGroupInMicrosoftGraphHandler(IMediator mediator) : IEventHandler<RoleUpdatedDomainEvent>
+public class UpdateGroupInMicrosoftGraphHandler(IMediator mediator, ILogger<UpdateGroupInMicrosoftGraphHandler> logger) : IEventHandler<RoleUpdatedDomainEvent>
 {
-    public Task HandleAsync(RoleUpdatedDomainEvent data, CancellationToken token)
+    public async Task HandleAsync(RoleUpdatedDomainEvent data, CancellationToken token)
     {
-        var command = new UpdateGroupCommand(data.AggregateId, data.Name, data.Description, data.IsActive);
+        try
+        {
+            var command = new UpdateGroupCommand(data.AggregateId, data.Name, data.Description, data.IsActive);
 
-        return mediator.Send(command, token);
+            await mediator.Send(command, token);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to process {EventName} for {AggregateId}. Likely already processed. Skipping.", nameof(RoleUpdatedDomainEvent), data.AggregateId);
+        }
     }
 }

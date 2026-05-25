@@ -2,16 +2,24 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.U
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Consumers;
 
 [QueueName("User", "updateidentity")]
-public class UpdateIdentityInMicrosoftGraphHandler(IMediator mediator) : IEventHandler<UserUpdatedDomainEvent>
+public class UpdateIdentityInMicrosoftGraphHandler(IMediator mediator, ILogger<UpdateIdentityInMicrosoftGraphHandler> logger) : IEventHandler<UserUpdatedDomainEvent>
 {
-    public Task HandleAsync(UserUpdatedDomainEvent data, CancellationToken token)
+    public async Task HandleAsync(UserUpdatedDomainEvent data, CancellationToken token)
     {
-        var command = new UpdateIdentityCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.IsActive);
+        try
+        {
+            var command = new UpdateIdentityCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.IsActive);
 
-        return mediator.Send(command, token);
+            await mediator.Send(command, token);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to process {EventName} for {AggregateId}. Likely already processed. Skipping.", nameof(UserUpdatedDomainEvent), data.AggregateId);
+        }
     }
 }
