@@ -1,24 +1,26 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Commands.DeleteGroup;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Roles;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Consumers;
 
 [QueueName("Graph", "deletegroup")]
-public class DeleteGroupInMicrosoftGraphHandler(IMediator mediator, ILogger<DeleteGroupInMicrosoftGraphHandler> logger) : IEventHandler<RoleDeletedDomainEvent>
+public class DeleteGroupInMicrosoftGraphHandler(IMediator mediator, IRoleRepository roleRepository, ILogger<DeleteGroupInMicrosoftGraphHandler> logger) : IEventHandler<RoleDeletedDomainEvent>
 {
     public async Task HandleAsync(RoleDeletedDomainEvent data, CancellationToken token)
     {
-        try
-        {
-            var command = new DeleteGroupCommand(data.AggregateId);
+        var exists = await roleRepository.ExistsAsync<Domain.RoleAggregate>(data.AggregateId, token);
 
-            await mediator.Send(command, token);
-        }
-        catch (Exception ex)
+        if (!exists)
         {
-            logger.LogWarning(ex, "Failed to process {EventName} for {AggregateId}. Likely already processed. Skipping.", nameof(RoleDeletedDomainEvent), data.AggregateId);
+            logger.LogInformation("Role {Id} not found locally. Skipping Graph operation.", data.AggregateId);
+            return;
         }
+
+        var command = new DeleteGroupCommand(data.AggregateId);
+
+        await mediator.Send(command, token);
     }
 }
