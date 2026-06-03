@@ -1,7 +1,9 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Commands.UpdateGroup;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Consumers;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Roles;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.Test.Consumers;
 
@@ -12,9 +14,16 @@ public class UpdateGroupInMicrosoftGraphHandlerTest
     {
         // Arrange
         var mediatorMock = new Mock<IMediator>();
-        var handler = new UpdateGroupInMicrosoftGraphHandler(mediatorMock.Object);
+        var roleRepositoryMock = new Mock<IRoleRepository>();
+        var loggerMock = new Mock<ILogger<UpdateGroupInMicrosoftGraphHandler>>();
 
-        var domainEvent = new RoleUpdatedDomainEvent(Guid.NewGuid(), "Test Group", "This is a test group", true);
+        var aggregateId = Guid.NewGuid();
+        roleRepositoryMock.Setup(x => x.ExistsAsync<Domain.RoleAggregate>(aggregateId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var handler = new UpdateGroupInMicrosoftGraphHandler(mediatorMock.Object, roleRepositoryMock.Object, loggerMock.Object);
+
+        var domainEvent = new RoleUpdatedDomainEvent(aggregateId, "Test Group", "This is a test group", true);
 
         var cancellationToken = CancellationToken.None;
 
