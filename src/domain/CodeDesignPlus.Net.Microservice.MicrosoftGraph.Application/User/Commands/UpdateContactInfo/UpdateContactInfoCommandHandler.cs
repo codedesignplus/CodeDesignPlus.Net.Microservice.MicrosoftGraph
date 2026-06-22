@@ -12,7 +12,7 @@ public class UpdateContactInfoCommandHandler(IUserRepository repository, IMapper
 
         ApplicationGuard.IsNull(user, Errors.UserNotFound);
 
-        var userExist = await identityServer.GetUserByIdAsync(user.Id, cancellationToken);
+        var userExist = await identityServer.GetUserByIdAsync(user.IdentityProviderId, cancellationToken);
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
