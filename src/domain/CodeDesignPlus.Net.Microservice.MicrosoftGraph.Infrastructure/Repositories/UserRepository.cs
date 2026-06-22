@@ -12,6 +12,13 @@ public class UserRepository(IServiceProvider serviceProvider, IOptions<MongoOpti
     }
    
 
+    public Task<UserAggregate> FindByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var collection = GetCollection<UserAggregate>();
+
+        return collection.Find(x => x.Email == email).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public Task<UserAggregate> GetByIdentityProviderId(Guid id, CancellationToken cancellationToken)
     {
         var collection = GetCollection<UserAggregate>();

@@ -46,6 +46,42 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     }
 
 
+    public static UserAggregate CreateFromSSO(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, bool isActive)
+    {
+        DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
+        DomainGuard.IsNullOrEmpty(firstName, Errors.FirstNameIsRequired);
+        DomainGuard.IsNullOrEmpty(lastName, Errors.LastNameIsRequired);
+        DomainGuard.IsNullOrEmpty(phone, Errors.PhoneIsRequired);
+        DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
+
+        var aggregate = new UserAggregate(id)
+        {
+            IdentityProviderId = Guid.Empty,
+            IdentityProvider = IdentityProvider.MicrosoftEntraExternalId,
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            Phone = phone,
+            DisplayName = displayName,
+            DocumentNumber = documentNumber,
+            WasCreatedFromSSO = true,
+            IsActive = isActive,
+            CreatedAt = SystemClock.Instance.GetCurrentInstant()
+        };
+
+        return aggregate;
+    }
+
+    public void CompleteProviderRegistration(Guid identityProviderId)
+    {
+        DomainGuard.GuidIsEmpty(identityProviderId, Errors.IdIdentityProviderIsInvalid);
+
+        IdentityProviderId = identityProviderId;
+        UpdatedAt = SystemClock.Instance.GetCurrentInstant();
+
+        this.AddEvent(UserCreatedDomainEvent.Create(Id, FirstName, LastName, Email, Phone, DisplayName, DocumentNumber, null, null, WasCreatedFromSSO, IsActive));
+    }
+
     public void AddRole(Guid idRoleIdentityServer)
     {
         DomainGuard.GuidIsEmpty(idRoleIdentityServer, Errors.IdIsInvalid);

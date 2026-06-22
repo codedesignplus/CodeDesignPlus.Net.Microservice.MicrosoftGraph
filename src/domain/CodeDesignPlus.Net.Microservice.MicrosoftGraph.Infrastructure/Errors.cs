@@ -10,4 +10,5 @@ public class Errors: IErrorCodes
     public const string PhoneIsRequired = "305 : Phone number is required for user creation.";
     public const string InvalidSignUpInfo = "306 : Invalid user sign-up information.";
     public const string UserNotFound = "307 : User not found";
+    public const string DocumentNumberIsRequired = "308 : Document number is required for user creation.";
 }
