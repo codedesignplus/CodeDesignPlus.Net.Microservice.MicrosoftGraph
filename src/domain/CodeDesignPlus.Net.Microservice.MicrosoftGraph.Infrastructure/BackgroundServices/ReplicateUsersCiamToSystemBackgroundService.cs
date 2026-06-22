@@ -37,6 +37,7 @@ public class ReplicateUsersCiamToSystemBackgroundService(IMediator mediator, IId
                     userCiam.Email,
                     userCiam.Phone,
                     userCiam.DisplayName,
+                    string.Empty,
                     user.IsActive
                 );
 

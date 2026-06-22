@@ -36,7 +36,7 @@ public class UpdateIdentityCommandHandlerTest
     public async Task Handle_UserNotFound_ThrowsUserNotFoundException()
     {
         // Arrange
-        var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", true);
+        var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", "1234567890", true);
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync((UserAggregate)null!);
@@ -53,8 +53,8 @@ public class UpdateIdentityCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsUserNotExistInIdentityServerException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(),  Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
-        var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", true);
+        var user = UserAggregate.Create(Guid.NewGuid(),  Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
+        var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", "1234567890", true);
 
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
@@ -75,8 +75,8 @@ public class UpdateIdentityCommandHandlerTest
     public async Task Handle_ValidRequest_UpdatesUserSuccessfully()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(),  Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
-        var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(),  Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
+        var request = new UpdateIdentityCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", "1234567890", true);
         var mappedUser = new Domain.Models.User();
 
         repositoryMock

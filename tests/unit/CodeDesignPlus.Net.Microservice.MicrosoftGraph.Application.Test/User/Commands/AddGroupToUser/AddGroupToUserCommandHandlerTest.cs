@@ -54,7 +54,7 @@ public class AddGroupToUserCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsUserNotExistInIdentityServerException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
         var request = new AddGroupToUserCommand(user.Id, "TestRole");
 
         userRepositoryMock
@@ -76,7 +76,7 @@ public class AddGroupToUserCommandHandlerTest
     public async Task Handle_RoleExists_AddsUserToGroupAndUpdatesUser()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
         var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         var request = new AddGroupToUserCommand(user.Id, role.Name);
         var userModel = new Domain.Models.User { Id = user.Id };
@@ -103,7 +103,7 @@ public class AddGroupToUserCommandHandlerTest
     public async Task Handle_RoleDoesNotExist_AddsUserToGroupAndUpdatesUser()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
         var group = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         var request = new AddGroupToUserCommand(user.Id, group.Name);
         var userModel = new Domain.Models.User { Id = user.Id };

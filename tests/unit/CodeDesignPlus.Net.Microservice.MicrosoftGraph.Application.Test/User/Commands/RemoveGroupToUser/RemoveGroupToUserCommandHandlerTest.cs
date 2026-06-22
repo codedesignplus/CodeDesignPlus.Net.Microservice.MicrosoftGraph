@@ -54,7 +54,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
         var request = new RemoveGroupToUserCommand(user.Id, "TestRole");
 
         userRepositoryMock
@@ -76,7 +76,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_RemovesUserFromGroupAndUpdatesUser()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
         var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         user.AddRole(role.IdIdentityServer);
 
@@ -105,7 +105,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_GroupNotFoundInRole_UsesIdentityServerGroup()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
         var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
         user.AddRole(role.IdIdentityServer);
         var request = new RemoveGroupToUserCommand(user.Id, role.Name);

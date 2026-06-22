@@ -29,4 +29,9 @@ public class GraphOptions
     /// </summary>
     [Required]
     public string IssuerIdentity { get; set; } = null!;
+    /// <summary>
+    /// The Application (client) ID of the app registration used for extension attributes (without hyphens).
+    /// </summary>
+    [Required]
+    public string ExtensionAppId { get; set; } = null!;
 }

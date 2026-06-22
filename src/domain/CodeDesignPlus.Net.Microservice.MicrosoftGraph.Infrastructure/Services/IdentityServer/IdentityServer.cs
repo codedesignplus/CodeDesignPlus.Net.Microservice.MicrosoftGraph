@@ -233,6 +233,8 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     {
         var mailNickname = user.Email.Split('@')[0];
 
+        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentNumber";
+
         var newUser = new Microsoft.Graph.Models.User
         {
             Id = user.Id.ToString(),
@@ -257,6 +259,10 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
                     IssuerAssignedId = user.Email,
                 },
             ],
+            AdditionalData = new Dictionary<string, object>
+            {
+                { extensionKey, user.DocumentNumber }
+            },
         };
 
         var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
@@ -275,13 +281,19 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateUserAsync(Guid id, Domain.Models.User user, CancellationToken cancellationToken)
     {
+        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentNumber";
+
         var updateUser = new Microsoft.Graph.Models.User
         {
             DisplayName = user.DisplayName,
             GivenName = user.FirstName,
             Surname = user.LastName,
             MobilePhone = user.Phone,
-            AccountEnabled = true
+            AccountEnabled = true,
+            AdditionalData = new Dictionary<string, object>
+            {
+                { extensionKey, user.DocumentNumber }
+            },
         };
 
         return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);

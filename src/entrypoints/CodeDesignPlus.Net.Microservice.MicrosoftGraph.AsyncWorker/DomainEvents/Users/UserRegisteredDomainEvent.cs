@@ -19,6 +19,7 @@ public class UserRegisteredDomainEvent : UserBaseDomainEvent
         string email,
         string phone,
         string? displayName,
+        string documentNumber,
         bool isActive,
         Guid? eventId = null,
         Instant? occurredAt = null,
@@ -30,6 +31,7 @@ public class UserRegisteredDomainEvent : UserBaseDomainEvent
         Email = email;
         Phone = phone;
         DisplayName = displayName;
+        DocumentNumber = documentNumber;
         IsActive = isActive;
     }
 }

@@ -10,6 +10,7 @@ public class UserUpdatedDomainEvent : UserBaseDomainEvent
         string email,
         string phone,
         string? displayName,
+        string documentNumber,
         bool isActive,
         Guid? eventId = null,
         Instant? occurredAt = null,
@@ -21,11 +22,12 @@ public class UserUpdatedDomainEvent : UserBaseDomainEvent
         Email = email;
         Phone = phone;
         DisplayName = displayName;
+        DocumentNumber = documentNumber;
         IsActive = isActive;
     }
 
-    public static UserUpdatedDomainEvent Create(Guid aggregateId, string firstName, string lastName, string email, string phone, string? displayName, bool isActive)
+    public static UserUpdatedDomainEvent Create(Guid aggregateId, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, bool isActive)
     {
-        return new UserUpdatedDomainEvent(aggregateId, firstName, lastName, email, phone, displayName, isActive);
+        return new UserUpdatedDomainEvent(aggregateId, firstName, lastName, email, phone, displayName, documentNumber, isActive);
     }
 }

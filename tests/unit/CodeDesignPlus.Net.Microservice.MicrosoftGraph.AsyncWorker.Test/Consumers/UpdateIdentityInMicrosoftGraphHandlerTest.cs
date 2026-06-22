@@ -23,7 +23,7 @@ public class UpdateIdentityInMicrosoftGraphHandlerTest
 
         var handler = new UpdateIdentityInMicrosoftGraphHandler(mediatorMock.Object, userRepositoryMock.Object, loggerMock.Object);
 
-        var domainEvent = new UserUpdatedDomainEvent(aggregateId, "Joe", "Doe", "jd@fake.com", "3107531241", "Joe Doe", true);
+        var domainEvent = new UserUpdatedDomainEvent(aggregateId, "Joe", "Doe", "jd@fake.com", "3107531241", "Joe Doe", "1234567890", true);
 
         var cancellationToken = CancellationToken.None;
 

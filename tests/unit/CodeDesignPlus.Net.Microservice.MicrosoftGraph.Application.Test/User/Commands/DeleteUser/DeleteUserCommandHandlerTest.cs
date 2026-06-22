@@ -53,7 +53,7 @@ public class DeleteUserCommandHandlerTest
     {
         // Arrange
         var request = new DeleteUserCommand(Guid.NewGuid());
-        var userAggregate = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var userAggregate = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
 
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
@@ -75,7 +75,7 @@ public class DeleteUserCommandHandlerTest
     {
         // Arrange
         var request = new DeleteUserCommand(Guid.NewGuid());
-        var userAggregate = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "key", "cipher", false, true);
+        var userAggregate = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
 
         var userModel = new Domain.Models.User() { Id = userAggregate.Id };
 

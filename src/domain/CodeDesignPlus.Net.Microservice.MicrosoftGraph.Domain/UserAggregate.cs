@@ -12,10 +12,11 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     public string LastName { get; private set; } = null!;
     public string Phone { get; private set; } = null!;
     public string? DisplayName { get; private set; } = null!;
+    public string DocumentNumber { get; private set; } = null!;
     public Guid[] IdRoles { get; private set; } = [];
     public bool WasCreatedFromSSO { get; private set; }
 
-    public static UserAggregate Create(Guid id, Guid idIdentityProvider, IdentityProvider identityProvider, string firstName, string lastName, string email, string phone, string? displayName, string? passwordKey, string? passwordCipher, bool wasCreatedFromSSO, bool isActive)
+    public static UserAggregate Create(Guid id, Guid idIdentityProvider, IdentityProvider identityProvider, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, string? passwordKey, string? passwordCipher, bool wasCreatedFromSSO, bool isActive)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.GuidIsEmpty(idIdentityProvider, Errors.IdIdentityProviderIsInvalid);
@@ -34,12 +35,13 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
             Email = email,
             Phone = phone,
             DisplayName = displayName,
+            DocumentNumber = documentNumber,
             WasCreatedFromSSO = wasCreatedFromSSO,
             IsActive = isActive
         };
 
-        aggregate.AddEvent(UserCreatedDomainEvent.Create(id, firstName, lastName, email, phone, displayName, passwordKey, passwordCipher, wasCreatedFromSSO, isActive));
-        
+        aggregate.AddEvent(UserCreatedDomainEvent.Create(id, firstName, lastName, email, phone, displayName, documentNumber, passwordKey, passwordCipher, wasCreatedFromSSO, isActive));
+
         return aggregate;
     }
 

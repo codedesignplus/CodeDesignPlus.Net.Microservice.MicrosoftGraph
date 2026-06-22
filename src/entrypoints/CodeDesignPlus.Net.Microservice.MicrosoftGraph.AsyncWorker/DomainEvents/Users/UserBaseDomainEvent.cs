@@ -14,5 +14,6 @@ public abstract class UserBaseDomainEvent(
     public string Email { get; protected set; } = null!;
     public string Phone { get; protected set; } = null!;
     public string? DisplayName { get; protected set; } = null!;
+    public string DocumentNumber { get; protected set; } = null!;
     public bool IsActive { get; protected set; }
 }
