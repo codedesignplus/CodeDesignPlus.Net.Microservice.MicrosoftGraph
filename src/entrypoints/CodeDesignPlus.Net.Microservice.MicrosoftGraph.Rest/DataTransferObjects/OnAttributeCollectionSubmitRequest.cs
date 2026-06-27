@@ -11,11 +11,10 @@ public class OnAttributeCollectionSubmitRequest
 
 public class OnAttributeCollectionSubmitData
 {
-
     [JsonProperty("@odata.type")]
-    public required string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
     [JsonProperty("userSignUpInfo")]
-    public UserSignUpInfo? UserSignUpInfo { get; set; } = null!;
+    public UserSignUpInfo? UserSignUpInfo { get; set; }
 }
 
 public class UserSignUpInfo
@@ -29,23 +28,23 @@ public class UserSignUpInfo
 public class UserSignUpInfoAttribute
 {
     [JsonProperty("value")]
-    public required string Value { get; set; }
+    public string? Value { get; set; }
 
     [JsonProperty("@odata.type")]
-    public required string Type { get; set; }
+    public string? Type { get; set; }
 
     [JsonProperty("attributeType")]
-    public required string AttributeType { get; set; }
+    public string? AttributeType { get; set; }
 }
 
 public class Identity
 {
     [JsonProperty("signInType")]
-    public required string SignInType { get; set; }
+    public string? SignInType { get; set; }
 
     [JsonProperty("issuer")]
-    public required string Issuer { get; set; }
+    public string? Issuer { get; set; }
 
     [JsonProperty("issuerAssignedId")]
-    public required string IssuerAssignedId { get; set; }
+    public string? IssuerAssignedId { get; set; }
 }

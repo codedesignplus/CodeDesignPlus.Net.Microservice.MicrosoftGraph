@@ -11,7 +11,6 @@ public class TokenIssuanceRequest
 
 public class TokenIssuanceData
 {
-
     [JsonProperty("authenticationContext")]
     public AuthenticationContext AuthenticationContext { get; set; } = null!;
 }
@@ -19,7 +18,7 @@ public class TokenIssuanceData
 public class AuthenticationContext
 {
     [JsonProperty("correlationId")]
-    public required string CorrelationId { get; set; }
+    public string CorrelationId { get; set; } = string.Empty;
     [JsonProperty("user")]
     public User User { get; set; } = null!;
 }
@@ -29,13 +28,13 @@ public class User
     [JsonProperty("id")]
     public Guid Id { get; set; }
     [JsonProperty("mail")]
-    public string Mail { get; set; } = null!;
+    public string? Mail { get; set; }
     [JsonProperty("userPrincipalName")]
-    public string UserPrincipalName { get; set; } = null!;
+    public string? UserPrincipalName { get; set; }
     [JsonProperty("displayName")]
-    public string DisplayName { get; set; } = null!;
+    public string? DisplayName { get; set; }
     [JsonProperty("givenName")]
-    public string GivenName { get; set; } = null!;
+    public string? GivenName { get; set; }
     [JsonProperty("surname")]
-    public string Surname { get; set; } = null!;
+    public string? Surname { get; set; }
 }
