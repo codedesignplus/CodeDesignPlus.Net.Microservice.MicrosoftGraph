@@ -12,7 +12,7 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class IdentityProviderController(IMediator mediator) : ControllerBase
+public class IdentityProviderController(IMediator mediator, ILogger<IdentityProviderController> logger) : ControllerBase
 {
     /// <summary>
     /// Receives user attributes from an Entra External ID sign-up flow and creates the user aggregate synchronously.
@@ -62,13 +62,31 @@ public class IdentityProviderController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> TokenIssuance([FromBody] TokenIssuanceRequest request, CancellationToken cancellationToken)
     {
+        var correlationId = request.Data.AuthenticationContext.CorrelationId;
         var entraUserId = request.Data.AuthenticationContext.User.Id;
-        var email = request.Data.AuthenticationContext.User.Mail;
+        var mail = request.Data.AuthenticationContext.User.Mail;
+        var upn = request.Data.AuthenticationContext.User.UserPrincipalName;
+        var displayName = request.Data.AuthenticationContext.User.DisplayName;
+
+        logger.LogInformation(
+            "TokenIssuance started. CorrelationId: {CorrelationId} | EntraUserId: {EntraUserId} | Mail: {Mail} | UPN: {UPN} | DisplayName: {DisplayName}",
+            correlationId, entraUserId, mail, upn, displayName);
+
+        var email = mail;
 
         if (string.IsNullOrEmpty(email))
-            email = request.Data.AuthenticationContext.User.UserPrincipalName;
+        {
+            logger.LogDebug("TokenIssuance: Mail is empty, falling back to UserPrincipalName. EntraUserId: {EntraUserId} | UPN: {UPN}", entraUserId, upn);
+            email = upn;
+        }
+
+        logger.LogDebug("TokenIssuance: resolved email = {Email}. Sending CompleteProviderRegistrationCommand.", email);
 
         var userId = await mediator.Send(new CompleteProviderRegistrationCommand(email, entraUserId), cancellationToken);
+
+        logger.LogInformation(
+            "TokenIssuance completed successfully. CorrelationId: {CorrelationId} | EntraUserId: {EntraUserId} | ResolvedUserId: {UserId}",
+            correlationId, entraUserId, userId);
 
         var response = TokenIssuanceResponse.Create();
 
