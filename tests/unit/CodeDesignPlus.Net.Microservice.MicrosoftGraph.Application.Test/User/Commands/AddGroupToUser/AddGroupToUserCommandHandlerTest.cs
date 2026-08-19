@@ -96,7 +96,7 @@ public class AddGroupToUserCommandHandlerTest
 
         // Assert
         identityServerMock.Verify(server => server.AddUserToGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-        userRepositoryMock.Verify(repo => repo.UpdateAsync(user, It.IsAny<CancellationToken>()), Times.Once);
+        userRepositoryMock.Verify(repo => repo.AddRoleAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -127,6 +127,6 @@ public class AddGroupToUserCommandHandlerTest
 
         // Assert
         identityServerMock.Verify(server => server.AddUserToGroupAsync(user.IdentityProviderId, group.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-        userRepositoryMock.Verify(repo => repo.UpdateAsync(user, It.IsAny<CancellationToken>()), Times.Once);
+        userRepositoryMock.Verify(repo => repo.AddRoleAsync(user.Id, group.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

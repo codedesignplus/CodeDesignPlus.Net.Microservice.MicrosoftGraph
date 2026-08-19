@@ -98,7 +98,7 @@ public class RemoveGroupToUserCommandHandlerTest
 
         // Assert
         identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-        userRepositoryMock.Verify(repo => repo.UpdateAsync(user, It.IsAny<CancellationToken>()), Times.Once);
+        userRepositoryMock.Verify(repo => repo.RemoveRoleAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -130,6 +130,6 @@ public class RemoveGroupToUserCommandHandlerTest
 
         // Assert
         identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-        userRepositoryMock.Verify(repo => repo.UpdateAsync(user, It.IsAny<CancellationToken>()), Times.Once);
+        userRepositoryMock.Verify(repo => repo.RemoveRoleAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
