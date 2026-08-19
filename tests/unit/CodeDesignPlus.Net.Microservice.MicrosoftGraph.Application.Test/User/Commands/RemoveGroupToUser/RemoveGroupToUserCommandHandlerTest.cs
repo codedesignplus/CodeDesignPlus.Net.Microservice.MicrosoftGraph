@@ -61,7 +61,7 @@ public class RemoveGroupToUserCommandHandlerTest
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         identityServerMock
-            .Setup(server => server.GetUserByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+            .Setup(server => server.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.Models.User)null!);
 
         // Act & Assert
@@ -87,7 +87,7 @@ public class RemoveGroupToUserCommandHandlerTest
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         identityServerMock
-            .Setup(server => server.GetUserByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+            .Setup(server => server.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userModel);
         roleRepositoryMock
             .Setup(repo => repo.GetByNameAsync(request.Role, It.IsAny<CancellationToken>()))
@@ -97,7 +97,7 @@ public class RemoveGroupToUserCommandHandlerTest
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
+        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
         userRepositoryMock.Verify(repo => repo.UpdateAsync(user, It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -116,7 +116,7 @@ public class RemoveGroupToUserCommandHandlerTest
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         identityServerMock
-            .Setup(server => server.GetUserByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+            .Setup(server => server.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userModel);
         roleRepositoryMock
             .Setup(repo => repo.GetByNameAsync(request.Role, It.IsAny<CancellationToken>()))
@@ -129,7 +129,7 @@ public class RemoveGroupToUserCommandHandlerTest
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
+        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
         userRepositoryMock.Verify(repo => repo.UpdateAsync(user, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

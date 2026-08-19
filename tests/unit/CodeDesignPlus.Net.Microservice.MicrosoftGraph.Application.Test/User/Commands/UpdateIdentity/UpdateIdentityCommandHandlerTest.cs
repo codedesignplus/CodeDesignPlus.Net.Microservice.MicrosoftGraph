@@ -60,7 +60,7 @@ public class UpdateIdentityCommandHandlerTest
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         identityServerMock
-            .Setup(i => i.GetUserByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+            .Setup(i => i.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.Models.User)null!);
 
         // Act & Assert
@@ -83,7 +83,7 @@ public class UpdateIdentityCommandHandlerTest
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         identityServerMock
-            .Setup(i => i.GetUserByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+            .Setup(i => i.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Domain.Models.User());
         mapperMock
             .Setup(m => m.Map<Domain.Models.User>(request))
@@ -93,6 +93,6 @@ public class UpdateIdentityCommandHandlerTest
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        identityServerMock.Verify(i => i.UpdateUserAsync(user.Id, mappedUser, It.IsAny<CancellationToken>()), Times.Once);
+        identityServerMock.Verify(i => i.UpdateUserAsync(user.IdentityProviderId, mappedUser, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

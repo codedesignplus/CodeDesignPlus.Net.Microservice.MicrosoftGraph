@@ -13,7 +13,7 @@ public class UpdateIdentityCommandHandler(IUserRepository repository, IMapper ma
 
         ApplicationGuard.IsNull(user, Errors.UserNotFound);
 
-        var userExist = await identityServer.GetUserByIdAsync(user.Id, cancellationToken);
+        var userExist = await identityServer.GetUserByIdAsync(user.IdentityProviderId, cancellationToken);
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 

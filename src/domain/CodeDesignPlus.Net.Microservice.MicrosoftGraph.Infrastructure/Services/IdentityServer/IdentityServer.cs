@@ -5,6 +5,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.GraphClient;
 using MapsterMapper;
 using Microsoft.Graph.Models;
+using Microsoft.Graph.Models.ODataErrors;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
 
@@ -334,14 +335,42 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <param name="groupId">The unique identifier of the group.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task AddUserToGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken)
+    public async Task AddUserToGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken)
     {
         var requestBody = new ReferenceCreate
         {
             OdataId = $"https://graph.microsoft.com/v1.0/directoryObjects/{userId}",
         };
 
-        return graph.Client.Groups[groupId.ToString()].Members.Ref.PostAsync(requestBody, cancellationToken: cancellationToken);
+        try
+        {
+            await graph.Client.Groups[groupId.ToString()].Members.Ref.PostAsync(requestBody, cancellationToken: cancellationToken);
+        }
+        catch (ODataError error) when (YaEsMiembro(error))
+        {
+            // Que ya pertenezca al grupo es el resultado que buscabamos, no un fallo. Graph responde 400 y
+            // eso viajaba como error de infraestructura: cuatro reintentos y a la cola de descarte. Le pasa a
+            // cualquier administrador que compre una segunda licencia, porque el rol ya se lo dio la primera.
+            logger.LogInformation(
+                "El usuario {UserId} ya pertenece al grupo {GroupId}. No hay nada que anadir.", userId, groupId);
+        }
+    }
+
+    /// <summary>
+    /// Distingue el "ya estaba" de un 400 de verdad.
+    /// </summary>
+    /// <remarks>
+    /// Graph no da un codigo propio para esto: llega como <c>Request_BadRequest</c> con el detalle en el
+    /// mensaje. Por eso se mira el texto, y solo el de duplicado — un 400 por otra causa tiene que seguir
+    /// fallando.
+    /// </remarks>
+    public static bool YaEsMiembro(ODataError error)
+    {
+        var mensaje = error.Error?.Message;
+
+        return error.ResponseStatusCode == 400
+            && mensaje is not null
+            && mensaje.Contains("already exist", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>

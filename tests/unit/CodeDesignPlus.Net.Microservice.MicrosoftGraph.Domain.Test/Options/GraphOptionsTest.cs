@@ -15,7 +15,9 @@ public class GraphOptionsTest
             ClientId = "valid-client-id",
             ClientSecret = "valid-client-secret",
             TenantId = "valid-tenant-id",
-            Scopes = ["scope1", "scope2"]
+            Scopes = ["scope1", "scope2"],
+            IssuerIdentity = "valid-issuer-identity",
+            ExtensionAppId = "valid-extension-app-id"
         };
 
         // Act
@@ -39,6 +41,8 @@ public class GraphOptionsTest
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.ClientId)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.ClientSecret)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.TenantId)));
+        Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.IssuerIdentity)));
+        Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.ExtensionAppId)));
     }
 
     private static List<ValidationResult> ValidateModel(object model)

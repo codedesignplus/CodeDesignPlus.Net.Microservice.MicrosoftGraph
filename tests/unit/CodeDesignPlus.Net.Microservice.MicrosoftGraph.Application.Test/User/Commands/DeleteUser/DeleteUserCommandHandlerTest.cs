@@ -59,7 +59,7 @@ public class DeleteUserCommandHandlerTest
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userAggregate);
         identityServerMock
-            .Setup(i => i.GetUserByIdAsync(userAggregate.Id, It.IsAny<CancellationToken>()))
+            .Setup(i => i.GetUserByIdAsync(userAggregate.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.Models.User)null!);
 
         // Act & Assert
@@ -83,10 +83,10 @@ public class DeleteUserCommandHandlerTest
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userAggregate);
         identityServerMock
-            .Setup(i => i.GetUserByIdAsync(userAggregate.Id, It.IsAny<CancellationToken>()))
+            .Setup(i => i.GetUserByIdAsync(userAggregate.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userModel);
         identityServerMock
-            .Setup(i => i.DeleteUserAsync(userAggregate.Id, It.IsAny<CancellationToken>()))
+            .Setup(i => i.DeleteUserAsync(userAggregate.IdentityProviderId, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         repositoryMock
             .Setup(r => r.DeleteAsync<UserAggregate>(userAggregate.Id, It.IsAny<CancellationToken>()))
@@ -96,7 +96,7 @@ public class DeleteUserCommandHandlerTest
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        identityServerMock.Verify(i => i.DeleteUserAsync(userAggregate.Id, It.IsAny<CancellationToken>()), Times.Once);
+        identityServerMock.Verify(i => i.DeleteUserAsync(userAggregate.IdentityProviderId, It.IsAny<CancellationToken>()), Times.Once);
         repositoryMock.Verify(r => r.DeleteAsync<UserAggregate>(userAggregate.Id, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

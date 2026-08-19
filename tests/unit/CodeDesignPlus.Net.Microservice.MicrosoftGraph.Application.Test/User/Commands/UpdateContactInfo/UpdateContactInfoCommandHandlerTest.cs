@@ -66,7 +66,7 @@ public class UpdateContactInfoCommandHandlerTest
             .ReturnsAsync(user);
 
         identityServerMock
-            .Setup(i => i.GetUserByIdAsync(user.Id, cancellationToken))
+            .Setup(i => i.GetUserByIdAsync(user.IdentityProviderId, cancellationToken))
             .ReturnsAsync((Domain.Models.User)null!);
 
         // Act & Assert
@@ -102,7 +102,7 @@ public class UpdateContactInfoCommandHandlerTest
             .ReturnsAsync(user);
 
         identityServerMock
-            .Setup(i => i.GetUserByIdAsync(user.Id, cancellationToken))
+            .Setup(i => i.GetUserByIdAsync(user.IdentityProviderId, cancellationToken))
             .ReturnsAsync(userModel);
 
         mapperMock
@@ -113,6 +113,6 @@ public class UpdateContactInfoCommandHandlerTest
         await handler.Handle(request, cancellationToken);
 
         // Assert
-        identityServerMock.Verify(i => i.UpdateContactInfoAsync(user.Id, contactInfo, cancellationToken), Times.Once);
+        identityServerMock.Verify(i => i.UpdateContactInfoAsync(user.IdentityProviderId, contactInfo, cancellationToken), Times.Once);
     }
 }

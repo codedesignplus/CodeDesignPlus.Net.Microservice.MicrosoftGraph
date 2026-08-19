@@ -34,4 +34,16 @@ public class UserRegisteredDomainEvent : UserBaseDomainEvent
         DocumentNumber = documentNumber;
         IsActive = isActive;
     }
+
+    /// <summary>
+    /// Crea el evento con el constructor con nombre, igual que sus hermanos.
+    /// </summary>
+    /// <remarks>
+    /// Era el unico evento del microservicio sin este metodo, y el contrato del SDK lo exige para todos: sin
+    /// el, la prueba que recorre los eventos no puede construirlo y ninguno queda comprobado.
+    /// </remarks>
+    public static UserRegisteredDomainEvent Create(Guid aggregateId, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, bool isActive)
+    {
+        return new UserRegisteredDomainEvent(aggregateId, firstName, lastName, email, phone, displayName, documentNumber, isActive);
+    }
 }
