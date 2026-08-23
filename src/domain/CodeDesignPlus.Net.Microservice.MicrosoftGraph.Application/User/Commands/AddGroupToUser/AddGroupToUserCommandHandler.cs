@@ -33,9 +33,13 @@ public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepos
 
         await identityServer.AddUserToGroupAsync(user.IdentityProviderId, idGroupIdentityServer, cancellationToken);
 
-        var added = await repository.AddRoleAsync(user.Id, idGroupIdentityServer, cancellationToken);
+        // Se anade contra la base, no contra el agregado que se leyo: dos asignaciones simultaneas sobre el
+        // mismo usuario partian del mismo estado y la ultima en guardar borraba la otra.
+        var anadido = await repository.AddRoleAsync(user.Id, idGroupIdentityServer, cancellationToken);
 
-        if (!added)
+        // Si el grupo ya estaba, el documento no cambio y lo que hay en cache sigue siendo lo que hay en la
+        // base: invalidarla solo obligaria a releer para obtener lo mismo. Se deja como esta.
+        if (!anadido)
             return;
 
         await cacheManager.RemoveAsync(user.IdentityProviderId.ToString());

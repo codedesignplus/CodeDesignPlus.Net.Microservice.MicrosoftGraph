@@ -32,9 +32,12 @@ public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRo
 
         await identityServer.RemoveUserFromGroupAsync(user.IdentityProviderId, idGroupIdentityServer, cancellationToken);
 
-        var removed = await userRepository.RemoveRoleAsync(user.Id, idGroupIdentityServer, cancellationToken);
+        // Se quita contra la base por la misma razon que se anade contra ella: reescribir el documento entero
+        // devolveria a la vida los grupos que otra operacion acabara de anadir mientras esta leia.
+        var quitado = await userRepository.RemoveRoleAsync(user.Id, idGroupIdentityServer, cancellationToken);
 
-        if (!removed)
+        // Si el grupo no estaba, el documento no cambio y la cache sigue coincidiendo con la base.
+        if (!quitado)
             return;
 
         await cacheManager.RemoveAsync(user.IdentityProviderId.ToString());
