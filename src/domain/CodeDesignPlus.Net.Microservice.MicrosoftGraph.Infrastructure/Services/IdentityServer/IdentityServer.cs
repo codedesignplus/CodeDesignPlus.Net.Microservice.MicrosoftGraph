@@ -234,7 +234,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     {
         var mailNickname = user.Email.Split('@')[0];
 
-        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentNumber";
+        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentnumber";
 
         var newUser = new Microsoft.Graph.Models.User
         {
@@ -282,7 +282,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateUserAsync(Guid id, Domain.Models.User user, CancellationToken cancellationToken)
     {
-        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentNumber";
+        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentnumber";
 
         var updateUser = new Microsoft.Graph.Models.User
         {
