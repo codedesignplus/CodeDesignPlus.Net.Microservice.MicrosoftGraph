@@ -7,6 +7,15 @@ ms-base:
     pullPolicy: IfNotPresent
     tag: "v0.1.0-alpha.100"
 
+  env:
+  # Nombre completo de los atributos de extension del directorio de desarrollo
+  # (tenant f8bf4beb, app de extensiones 60408c67...). El codigo no los compone:
+  # se copian tal cual los devuelve /applications/<app>/extensionProperties.
+  - name: GRAPH__DOCUMENTNUMBERCLAIM
+    value: extension_60408c67ffd04a89a9cf6b0a44355c3e_DocumentNumber
+  - name: GRAPH__DOCUMENTTYPECLAIM
+    value: extension_60408c67ffd04a89a9cf6b0a44355c3e_DocumentType
+
   imagePullSecrets: []
   fullnameOverride: "ms-microsoftgraph-worker"
   nameOverride: "ms-microsoftgraph-worker"

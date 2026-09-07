@@ -20,7 +20,7 @@ public class UpdateIdentityInMicrosoftGraphHandler(IMediator mediator, IUserRepo
             return;
         }
 
-        var command = new UpdateIdentityCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.DocumentNumber, data.IsActive);
+        var command = new UpdateIdentityCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.DocumentNumber, data.DocumentType, data.IsActive);
 
         await mediator.Send(command, token);
     }

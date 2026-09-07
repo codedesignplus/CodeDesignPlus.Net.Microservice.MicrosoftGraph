@@ -12,7 +12,7 @@ public class CreateUserFromSSOCommandHandler(IUserRepository repository) : IRequ
 
         var userId = Guid.NewGuid();
 
-        var aggregate = UserAggregate.CreateFromSSO(userId, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, request.DocumentNumber, request.IsActive);
+        var aggregate = UserAggregate.CreateFromSSO(userId, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, request.DocumentNumber, request.DocumentType, request.IsActive);
 
         await repository.CreateAsync(aggregate, cancellationToken);
 

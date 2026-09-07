@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUser;
 
 [DtoGenerator]
-public record CreateUserCommand(Guid Id, string FirstName, string LastName, string Email, string Phone, string? DisplayName, string DocumentNumber, bool IsActive) : IRequest;
+public record CreateUserCommand(Guid Id, string FirstName, string LastName, string Email, string Phone, string? DisplayName, string DocumentNumber, DocumentType? DocumentType, bool IsActive) : IRequest;
 
 public class Validator : AbstractValidator<CreateUserCommand>
 {

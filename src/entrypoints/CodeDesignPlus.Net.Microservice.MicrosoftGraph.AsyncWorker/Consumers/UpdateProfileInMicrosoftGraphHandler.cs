@@ -19,7 +19,7 @@ public class UpdateProfileInMicrosoftGraphHandler(IMediator mediator, IUserRepos
             return;
         }
 
-        var command = new UpdateProfileCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.Contact, data.Job, data.IsActive);
+        var command = new UpdateProfileCommand(data.AggregateId, data.FirstName, data.LastName, data.DisplayName, data.Email, data.Phone, data.DocumentNumber, data.DocumentType, data.Contact, data.Job, data.IsActive);
 
         await mediator.Send(command, token);
     }

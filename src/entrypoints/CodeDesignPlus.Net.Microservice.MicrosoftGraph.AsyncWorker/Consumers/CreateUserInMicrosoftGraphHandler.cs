@@ -36,6 +36,7 @@ public class CreateUserInMicrosoftGraphHandler(IMediator mediator, IUserReposito
             data.Phone,
             data.DisplayName,
             data.DocumentNumber,
+            data.DocumentType,
             data.IsActive
         );
 

@@ -26,7 +26,7 @@ public class UpdateProfileInMicrosoftGraphHandlerTest
         var contactInfo = Domain.ValueObjects.ContactInfo.Create("Street 123", "City", "State", "12345", "Country", "3105631234", ["joee.doe@fake.com"]);
         var jobInfo = Domain.ValueObjects.JobInfo.Create("Software Engineer", "Tech Company", "It", "123456", "Full Time", SystemClock.Instance.GetCurrentInstant(), "Remote");
 
-        var domainEvent = new ProfileUpdatedDomainEvent(aggregateId, "Joe", "Doe", "jd@fake.com", "3107531241", "Joe Doe", true, contactInfo, jobInfo);
+        var domainEvent = new ProfileUpdatedDomainEvent(aggregateId, "Joe", "Doe", "jd@fake.com", "3107531241", "Joe Doe", "1234567890", null, true, contactInfo, jobInfo);
 
         var cancellationToken = CancellationToken.None;
 

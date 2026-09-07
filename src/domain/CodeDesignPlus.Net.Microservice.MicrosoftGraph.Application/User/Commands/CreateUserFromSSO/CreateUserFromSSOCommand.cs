@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUserFromSSO;
 
 [DtoGenerator]
-public record CreateUserFromSSOCommand(string FirstName, string LastName, string Email, string Phone, string? DisplayName, string DocumentNumber, bool IsActive) : IRequest<Guid>;
+public record CreateUserFromSSOCommand(string FirstName, string LastName, string Email, string Phone, string? DisplayName, string DocumentNumber, DocumentType? DocumentType, bool IsActive) : IRequest<Guid>;
 
 public class Validator : AbstractValidator<CreateUserFromSSOCommand>
 {

@@ -1,3 +1,4 @@
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 using System;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Models;
@@ -11,6 +12,7 @@ public class User
     public string Email { get; set; } = null!;
     public string Phone { get; set; } = null!;
     public string DocumentNumber { get; set; } = null!;
+    public DocumentType? DocumentType { get; set; }
     public string Password { get; set; } = null!;
     public JobInfo Job { get; set; } = null!;
     public ContactInfo Contact { get; set; } = null!;

@@ -1,4 +1,4 @@
-﻿global using CodeDesignPlus.Net.Exceptions.Guards;
+global using CodeDesignPlus.Net.Exceptions.Guards;
 global using CodeDesignPlus.Net.Generator.Attributes;
 global using CodeDesignPlus.Net.PubSub.Abstractions;
 global using CodeDesignPlus.Net.Security.Abstractions;
@@ -13,6 +13,7 @@ global using NodaTime;
 global using CodeDesignPlus.Net.Cache.Abstractions;
 
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;
 

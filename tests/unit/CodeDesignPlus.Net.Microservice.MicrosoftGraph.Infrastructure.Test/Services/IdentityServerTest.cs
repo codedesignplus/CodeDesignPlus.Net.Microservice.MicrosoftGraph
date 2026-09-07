@@ -1,5 +1,7 @@
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Services.IdentityServer;
 using Microsoft.Graph.Models.ODataErrors;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Options;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Test.Services;
 
@@ -55,6 +57,42 @@ public class IdentityServerTest
 
         Assert.True(IdentityServer.YaEsMiembro(error));
     }
+
+    [Fact]
+    public void ElDocumentoViajaConSuTipoEnCodigo()
+    {
+        var atributos = IdentityServer.AtributosDeDocumento(Opciones(), Usuario(new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC")));
+
+        // El nombre de la clave sale de configuracion: cambia con el tenant y no se compone en el codigo.
+        Assert.Equal("79800700", atributos["extension_appid_DocumentNumber"]);
+        // Del tipo viaja el codigo, no el nombre ni el id: es la mitad estable del catalogo y la unica
+        // que sirve fuera de esta base de datos.
+        Assert.Equal("CC", atributos["extension_appid_DocumentType"]);
+    }
+
+    [Fact]
+    public void SinTipoDeDocumentoLaClaveViajaEnNulo()
+    {
+        // El tipo es opcional. La clave se manda igual con null, que en Graph significa "borra el
+        // atributo": omitirla dejaria en el directorio el tipo anterior de alguien que acaba de quitarlo.
+        var atributos = IdentityServer.AtributosDeDocumento(Opciones(), Usuario(null));
+
+        Assert.True(atributos.ContainsKey("extension_appid_DocumentType"));
+        Assert.Null(atributos["extension_appid_DocumentType"]);
+        Assert.Equal("79800700", atributos["extension_appid_DocumentNumber"]);
+    }
+
+    private static GraphOptions Opciones() => new()
+    {
+        DocumentNumberClaim = "extension_appid_DocumentNumber",
+        DocumentTypeClaim = "extension_appid_DocumentType",
+    };
+
+    private static Domain.Models.User Usuario(DocumentType? tipo) => new()
+    {
+        DocumentNumber = "79800700",
+        DocumentType = tipo,
+    };
 
     private static ODataError Error(int codigo, string mensaje)
         => new() { ResponseStatusCode = codigo, Error = new MainError { Message = mensaje } };

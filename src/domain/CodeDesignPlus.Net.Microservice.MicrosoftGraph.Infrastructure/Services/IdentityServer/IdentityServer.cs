@@ -234,8 +234,6 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     {
         var mailNickname = user.Email.Split('@')[0];
 
-        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentnumber";
-
         var newUser = new Microsoft.Graph.Models.User
         {
             Id = user.Id.ToString(),
@@ -260,10 +258,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
                     IssuerAssignedId = user.Email,
                 },
             ],
-            AdditionalData = new Dictionary<string, object>
-            {
-                { extensionKey, user.DocumentNumber }
-            },
+            AdditionalData = AtributosDeDocumento(graphOptions.Value, user),
         };
 
         var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
@@ -282,8 +277,6 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateUserAsync(Guid id, Domain.Models.User user, CancellationToken cancellationToken)
     {
-        var extensionKey = $"extension_{graphOptions.Value.ExtensionAppId}_documentnumber";
-
         var updateUser = new Microsoft.Graph.Models.User
         {
             DisplayName = user.DisplayName,
@@ -291,10 +284,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             Surname = user.LastName,
             MobilePhone = user.Phone,
             AccountEnabled = true,
-            AdditionalData = new Dictionary<string, object>
-            {
-                { extensionKey, user.DocumentNumber }
-            },
+            AdditionalData = AtributosDeDocumento(graphOptions.Value, user),
         };
 
         return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
@@ -364,6 +354,24 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// mensaje. Por eso se mira el texto, y solo el de duplicado — un 400 por otra causa tiene que seguir
     /// fallando.
     /// </remarks>
+    /// <summary>
+    /// Arma los atributos de extension del documento que se mandan a Graph.
+    /// </summary>
+    /// <remarks>
+    /// Es lo unico que se puede comprobar sin un directorio delante: el resto de CreateUserAsync y
+    /// UpdateUserAsync es el request builder de Kiota. Los nombres de las claves son configuracion —
+    /// cambian con el tenant— y el tipo de documento viaja como codigo (CC, NIT), que es la mitad
+    /// estable del catalogo. Un valor nulo se manda tal cual: en Graph significa "borra el atributo".
+    /// </remarks>
+    public static Dictionary<string, object?> AtributosDeDocumento(GraphOptions options, Domain.Models.User user)
+    {
+        return new Dictionary<string, object?>
+        {
+            { options.DocumentNumberClaim, user.DocumentNumber },
+            { options.DocumentTypeClaim, user.DocumentType?.Code },
+        };
+    }
+
     public static bool YaEsMiembro(ODataError error)
     {
         var mensaje = error.Error?.Message;

@@ -42,7 +42,7 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
         InfrastructureGuard.IsNullOrEmpty(phone!, Errors.PhoneIsRequired);
         InfrastructureGuard.IsNullOrEmpty(documentNumber!, Errors.DocumentNumberIsRequired);
 
-        await mediator.Send(new CreateUserFromSSOCommand(givenName!, surname!, email!, phone!, displayName!, documentNumber!, true), cancellationToken);
+        await mediator.Send(new CreateUserFromSSOCommand(givenName!, surname!, email!, phone!, displayName!, documentNumber!, null, true), cancellationToken);
 
         var response = OnAttributeCollectionSubmitResponse.Create();
 

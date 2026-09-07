@@ -130,7 +130,7 @@ public class AsignacionSimultaneaDeGruposTest
     {
         var usuario = UserAggregate.Create(
             Usuario, IdentidadEnEntra, Domain.Enums.IdentityProvider.MicrosoftEntraExternalId,
-            "Joe", "Doe", "joe.doe@fake.com", "3107545252", "Joe Doe", "1234567890", null, null, false, true);
+            "Joe", "Doe", "joe.doe@fake.com", "3107545252", "Joe Doe", "1234567890", null, null, null, false, true);
 
         Guid[] instantanea;
 

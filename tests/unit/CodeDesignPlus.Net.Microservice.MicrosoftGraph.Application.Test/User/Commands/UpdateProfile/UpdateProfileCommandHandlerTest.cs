@@ -39,7 +39,7 @@ public class UpdateProfileCommandHandlerTest
         // Arrange
         var contactInfo = Domain.ValueObjects.ContactInfo.Create("Street 123", "City", "State", "12345", "Country", "3105631234", ["joee.doe@fake.com"]);
         var jobInfo = Domain.ValueObjects.JobInfo.Create("Software Engineer", "Tech Company", "It", "123456", "Full Time", SystemClock.Instance.GetCurrentInstant(), "Remote");
-        var request = new UpdateProfileCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", contactInfo, jobInfo, true);
+        var request = new UpdateProfileCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", "1234567890", null, contactInfo, jobInfo, true);
 
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
@@ -59,9 +59,9 @@ public class UpdateProfileCommandHandlerTest
         // Arrange
         var contactInfo = Domain.ValueObjects.ContactInfo.Create("Street 123", "City", "State", "12345", "Country", "3105631234", ["joee.doe@fake.com"]);
         var jobInfo = Domain.ValueObjects.JobInfo.Create("Software Engineer", "Tech Company", "It", "123456", "Full Time", SystemClock.Instance.GetCurrentInstant(), "Remote");
-        var request = new UpdateProfileCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", contactInfo, jobInfo, true);
+        var request = new UpdateProfileCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", "1234567890", null, contactInfo, jobInfo, true);
 
-        var user = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
+        var user = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
         repositoryMock
             .Setup(r => r.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
@@ -83,9 +83,9 @@ public class UpdateProfileCommandHandlerTest
         // Arrange
         var contactInfo = Domain.ValueObjects.ContactInfo.Create("Street 123", "City", "State", "12345", "Country", "3105631234", ["joee.doe@fake.com"]);
         var jobInfo = Domain.ValueObjects.JobInfo.Create("Software Engineer", "Tech Company", "It", "123456", "Full Time", SystemClock.Instance.GetCurrentInstant(), "Remote");
-        var request = new UpdateProfileCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", contactInfo, jobInfo, true);
+        var request = new UpdateProfileCommand(Guid.NewGuid(), "Joe", "Doe", "Joe Doe", "joe.doe@fake.com", "3105631234", "1234567890", null, contactInfo, jobInfo, true);
 
-        var user = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", "key", "cipher", false, true);
+        var user = UserAggregate.Create(request.Id, Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
         var userModel = new Domain.Models.User();
 
         repositoryMock

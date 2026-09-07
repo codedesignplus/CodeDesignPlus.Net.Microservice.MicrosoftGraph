@@ -11,6 +11,7 @@ public class UserUpdatedDomainEvent : UserBaseDomainEvent
         string phone,
         string? displayName,
         string documentNumber,
+        DocumentType? documentType,
         bool isActive,
         Guid? eventId = null,
         Instant? occurredAt = null,
@@ -23,11 +24,12 @@ public class UserUpdatedDomainEvent : UserBaseDomainEvent
         Phone = phone;
         DisplayName = displayName;
         DocumentNumber = documentNumber;
+        DocumentType = documentType;
         IsActive = isActive;
     }
 
-    public static UserUpdatedDomainEvent Create(Guid aggregateId, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, bool isActive)
+    public static UserUpdatedDomainEvent Create(Guid aggregateId, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType? documentType, bool isActive)
     {
-        return new UserUpdatedDomainEvent(aggregateId, firstName, lastName, email, phone, displayName, documentNumber, isActive);
+        return new UserUpdatedDomainEvent(aggregateId, firstName, lastName, email, phone, displayName, documentNumber, documentType, isActive);
     }
 }

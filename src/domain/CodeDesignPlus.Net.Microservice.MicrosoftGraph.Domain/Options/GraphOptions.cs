@@ -30,8 +30,17 @@ public class GraphOptions
     [Required]
     public string IssuerIdentity { get; set; } = null!;
     /// <summary>
-    /// The Application (client) ID of the app registration used for extension attributes (without hyphens).
+    /// Full name of the directory extension attribute that stores the user's document number,
+    /// e.g. extension_{appIdWithoutHyphens}_DocumentNumber. Case-sensitive: it must match the
+    /// property registered in the directory exactly.
     /// </summary>
     [Required]
-    public string ExtensionAppId { get; set; } = null!;
+    public string DocumentNumberClaim { get; set; } = null!;
+    /// <summary>
+    /// Full name of the directory extension attribute that stores the user's document type code,
+    /// e.g. extension_{appIdWithoutHyphens}_DocumentType. Case-sensitive: it must match the
+    /// property registered in the directory exactly.
+    /// </summary>
+    [Required]
+    public string DocumentTypeClaim { get; set; } = null!;
 }
