@@ -61,7 +61,7 @@ public class IdentityServerTest
     [Fact]
     public void ElDocumentoViajaConSuTipoEnCodigo()
     {
-        var atributos = IdentityServer.AtributosDeDocumento(Opciones(), Usuario(new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC")));
+        var atributos = IdentityServer.AtributosDeExtension(Opciones(), Usuario(new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC")));
 
         // El nombre de la clave sale de configuracion: cambia con el tenant y no se compone en el codigo.
         Assert.Equal("79800700", atributos["extension_appid_DocumentNumber"]);
@@ -75,23 +75,51 @@ public class IdentityServerTest
     {
         // El tipo es opcional. La clave se manda igual con null, que en Graph significa "borra el
         // atributo": omitirla dejaria en el directorio el tipo anterior de alguien que acaba de quitarlo.
-        var atributos = IdentityServer.AtributosDeDocumento(Opciones(), Usuario(null));
+        var atributos = IdentityServer.AtributosDeExtension(Opciones(), Usuario(null));
 
         Assert.True(atributos.ContainsKey("extension_appid_DocumentType"));
         Assert.Null(atributos["extension_appid_DocumentType"]);
         Assert.Equal("79800700", atributos["extension_appid_DocumentNumber"]);
     }
 
+    [Fact]
+    public void ElTelefonoViajaEnElAtributoDeExtension()
+    {
+        // No en mobilePhone: el formulario de registro de Entra External ID escribe lo que teclea el usuario
+        // en este atributo, asi que usar mobilePhone deja dos telefonos que no coinciden —el que ve el
+        // usuario al registrarse y el que guarda la plataforma— y leerlo de ahi devuelve nulo para todo el
+        // que entro por el portal.
+        var atributos = IdentityServer.AtributosDeExtension(Opciones(), Usuario(null));
+
+        Assert.Equal("+573001112233", atributos["extension_appid_Phone"]);
+    }
+
+    [Fact]
+    public void SinTelefonoLaClaveViajaEnNulo()
+    {
+        // Igual que el tipo de documento: la clave se manda con null, que en Graph significa "borra el
+        // atributo". Omitirla dejaria en el directorio el telefono anterior de alguien que acaba de quitarlo.
+        var usuario = Usuario(null);
+        usuario.Phone = null!;
+
+        var atributos = IdentityServer.AtributosDeExtension(Opciones(), usuario);
+
+        Assert.True(atributos.ContainsKey("extension_appid_Phone"));
+        Assert.Null(atributos["extension_appid_Phone"]);
+    }
+
     private static GraphOptions Opciones() => new()
     {
         DocumentNumberClaim = "extension_appid_DocumentNumber",
         DocumentTypeClaim = "extension_appid_DocumentType",
+        PhoneClaim = "extension_appid_Phone",
     };
 
     private static Domain.Models.User Usuario(DocumentType? tipo) => new()
     {
         DocumentNumber = "79800700",
         DocumentType = tipo,
+        Phone = "+573001112233",
     };
 
     private static ODataError Error(int codigo, string mensaje)

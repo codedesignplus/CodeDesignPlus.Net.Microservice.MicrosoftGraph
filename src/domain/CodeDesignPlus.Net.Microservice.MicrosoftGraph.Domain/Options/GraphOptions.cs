@@ -43,4 +43,17 @@ public class GraphOptions
     /// </summary>
     [Required]
     public string DocumentTypeClaim { get; set; } = null!;
+    /// <summary>
+    /// Full name of the directory extension attribute that stores the user's phone number,
+    /// e.g. extension_{appIdWithoutHyphens}_Phone. Case-sensitive: it must match the
+    /// property registered in the directory exactly.
+    /// </summary>
+    /// <remarks>
+    /// The phone does not live in <c>mobilePhone</c>. The Entra External ID sign-up flow writes whatever the
+    /// user typed into this extension attribute, so reading <c>mobilePhone</c> returns null for anyone who
+    /// registered through the portal, and writing it leaves two phones that disagree: the one the user sees
+    /// on the sign-up form and the one the platform shows.
+    /// </remarks>
+    [Required]
+    public string PhoneClaim { get; set; } = null!;
 }

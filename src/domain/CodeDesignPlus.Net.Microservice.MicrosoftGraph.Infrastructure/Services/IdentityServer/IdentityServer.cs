@@ -167,7 +167,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         {
             var response = await graph.Client.Users[id.ToString()].GetAsync((requestConfiguration) =>
             {
-                requestConfiguration.QueryParameters.Select = ["id", "displayName", "givenName", "surname", "mobilePhone", "postalCode", "identities", "accountEnabled"];
+                requestConfiguration.QueryParameters.Select = ["id", "displayName", "givenName", "surname", "postalCode", "identities", "accountEnabled", graphOptions.Value.PhoneClaim];
 
             }, cancellationToken: cancellationToken);
 
@@ -180,7 +180,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
                 DisplayName = response.DisplayName!,
                 FirstName = response.GivenName!,
                 LastName = response.Surname!,
-                Phone = response.MobilePhone!,
+                Phone = LeerExtension(response, graphOptions.Value.PhoneClaim),
                 Email = response.Identities?.FirstOrDefault()?.IssuerAssignedId ?? string.Empty,
                 IsActive = response.AccountEnabled ?? false
             };
@@ -204,7 +204,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
         var response = await graph.Client.Users.GetAsync((requestConfiguration) =>
         {
             requestConfiguration.QueryParameters.Filter = $"mail eq '{email}'";
-            requestConfiguration.QueryParameters.Select = ["id", "displayName", "givenName", "surname", "mobilePhone", "postalCode", "identities", "accountEnabled"];
+            requestConfiguration.QueryParameters.Select = ["id", "displayName", "givenName", "surname", "postalCode", "identities", "accountEnabled", graphOptions.Value.PhoneClaim];
         }, cancellationToken: cancellationToken);
 
         var user = response?.Value?.FirstOrDefault();
@@ -218,7 +218,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             DisplayName = user.DisplayName!,
             FirstName = user.GivenName!,
             LastName = user.Surname!,
-            Phone = user.MobilePhone!,
+            Phone = LeerExtension(user, graphOptions.Value.PhoneClaim),
             Email = user.Identities?.FirstOrDefault()?.IssuerAssignedId ?? string.Empty,
             IsActive = user.AccountEnabled ?? false
         };
@@ -240,7 +240,6 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             DisplayName = user.DisplayName,
             GivenName = user.FirstName,
             Surname = user.LastName,
-            MobilePhone = user.Phone,
             AccountEnabled = user.IsActive,
             MailNickname = mailNickname,
             PasswordProfile = new PasswordProfile
@@ -258,7 +257,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
                     IssuerAssignedId = user.Email,
                 },
             ],
-            AdditionalData = AtributosDeDocumento(graphOptions.Value, user),
+            AdditionalData = AtributosDeExtension(graphOptions.Value, user),
         };
 
         var response = await graph.Client.Users.PostAsync(newUser, cancellationToken: cancellationToken);
@@ -282,9 +281,8 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
             DisplayName = user.DisplayName,
             GivenName = user.FirstName,
             Surname = user.LastName,
-            MobilePhone = user.Phone,
             AccountEnabled = true,
-            AdditionalData = AtributosDeDocumento(graphOptions.Value, user),
+            AdditionalData = AtributosDeExtension(graphOptions.Value, user),
         };
 
         return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
@@ -301,7 +299,7 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     {
         var updateUser = new Microsoft.Graph.Models.User
         {
-            MobilePhone = phone
+            AdditionalData = new Dictionary<string, object?> { { graphOptions.Value.PhoneClaim, phone } }
         };
 
         await graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
@@ -363,13 +361,33 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// cambian con el tenant— y el tipo de documento viaja como codigo (CC, NIT), que es la mitad
     /// estable del catalogo. Un valor nulo se manda tal cual: en Graph significa "borra el atributo".
     /// </remarks>
-    public static Dictionary<string, object?> AtributosDeDocumento(GraphOptions options, Domain.Models.User user)
+    /// <summary>
+    /// Atributos de extension del directorio: documento y telefono.
+    /// </summary>
+    /// <remarks>
+    /// El telefono va aqui y no en <c>mobilePhone</c> porque es donde lo escribe el propio formulario de
+    /// registro de Entra External ID. Escribirlo en <c>mobilePhone</c> dejaba dos telefonos que no coinciden
+    /// —el que tecleo el usuario al registrarse y el que guarda la plataforma— y leerlo de ahi devolvia nulo
+    /// para todo el que entro por el portal.
+    /// </remarks>
+    public static Dictionary<string, object?> AtributosDeExtension(GraphOptions options, Domain.Models.User user)
     {
         return new Dictionary<string, object?>
         {
             { options.DocumentNumberClaim, user.DocumentNumber },
             { options.DocumentTypeClaim, user.DocumentType?.Code },
+            { options.PhoneClaim, user.Phone },
         };
+    }
+
+    /// <summary>Lee un atributo de extension de la respuesta de Graph, que llega en AdditionalData.</summary>
+    private static string LeerExtension(Microsoft.Graph.Models.User usuario, string claim)
+    {
+        if (usuario.AdditionalData is null || !usuario.AdditionalData.TryGetValue(claim, out var valor))
+            return string.Empty;
+
+        // Graph devuelve los valores como JsonElement cuando el SDK no conoce la propiedad.
+        return valor?.ToString() ?? string.Empty;
     }
 
     public static bool YaEsMiembro(ODataError error)
