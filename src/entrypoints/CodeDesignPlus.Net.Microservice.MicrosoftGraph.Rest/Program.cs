@@ -1,4 +1,4 @@
-using CodeDesignPlus.Net.Observability.Extensions;
+﻿using CodeDesignPlus.Net.Observability.Extensions;
 using CodeDesignPlus.Net.Microservice.Commons.Application;
 using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.Rest.Middlewares;
 using CodeDesignPlus.Net.Microservice.Commons.EntryPoints.Rest.Resources;
@@ -41,6 +41,7 @@ builder.Services.AddObservability(builder.Configuration, builder.Environment, nu
 });
 builder.Services.AddLogger(builder.Configuration);
 builder.Services.AddRabbitMQ<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Startup>(builder.Configuration);
+builder.Services.AddServiceBus<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Startup>(builder.Configuration);
 builder.Services.AddMapster();
 builder.Services.AddFluentValidation();
 builder.Services.AddMediatR<CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Startup>();
