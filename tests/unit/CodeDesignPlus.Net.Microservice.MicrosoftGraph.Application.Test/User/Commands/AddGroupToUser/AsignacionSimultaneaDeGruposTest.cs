@@ -22,6 +22,9 @@ public class AsignacionSimultaneaDeGruposTest
 {
     private static readonly Guid Usuario = Guid.Parse("6d2d4d1e-5a2f-4a3f-9f2c-3a1c9b7d4e51");
     private static readonly Guid IdentidadEnEntra = Guid.Parse("b1f0c5a4-2e3d-4c6b-8a97-1d0e2f3a4b5c");
+    // El rol viaja con el id del catalogo; el del grupo en el directorio lo resuelve este micro.
+    private static readonly Guid RolPropietario = Guid.Parse("20000000-0000-0000-0000-000000000006");
+    private static readonly Guid RolResidente = Guid.Parse("20000000-0000-0000-0000-000000000007");
     private static readonly Guid GrupoPropietario = Guid.Parse("7c9a1b2d-3e4f-4a5b-8c6d-9e0f1a2b3c4d");
     private static readonly Guid GrupoResidente = Guid.Parse("2f8e7d6c-5b4a-4938-8271-6a5b4c3d2e1f");
 
@@ -69,11 +72,11 @@ public class AsignacionSimultaneaDeGruposTest
         var documento = new Documento();
         var cita = new Cita();
         var handler = new AddGroupToUserCommandHandler(
-            Repositorio(documento, cita).Object, ProveedorDeIdentidad(cita).Object, Mock.Of<ICacheManager>());
+            Repositorio(documento, cita).Object, RepositorioDeRoles().Object, ProveedorDeIdentidad(cita).Object, Mock.Of<ICacheManager>());
 
         await Task.WhenAll(
-            handler.Handle(new AddGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None),
-            handler.Handle(new AddGroupToUserCommand(Usuario, GrupoResidente), CancellationToken.None));
+            handler.Handle(new AddGroupToUserCommand(Usuario, RolPropietario), CancellationToken.None),
+            handler.Handle(new AddGroupToUserCommand(Usuario, RolResidente), CancellationToken.None));
 
         Assert.Equal(2, documento.IdRoles.Count);
         Assert.Contains(GrupoPropietario, documento.IdRoles);
@@ -93,12 +96,12 @@ public class AsignacionSimultaneaDeGruposTest
         var repositorio = Repositorio(documento, cita);
         var identidad = ProveedorDeIdentidad(cita);
 
-        var anadir = new AddGroupToUserCommandHandler(repositorio.Object, identidad.Object, Mock.Of<ICacheManager>());
-        var quitar = new RemoveGroupToUserCommandHandler(repositorio.Object, identidad.Object, Mock.Of<ICacheManager>());
+        var anadir = new AddGroupToUserCommandHandler(repositorio.Object, RepositorioDeRoles().Object, identidad.Object, Mock.Of<ICacheManager>());
+        var quitar = new RemoveGroupToUserCommandHandler(repositorio.Object, RepositorioDeRoles().Object, identidad.Object, Mock.Of<ICacheManager>());
 
         await Task.WhenAll(
-            anadir.Handle(new AddGroupToUserCommand(Usuario, GrupoResidente), CancellationToken.None),
-            quitar.Handle(new RemoveGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None));
+            anadir.Handle(new AddGroupToUserCommand(Usuario, RolResidente), CancellationToken.None),
+            quitar.Handle(new RemoveGroupToUserCommand(Usuario, RolPropietario), CancellationToken.None));
 
         Assert.Single(documento.IdRoles);
         Assert.Contains(GrupoResidente, documento.IdRoles);
@@ -113,10 +116,10 @@ public class AsignacionSimultaneaDeGruposTest
         var documento = new Documento();
         var cache = new Mock<ICacheManager>();
         var handler = new AddGroupToUserCommandHandler(
-            Repositorio(documento, null).Object, ProveedorDeIdentidad(null).Object, cache.Object);
+            Repositorio(documento, null).Object, RepositorioDeRoles().Object, ProveedorDeIdentidad(null).Object, cache.Object);
 
-        await handler.Handle(new AddGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None);
-        await handler.Handle(new AddGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None);
+        await handler.Handle(new AddGroupToUserCommand(Usuario, RolPropietario), CancellationToken.None);
+        await handler.Handle(new AddGroupToUserCommand(Usuario, RolPropietario), CancellationToken.None);
 
         Assert.Single(documento.IdRoles);
         cache.Verify(x => x.RemoveAsync(IdentidadEnEntra.ToString()), Times.Once);
@@ -211,13 +214,15 @@ public class AsignacionSimultaneaDeGruposTest
     {
         var roles = new Mock<IRoleRepository>();
 
+        // La traduccion es una busqueda por clave: este micro guarda el rol con el id del catalogo y el
+        // del grupo al lado, asi que nadie mas tiene que conocer la correspondencia.
         roles
-            .Setup(x => x.GetByNameAsync("Propietario", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(RoleAggregate.Create(Guid.NewGuid(), GrupoPropietario, "Propietario", "Propietario", true));
+            .Setup(x => x.FindAsync<RoleAggregate>(RolPropietario, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(RoleAggregate.Create(RolPropietario, GrupoPropietario, "Propietario", "Propietario", true));
 
         roles
-            .Setup(x => x.GetByNameAsync("Residente", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(RoleAggregate.Create(Guid.NewGuid(), GrupoResidente, "Residente", "Residente", true));
+            .Setup(x => x.FindAsync<RoleAggregate>(RolResidente, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(RoleAggregate.Create(RolResidente, GrupoResidente, "Residente", "Residente", true));
 
         return roles;
     }

@@ -7,14 +7,16 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Test.User.C
 public class RemoveGroupToUserCommandHandlerTest
 {
     private readonly Mock<IUserRepository> userRepositoryMock;
+    private readonly Mock<IRoleRepository> roleRepositoryMock;
     private readonly Mock<IIdentityServer> identityServerMock;
     private readonly RemoveGroupToUserCommandHandler handler;
 
     public RemoveGroupToUserCommandHandlerTest()
     {
         userRepositoryMock = new Mock<IUserRepository>();
+        roleRepositoryMock = new Mock<IRoleRepository>();
         identityServerMock = new Mock<IIdentityServer>();
-        handler = new RemoveGroupToUserCommandHandler(userRepositoryMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
+        handler = new RemoveGroupToUserCommandHandler(userRepositoryMock.Object, roleRepositoryMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
     }
 
     [Fact]
@@ -71,19 +73,23 @@ public class RemoveGroupToUserCommandHandlerTest
     }
 
     [Fact]
-    public async Task Handle_RemovesUserFromTheGroupItWasGiven()
+    public async Task Handle_TranslatesTheCatalogueRoleIntoItsIdentityProviderGroup()
     {
-        // Arrange: el rol llega ya como identificador del grupo. Antes viajaba el nombre y habia dos
-        // caminos para traducirlo, segun si el rol estaba replicado en este micro o no.
+        // Arrange: el rol viaja con el identificador del catalogo y este micro lo traduce al grupo, que
+        // es lo unico que entiende el proveedor de identidad.
         var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
+        var rol = Guid.Parse("20000000-0000-0000-0000-000000000007");
         var grupo = Guid.Parse("d13dc2fd-59ce-4462-ae03-2a830a243c56");
         user.AddRole(grupo);
 
-        var request = new RemoveGroupToUserCommand(user.Id, grupo);
+        var request = new RemoveGroupToUserCommand(user.Id, rol);
 
         userRepositoryMock
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
+        roleRepositoryMock
+            .Setup(repo => repo.FindAsync<RoleAggregate>(rol, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(RoleAggregate.Create(rol, grupo, "Residente", "Residente", true));
         identityServerMock
             .Setup(server => server.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Domain.Models.User { Id = user.Id });
