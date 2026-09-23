@@ -1,4 +1,4 @@
-namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
+﻿namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.AsyncWorker.DomainEvents.Users;
 
 /// <summary>
 /// Gemelo del evento de ms-users. Los nombres de los parametros del constructor coinciden con los de las
@@ -29,7 +29,7 @@ public class RoleAddedToUserDomainEvent(
     public Guid TenantId { get; } = tenantId;
 
     /// <summary>
-    /// El id del grupo del proveedor de identidad.
+    /// El id del rol en el catalogo, que es el mismo en todos los entornos.
     /// </summary>
     public Guid Role { get; } = role;
 
