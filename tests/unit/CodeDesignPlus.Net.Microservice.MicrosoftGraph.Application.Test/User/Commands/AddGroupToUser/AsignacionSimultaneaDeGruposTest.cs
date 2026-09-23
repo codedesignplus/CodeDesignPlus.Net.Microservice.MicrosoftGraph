@@ -69,11 +69,11 @@ public class AsignacionSimultaneaDeGruposTest
         var documento = new Documento();
         var cita = new Cita();
         var handler = new AddGroupToUserCommandHandler(
-            Repositorio(documento, cita).Object, RepositorioDeRoles().Object, ProveedorDeIdentidad(cita).Object, Mock.Of<ICacheManager>());
+            Repositorio(documento, cita).Object, ProveedorDeIdentidad(cita).Object, Mock.Of<ICacheManager>());
 
         await Task.WhenAll(
-            handler.Handle(new AddGroupToUserCommand(Usuario, "Propietario"), CancellationToken.None),
-            handler.Handle(new AddGroupToUserCommand(Usuario, "Residente"), CancellationToken.None));
+            handler.Handle(new AddGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None),
+            handler.Handle(new AddGroupToUserCommand(Usuario, GrupoResidente), CancellationToken.None));
 
         Assert.Equal(2, documento.IdRoles.Count);
         Assert.Contains(GrupoPropietario, documento.IdRoles);
@@ -91,15 +91,14 @@ public class AsignacionSimultaneaDeGruposTest
 
         var cita = new Cita();
         var repositorio = Repositorio(documento, cita);
-        var roles = RepositorioDeRoles();
         var identidad = ProveedorDeIdentidad(cita);
 
-        var anadir = new AddGroupToUserCommandHandler(repositorio.Object, roles.Object, identidad.Object, Mock.Of<ICacheManager>());
-        var quitar = new RemoveGroupToUserCommandHandler(repositorio.Object, roles.Object, identidad.Object, Mock.Of<ICacheManager>());
+        var anadir = new AddGroupToUserCommandHandler(repositorio.Object, identidad.Object, Mock.Of<ICacheManager>());
+        var quitar = new RemoveGroupToUserCommandHandler(repositorio.Object, identidad.Object, Mock.Of<ICacheManager>());
 
         await Task.WhenAll(
-            anadir.Handle(new AddGroupToUserCommand(Usuario, "Residente"), CancellationToken.None),
-            quitar.Handle(new RemoveGroupToUserCommand(Usuario, "Propietario"), CancellationToken.None));
+            anadir.Handle(new AddGroupToUserCommand(Usuario, GrupoResidente), CancellationToken.None),
+            quitar.Handle(new RemoveGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None));
 
         Assert.Single(documento.IdRoles);
         Assert.Contains(GrupoResidente, documento.IdRoles);
@@ -114,10 +113,10 @@ public class AsignacionSimultaneaDeGruposTest
         var documento = new Documento();
         var cache = new Mock<ICacheManager>();
         var handler = new AddGroupToUserCommandHandler(
-            Repositorio(documento, null).Object, RepositorioDeRoles().Object, ProveedorDeIdentidad(null).Object, cache.Object);
+            Repositorio(documento, null).Object, ProveedorDeIdentidad(null).Object, cache.Object);
 
-        await handler.Handle(new AddGroupToUserCommand(Usuario, "Propietario"), CancellationToken.None);
-        await handler.Handle(new AddGroupToUserCommand(Usuario, "Propietario"), CancellationToken.None);
+        await handler.Handle(new AddGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None);
+        await handler.Handle(new AddGroupToUserCommand(Usuario, GrupoPropietario), CancellationToken.None);
 
         Assert.Single(documento.IdRoles);
         cache.Verify(x => x.RemoveAsync(IdentidadEnEntra.ToString()), Times.Once);

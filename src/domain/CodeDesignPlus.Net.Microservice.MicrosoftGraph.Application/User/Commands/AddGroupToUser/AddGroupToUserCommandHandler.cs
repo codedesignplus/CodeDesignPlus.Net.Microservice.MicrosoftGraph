@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.AddGroupToUser;
 
-public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepository roleRepository, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<AddGroupToUserCommand>
+public class AddGroupToUserCommandHandler(IUserRepository repository, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<AddGroupToUserCommand>
 {
     public async Task Handle(AddGroupToUserCommand request, CancellationToken cancellationToken)
     {
@@ -17,19 +17,9 @@ public class AddGroupToUserCommandHandler(IUserRepository repository, IRoleRepos
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
 
-        var role = await roleRepository.GetByNameAsync(request.Role, cancellationToken);
-
-        Guid idGroupIdentityServer;
-
-        if (role != null)
-        {
-            idGroupIdentityServer = role.IdIdentityServer;
-        }
-        else
-        {
-            var group = await identityServer.GetGroupByNameAsync(request.Role, cancellationToken);
-            idGroupIdentityServer = group.Id;
-        }
+        // El rol ya llega como identificador del grupo, asi que no hay nombre que traducir. Antes viajaba
+        // el nombre y habia que buscarlo aqui o preguntarselo al proveedor de identidad.
+        var idGroupIdentityServer = request.Role;
 
         await identityServer.AddUserToGroupAsync(user.IdentityProviderId, idGroupIdentityServer, cancellationToken);
 

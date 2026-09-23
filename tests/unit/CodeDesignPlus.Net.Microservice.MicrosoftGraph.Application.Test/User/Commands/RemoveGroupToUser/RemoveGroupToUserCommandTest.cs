@@ -16,7 +16,7 @@ public class RemoveGroupToUserCommandTest
     public void Validator_Should_Have_Error_When_Id_Is_Empty()
     {
         // Arrange
-        var command = new RemoveGroupToUserCommand(Guid.Empty, "Admin");
+        var command = new RemoveGroupToUserCommand(Guid.Empty, Guid.NewGuid());
 
         // Act & Assert
         var result = validator.TestValidate(command);
@@ -27,7 +27,7 @@ public class RemoveGroupToUserCommandTest
     public void Validator_Should_Have_Error_When_Role_Is_Empty()
     {
         // Arrange
-        var command = new RemoveGroupToUserCommand(Guid.NewGuid(), string.Empty);
+        var command = new RemoveGroupToUserCommand(Guid.NewGuid(), Guid.Empty);
 
         // Act & Assert
         var result = validator.TestValidate(command);
@@ -38,7 +38,7 @@ public class RemoveGroupToUserCommandTest
     public void Validator_Should_Not_Have_Error_When_Command_Is_Valid()
     {
         // Arrange
-        var command = new RemoveGroupToUserCommand(Guid.NewGuid(), "Admin");
+        var command = new RemoveGroupToUserCommand(Guid.NewGuid(), Guid.NewGuid());
 
         // Act & Assert
         var result = validator.TestValidate(command);

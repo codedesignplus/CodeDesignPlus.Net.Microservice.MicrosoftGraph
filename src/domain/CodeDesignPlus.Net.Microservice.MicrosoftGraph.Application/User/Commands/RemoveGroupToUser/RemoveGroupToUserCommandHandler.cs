@@ -2,7 +2,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.RemoveGroupToUser;
 
-public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<RemoveGroupToUserCommand>
+public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IIdentityServer identityServer, ICacheManager cacheManager) : IRequestHandler<RemoveGroupToUserCommand>
 {
     public async Task Handle(RemoveGroupToUserCommand request, CancellationToken cancellationToken)
     {
@@ -16,19 +16,8 @@ public class RemoveGroupToUserCommandHandler(IUserRepository userRepository, IRo
 
         ApplicationGuard.IsNull(userExist, Errors.UserNotExistInIdentityServer);
 
-        var role = await roleRepository.GetByNameAsync(request.Role, cancellationToken);
-
-        Guid idGroupIdentityServer;
-
-        if (role != null)
-        {
-            idGroupIdentityServer = role.IdIdentityServer;
-        }
-        else
-        {
-            var group = await identityServer.GetGroupByNameAsync(request.Role, cancellationToken);
-            idGroupIdentityServer = group.Id;
-        }
+        // El rol ya llega como identificador del grupo, asi que no hay nombre que traducir.
+        var idGroupIdentityServer = request.Role;
 
         await identityServer.RemoveUserFromGroupAsync(user.IdentityProviderId, idGroupIdentityServer, cancellationToken);
 

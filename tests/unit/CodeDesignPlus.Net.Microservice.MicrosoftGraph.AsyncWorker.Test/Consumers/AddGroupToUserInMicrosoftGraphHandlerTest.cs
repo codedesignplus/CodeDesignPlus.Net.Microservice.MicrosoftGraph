@@ -23,7 +23,7 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest
 
         var handler = new AddGroupToUserInMicrosoftGraphHandler(mediatorMock.Object, userRepositoryMock.Object, loggerMock.Object);
 
-        var domainEvent = new RoleAddedToUserDomainEvent(aggregateId, "Joe Doe", "Admin");
+        var domainEvent = new RoleAddedToUserDomainEvent(aggregateId, "Joe Doe", Guid.NewGuid(), Guid.NewGuid());
 
         var cancellationToken = CancellationToken.None;
 

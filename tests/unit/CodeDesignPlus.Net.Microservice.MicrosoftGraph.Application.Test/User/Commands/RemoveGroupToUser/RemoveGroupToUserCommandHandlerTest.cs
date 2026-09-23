@@ -7,16 +7,14 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Test.User.C
 public class RemoveGroupToUserCommandHandlerTest
 {
     private readonly Mock<IUserRepository> userRepositoryMock;
-    private readonly Mock<IRoleRepository> roleRepositoryMock;
     private readonly Mock<IIdentityServer> identityServerMock;
     private readonly RemoveGroupToUserCommandHandler handler;
 
     public RemoveGroupToUserCommandHandlerTest()
     {
         userRepositoryMock = new Mock<IUserRepository>();
-        roleRepositoryMock = new Mock<IRoleRepository>();
         identityServerMock = new Mock<IIdentityServer>();
-        handler = new RemoveGroupToUserCommandHandler(userRepositoryMock.Object, roleRepositoryMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
+        handler = new RemoveGroupToUserCommandHandler(userRepositoryMock.Object, identityServerMock.Object, Mock.Of<ICacheManager>());
     }
 
     [Fact]
@@ -37,7 +35,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_UserNotFound_ThrowsException()
     {
         // Arrange
-        var request = new RemoveGroupToUserCommand(Guid.NewGuid(), "TestRole");
+        var request = new RemoveGroupToUserCommand(Guid.NewGuid(), Guid.NewGuid());
         userRepositoryMock
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync((UserAggregate)null!);
@@ -55,7 +53,7 @@ public class RemoveGroupToUserCommandHandlerTest
     {
         // Arrange
         var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
-        var request = new RemoveGroupToUserCommand(user.Id, "TestRole");
+        var request = new RemoveGroupToUserCommand(user.Id, Guid.NewGuid());
 
         userRepositoryMock
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
@@ -73,63 +71,28 @@ public class RemoveGroupToUserCommandHandlerTest
     }
 
     [Fact]
-    public async Task Handle_RemovesUserFromGroupAndUpdatesUser()
+    public async Task Handle_RemovesUserFromTheGroupItWasGiven()
     {
-        // Arrange
+        // Arrange: el rol llega ya como identificador del grupo. Antes viajaba el nombre y habia dos
+        // caminos para traducirlo, segun si el rol estaba replicado en este micro o no.
         var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
-        var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
-        user.AddRole(role.IdIdentityServer);
+        var grupo = Guid.Parse("d13dc2fd-59ce-4462-ae03-2a830a243c56");
+        user.AddRole(grupo);
 
-        var request = new RemoveGroupToUserCommand(user.Id, role.Name);
-        var userModel = new Domain.Models.User { Id = user.Id };
+        var request = new RemoveGroupToUserCommand(user.Id, grupo);
 
         userRepositoryMock
             .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         identityServerMock
             .Setup(server => server.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userModel);
-        roleRepositoryMock
-            .Setup(repo => repo.GetByNameAsync(request.Role, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(role);
+            .ReturnsAsync(new Domain.Models.User { Id = user.Id });
 
         // Act
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-        userRepositoryMock.Verify(repo => repo.RemoveRoleAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    [Fact]
-    public async Task Handle_GroupNotFoundInRole_UsesIdentityServerGroup()
-    {
-        // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
-        var role = RoleAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), "TestRole", "Test Description", true);
-        user.AddRole(role.IdIdentityServer);
-        var request = new RemoveGroupToUserCommand(user.Id, role.Name);
-        var userModel = new Domain.Models.User { Id = user.Id };
-        var groupModel = new Domain.Models.Role { Id = role.IdIdentityServer };
-
-        userRepositoryMock
-            .Setup(repo => repo.FindAsync<UserAggregate>(request.Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
-        identityServerMock
-            .Setup(server => server.GetUserByIdAsync(user.IdentityProviderId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userModel);
-        roleRepositoryMock
-            .Setup(repo => repo.GetByNameAsync(request.Role, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((RoleAggregate)null!);
-        identityServerMock
-            .Setup(server => server.GetGroupByNameAsync(request.Role, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(groupModel);
-
-        // Act
-        await handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
-        userRepositoryMock.Verify(repo => repo.RemoveRoleAsync(user.Id, role.IdIdentityServer, It.IsAny<CancellationToken>()), Times.Once);
+        identityServerMock.Verify(server => server.RemoveUserFromGroupAsync(user.IdentityProviderId, grupo, It.IsAny<CancellationToken>()), Times.Once);
+        userRepositoryMock.Verify(repo => repo.RemoveRoleAsync(user.Id, grupo, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

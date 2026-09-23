@@ -24,7 +24,7 @@ public class RemoveGroupToUserInMicrosoftGraphHandlerTest
 
         var handler = new RemoveGroupToUserInMicrosoftGraphHandler(mediatorMock.Object, userRepositoryMock.Object, loggerMock.Object);
 
-        var domainEvent = new RoleRemovedToUserDomainEvent(aggregateId, "Joe Doe", "Admin");
+        var domainEvent = new RoleRemovedToUserDomainEvent(aggregateId, "Joe Doe", Guid.NewGuid(), Guid.NewGuid(), stillHasItElsewhere: false);
 
         var cancellationToken = CancellationToken.None;
 
@@ -35,5 +35,28 @@ public class RemoveGroupToUserInMicrosoftGraphHandlerTest
         mediatorMock.Verify(m => m.Send(It.Is<RemoveGroupToUserCommand>(cmd =>
             cmd.Id == domainEvent.AggregateId &&
             cmd.Role == domainEvent.Role), cancellationToken), Times.Once);
+    }
+
+    [Fact]
+    public async Task HandleAsync_RoleSurvivesInAnotherTenant_LeavesTheGroupAlone()
+    {
+        // El grupo del proveedor de identidad es global. Sacar al usuario de el por haber perdido el rol en
+        // una sola copropiedad se lo quitaria en todas las demas, y nada lo avisaria: el evento se habria
+        // consumido sin error.
+        var mediatorMock = new Mock<IMediator>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        var loggerMock = new Mock<ILogger<RemoveGroupToUserInMicrosoftGraphHandler>>();
+
+        var handler = new RemoveGroupToUserInMicrosoftGraphHandler(mediatorMock.Object, userRepositoryMock.Object, loggerMock.Object);
+
+        var domainEvent = new RoleRemovedToUserDomainEvent(
+            Guid.NewGuid(), "Joe Doe", Guid.NewGuid(), Guid.NewGuid(), stillHasItElsewhere: true);
+
+        // Act
+        await handler.HandleAsync(domainEvent, CancellationToken.None);
+
+        // Assert
+        mediatorMock.Verify(m => m.Send(It.IsAny<RemoveGroupToUserCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        userRepositoryMock.Verify(x => x.ExistsAsync<Domain.UserAggregate>(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

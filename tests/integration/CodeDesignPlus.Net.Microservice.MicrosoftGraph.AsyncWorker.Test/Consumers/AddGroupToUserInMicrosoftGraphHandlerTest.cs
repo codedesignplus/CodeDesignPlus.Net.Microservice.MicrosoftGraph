@@ -40,7 +40,7 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest(Server<Program> server) :
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var roleRepository = this.Services.GetRequiredService<IRoleRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var domainEvent = new RoleAddedToUserDomainEvent(userAggregate.Id, "Joe Doe", "Admin");
+        var domainEvent = new RoleAddedToUserDomainEvent(userAggregate.Id, "Joe Doe", Guid.NewGuid(), roleAggregate.IdIdentityServer);
 
         var userModel = new Domain.Models.User
         {

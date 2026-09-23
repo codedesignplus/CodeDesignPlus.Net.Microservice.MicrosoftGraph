@@ -20,6 +20,11 @@ public class AddGroupToUserInMicrosoftGraphHandler(IMediator mediator, IUserRepo
             return;
         }
 
+        // data.TenantId no se usa, y no es un olvido: los grupos del proveedor de identidad son globales
+        // al directorio, no existe "Administrador de tal copropiedad". Lo que este micro mantiene es la
+        // union de los roles del usuario en todas sus copropiedades, que es lo que el frontend necesita
+        // para pintar antes de saber cual se esta mirando. Quien decide por copropiedad es el directorio
+        // de roles del SDK.
         var command = new AddGroupToUserCommand(data.AggregateId, data.Role);
 
         await mediator.Send(command, token);

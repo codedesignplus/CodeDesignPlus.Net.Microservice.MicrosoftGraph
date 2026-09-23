@@ -1,7 +1,9 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.RemoveGroupToUser;
 
 [DtoGenerator]
-public record RemoveGroupToUserCommand(Guid Id, string Role) : IRequest;
+/// <param name="Id">El usuario.</param>
+/// <param name="Role">El id del grupo del proveedor de identidad, no el nombre del rol.</param>
+public record RemoveGroupToUserCommand(Guid Id, Guid Role) : IRequest;
 
 public class Validator : AbstractValidator<RemoveGroupToUserCommand>
 {

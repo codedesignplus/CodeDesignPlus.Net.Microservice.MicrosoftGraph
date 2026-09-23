@@ -1,7 +1,9 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.AddGroupToUser;
 
 [DtoGenerator]
-public record AddGroupToUserCommand(Guid Id, string Role) : IRequest;
+/// <param name="Id">El usuario.</param>
+/// <param name="Role">El id del grupo del proveedor de identidad, no el nombre del rol.</param>
+public record AddGroupToUserCommand(Guid Id, Guid Role) : IRequest;
 
 public class Validator : AbstractValidator<AddGroupToUserCommand>
 {
