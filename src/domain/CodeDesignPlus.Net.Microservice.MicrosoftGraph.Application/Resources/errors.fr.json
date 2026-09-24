@@ -1,0 +1,15 @@
+{
+  "language": "fr",
+  "errors": {
+    "200": "Erreur inconnue.",
+    "201": "La requête n'est pas valide.",
+    "202": "Ce rôle existe déjà.",
+    "203": "Rôle introuvable.",
+    "204": "Ce groupe existe déjà dans le fournisseur d'identité.",
+    "205": "Groupe introuvable dans le fournisseur d'identité.",
+    "206": "Cet utilisateur n'existe pas dans le fournisseur d'identité.",
+    "207": "Utilisateur introuvable.",
+    "208": "Cet utilisateur existe déjà.",
+    "209": "Contexte de secrets introuvable."
+  }
+}

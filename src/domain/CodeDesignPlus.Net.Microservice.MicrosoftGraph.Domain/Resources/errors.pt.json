@@ -1,0 +1,20 @@
+{
+  "language": "pt",
+  "errors": {
+    "100": "Erro desconhecido.",
+    "101": "O nome é obrigatório.",
+    "102": "A descrição é obrigatória.",
+    "103": "O identificador não é válido.",
+    "104": "O identificador não é válido.",
+    "105": "O identificador do objeto não é válido.",
+    "106": "Esse papel já está atribuído.",
+    "107": "Esse papel não pode ser removido.",
+    "108": "O é-mail não é válido.",
+    "109": "O nome é obrigatório.",
+    "110": "O sobrenome é obrigatório.",
+    "111": "O telefone é obrigatório.",
+    "112": "A senha é obrigatória.",
+    "113": "O identificador do provedor de identidade não é válido.",
+    "114": "O provedor de identidade não é válido."
+  }
+}

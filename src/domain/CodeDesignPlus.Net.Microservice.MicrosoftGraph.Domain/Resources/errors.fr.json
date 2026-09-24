@@ -1,0 +1,20 @@
+{
+  "language": "fr",
+  "errors": {
+    "100": "Erreur inconnue.",
+    "101": "Le nom est obligatoire.",
+    "102": "La description est obligatoire.",
+    "103": "L'identifiant n'est pas valide.",
+    "104": "L'identifiant n'est pas valide.",
+    "105": "L'identifiant de l'objet n'est pas valide.",
+    "106": "Ce rôle est déjà attribué.",
+    "107": "Ce rôle ne peut pas être retiré.",
+    "108": "L'e-mail n'est pas valide.",
+    "109": "Le prénom est obligatoire.",
+    "110": "Le nom de famille est obligatoire.",
+    "111": "Le téléphone est obligatoire.",
+    "112": "Le mot de passe est obligatoire.",
+    "113": "L'identifiant du fournisseur d'identité n'est pas valide.",
+    "114": "Le fournisseur d'identité n'est pas valide."
+  }
+}

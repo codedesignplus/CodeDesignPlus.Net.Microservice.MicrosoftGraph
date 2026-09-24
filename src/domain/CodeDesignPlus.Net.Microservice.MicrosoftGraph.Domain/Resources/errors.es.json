@@ -1,20 +1,20 @@
 {
   "language": "es",
   "errors": {
-    "100": "",
-    "101": "",
-    "102": "",
-    "103": "",
-    "104": "",
-    "105": "",
-    "106": "",
-    "107": "",
-    "108": "",
-    "109": "",
-    "110": "",
-    "111": "",
-    "112": "",
-    "113": "",
-    "114": ""
+    "100": "Error desconocido.",
+    "101": "El nombre es obligatorio.",
+    "102": "La descripción es obligatoria.",
+    "103": "El identificador no es válido.",
+    "104": "El identificador no es válido.",
+    "105": "El identificador del objeto no es válido.",
+    "106": "Ese rol ya está asignado.",
+    "107": "Ese rol no se puede retirar.",
+    "108": "El correo no es válido.",
+    "109": "El nombre es obligatorio.",
+    "110": "Los apellidos son obligatorios.",
+    "111": "El teléfono es obligatorio.",
+    "112": "La contraseña es obligatoria.",
+    "113": "El identificador del proveedor de identidad no es válido.",
+    "114": "El proveedor de identidad no es válido."
   }
 }

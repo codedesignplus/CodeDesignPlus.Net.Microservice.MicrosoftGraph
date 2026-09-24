@@ -1,14 +1,14 @@
 {
   "language": "es",
   "errors": {
-    "300": "",
-    "301": "",
-    "302": "",
-    "303": "",
-    "304": "",
-    "305": "",
-    "306": "",
-    "307": "",
-    "308": ""
+    "300": "Error desconocido.",
+    "301": "No se pudo crear el usuario en Microsoft Graph.",
+    "302": "El correo es obligatorio para crear el usuario.",
+    "303": "El nombre es obligatorio para crear el usuario.",
+    "304": "Los apellidos son obligatorios para crear el usuario.",
+    "305": "El teléfono es obligatorio para crear el usuario.",
+    "306": "Los datos de registro del usuario no son válidos.",
+    "307": "No encontramos ese usuario.",
+    "308": "El número de documento es obligatorio para crear el usuario."
   }
 }

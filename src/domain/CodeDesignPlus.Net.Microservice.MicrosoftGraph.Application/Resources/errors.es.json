@@ -1,15 +1,15 @@
 {
   "language": "es",
   "errors": {
-    "200": "",
-    "201": "",
-    "202": "",
-    "203": "",
-    "204": "",
-    "205": "",
-    "206": "",
-    "207": "",
-    "208": "",
-    "209": ""
+    "200": "Error desconocido.",
+    "201": "La petición no es válida.",
+    "202": "Ese rol ya existe.",
+    "203": "No encontramos ese rol.",
+    "204": "Ese grupo ya existe en el proveedor de identidad.",
+    "205": "No encontramos ese grupo en el proveedor de identidad.",
+    "206": "Ese usuario no existe en el proveedor de identidad.",
+    "207": "No encontramos ese usuario.",
+    "208": "Ese usuario ya existe.",
+    "209": "No encontramos el contexto de secretos."
   }
 }

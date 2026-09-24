@@ -1,0 +1,15 @@
+{
+  "language": "pt",
+  "errors": {
+    "200": "Erro desconhecido.",
+    "201": "A requisição não é válida.",
+    "202": "Esse papel já existe.",
+    "203": "Não encontramos esse papel.",
+    "204": "Esse grupo já existe no provedor de identidade.",
+    "205": "Não encontramos esse grupo no provedor de identidade.",
+    "206": "Esse usuário não existe no provedor de identidade.",
+    "207": "Não encontramos esse usuário.",
+    "208": "Esse usuário já existe.",
+    "209": "Não encontramos o contexto de segredos."
+  }
+}

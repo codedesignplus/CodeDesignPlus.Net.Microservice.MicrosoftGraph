@@ -1,0 +1,14 @@
+{
+  "language": "pt",
+  "errors": {
+    "300": "Erro desconhecido.",
+    "301": "Não foi possível criar o usuário no Microsoft Graph.",
+    "302": "O é-mail é obrigatório para criar o usuário.",
+    "303": "O nome é obrigatório para criar o usuário.",
+    "304": "O sobrenome é obrigatório para criar o usuário.",
+    "305": "O telefone é obrigatório para criar o usuário.",
+    "306": "Os dados de cadastro do usuário não são válidos.",
+    "307": "Não encontramos esse usuário.",
+    "308": "O número do documento é obrigatório para criar o usuário."
+  }
+}
