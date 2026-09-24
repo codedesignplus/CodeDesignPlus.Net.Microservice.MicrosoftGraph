@@ -1,0 +1,15 @@
+{
+  "language": "en",
+  "errors": {
+    "200": "UnknownError",
+    "201": "The request is invalid",
+    "202": "The role already exists",
+    "203": "The role was not found",
+    "204": "The group already exists in IdentityServer",
+    "205": "The group was not found in IdentityServer",
+    "206": "The user does not exist in IdentityServer",
+    "207": "The user was not found",
+    "208": "The user already exists",
+    "209": "The secret context was not found"
+  }
+}

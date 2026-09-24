@@ -1,0 +1,20 @@
+{
+  "language": "en",
+  "errors": {
+    "100": "UnknownError",
+    "101": "The name is required",
+    "102": "The description is required",
+    "103": "The id is invalid",
+    "104": "The id is invalid",
+    "105": "The object id is invalid",
+    "106": "The role is already added",
+    "107": "The role cannot be removed",
+    "108": "The email is invalid",
+    "109": "The first name is required",
+    "110": "The last name is required",
+    "111": "The phone is required",
+    "112": "The password is required",
+    "113": "The id identity provider is invalid",
+    "114": "The identity provider is invalid"
+  }
+}
