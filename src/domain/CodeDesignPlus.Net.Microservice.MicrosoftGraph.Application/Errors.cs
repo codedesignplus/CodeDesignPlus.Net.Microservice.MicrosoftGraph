@@ -1,19 +1,21 @@
+using CodeDesignPlus.Net.Exceptions;
+
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application;
 
 public class Errors: IErrorCodes
 {    
-    public const string UnknownError = "200 : UnknownError";
+    public static readonly Error UnknownError = new("200", "UnknownError");
 
-    public const string InvalidRequest = "201 : The request is invalid";
-    public const string RoleAlreadyExists = "202 : The role already exists";
-    public const string RoleNotFound = "203 : The role was not found";
-    public const string GroupAlreadyExistsInIdentityServer = "204 : The group already exists in IdentityServer";
-    public const string GroupNotFoundInIdentityServer = "205 : The group was not found in IdentityServer";
-    public const string UserNotExistInIdentityServer = "206 : The user does not exist in IdentityServer";
+    public static readonly Error InvalidRequest = new("201", "The request is invalid");
+    public static readonly Error RoleAlreadyExists = new("202", "The role already exists");
+    public static readonly Error RoleNotFound = new("203", "The role was not found");
+    public static readonly Error GroupAlreadyExistsInIdentityServer = new("204", "The group already exists in IdentityServer");
+    public static readonly Error GroupNotFoundInIdentityServer = new("205", "The group was not found in IdentityServer");
+    public static readonly Error UserNotExistInIdentityServer = new("206", "The user does not exist in IdentityServer");
 
-    public const string UserNotFound = "207 : The user was not found";
+    public static readonly Error UserNotFound = new("207", "The user was not found");
 
-    public const string UserAlreadyExists = "208 : The user already exists";
+    public static readonly Error UserAlreadyExists = new("208", "The user already exists");
 
-    public const string SecretContextNotFound = "209 : The secret context was not found";
+    public static readonly Error SecretContextNotFound = new("209", "The secret context was not found");
 }
