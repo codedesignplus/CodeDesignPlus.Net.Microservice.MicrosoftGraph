@@ -18,7 +18,8 @@ public class GraphOptionsTest
             Scopes = ["scope1", "scope2"],
             IssuerIdentity = "valid-issuer-identity",
             DocumentNumberClaim = "extension_appid_DocumentNumber",
-            DocumentTypeClaim = "extension_appid_DocumentType"
+            DocumentTypeClaim = "extension_appid_DocumentType",
+            PhoneClaim = "extension_appid_Phone"
         };
 
         // Act
@@ -43,6 +44,7 @@ public class GraphOptionsTest
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.ClientSecret)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.TenantId)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.IssuerIdentity)));
+        Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.PhoneClaim)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.DocumentNumberClaim)));
         Assert.Contains(validationResults, v => v.MemberNames.Contains(nameof(GraphOptions.DocumentTypeClaim)));
     }
