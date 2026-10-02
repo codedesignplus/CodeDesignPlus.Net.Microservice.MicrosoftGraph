@@ -14,10 +14,17 @@ public class AddGroupToUserInMicrosoftGraphHandler(IMediator mediator, IUserRepo
     {
         var exists = await userRepository.ExistsAsync<Domain.UserAggregate>(data.AggregateId, token);
 
+        // Invitar a alguien y darle un rol pasa en el mismo gesto: ms-users publica el alta y, uno o dos segundos
+        // despues, el rol. El alta tarda mas, porque crea la cuenta en el proveedor de identidad antes de guardar el
+        // usuario aqui, asi que el rol suele llegar primero. Antes se descartaba con un log informativo y la persona
+        // se quedaba sin grupo para siempre: 7 de las 11 cuentas invitadas en Copropietarios el 2026-10-02
+        // (pendings/224). Ahora se lanza una excepcion de infraestructura, no de negocio, para que el bus lo
+        // reintente con su espera creciente; si la cuenta nunca llega, el mensaje acaba en dead-letter, a la vista.
         if (!exists)
         {
-            logger.LogInformation("User {Id} not found locally. Skipping Graph operation.", data.AggregateId);
-            return;
+            logger.LogWarning("User {Id} not found locally yet. The role {Role} will be retried.", data.AggregateId, data.Role);
+
+            throw new UserNotProvisionedYetException(data.AggregateId);
         }
 
         // data.TenantId no se usa, y no es un olvido: los grupos del proveedor de identidad son globales
