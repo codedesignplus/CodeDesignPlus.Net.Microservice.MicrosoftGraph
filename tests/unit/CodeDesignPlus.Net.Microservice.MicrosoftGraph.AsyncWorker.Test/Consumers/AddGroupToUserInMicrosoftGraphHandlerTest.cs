@@ -38,8 +38,7 @@ public class AddGroupToUserInMicrosoftGraphHandlerTest
         );
     }
     /// <summary>
-    /// El rol llega antes de que termine el alta: no se descarta, se lanza para que el bus lo reintente
-    /// (pendings/224).
+    /// El rol llega antes de que termine el alta: no se descarta, se lanza para que el bus lo reintente.
     /// </summary>
     [Fact]
     public async Task HandleAsync_UserNotProvisionedYet_ThrowsSoTheBusRetries()
