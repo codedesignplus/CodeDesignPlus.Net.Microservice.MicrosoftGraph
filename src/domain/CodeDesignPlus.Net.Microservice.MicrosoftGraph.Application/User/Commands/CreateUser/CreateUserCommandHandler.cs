@@ -38,16 +38,9 @@ public class CreateUserCommandHandler(IUserRepository repository, IMapper mapper
 
         ApplicationGuard.IsFalse(isValidContext, Errors.SecretContextNotFound);
 
-        var password = GenerateRandomPassword();
+        var password = TemporaryPasswordGenerator.Generate();
 
         var (key, ciphertext) = await vaultTransit.EncryptAsync(password, secretContext);
         return (password, key, ciphertext);
-    }
-
-    private static string GenerateRandomPassword()
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#!$%&*()+";
-        var random = new Random();
-        return new string([.. Enumerable.Repeat(chars, 16).Select(s => s[random.Next(s.Length)])]);
     }
 }
