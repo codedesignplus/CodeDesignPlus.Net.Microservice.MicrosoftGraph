@@ -1,8 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Test;
 
 /// <summary>
-/// Todo usuario nace con tipo y numero de documento (pendings/663), y la copia del catalogo resuelve el codigo como lo
-/// guarda ms-catalogs.
+/// Todo usuario nace con tipo y numero de documento (pendings/663).
 /// </summary>
 public class DocumentTypeRequiredTest
 {
@@ -61,25 +60,5 @@ public class DocumentTypeRequiredTest
         // Assert
         var created = Assert.IsType<DomainEvents.UserCreatedDomainEvent>(Assert.Single(user.GetAndClearEvents()));
         Assert.Equal(Cedula, created.DocumentType);
-    }
-
-    [Fact]
-    public void TypeDocumentCreate_LowercaseCode_StoresItNormalized()
-    {
-        // Act
-        var typeDocument = TypeDocumentAggregate.Create(Guid.NewGuid(), "Cédula de Ciudadanía", " cc ", true, false, Instant.FromUtc(2026, 11, 11, 15, 0));
-
-        // Assert
-        Assert.Equal("CC", typeDocument.ToDocumentType().Code);
-    }
-
-    [Fact]
-    public void TypeDocumentCreate_Deleted_IsNotActive()
-    {
-        // Act
-        var typeDocument = TypeDocumentAggregate.Create(Guid.NewGuid(), "Registro Civil", "RC", true, true, Instant.FromUtc(2026, 11, 11, 15, 0));
-
-        // Assert
-        Assert.False(typeDocument.IsActive);
     }
 }

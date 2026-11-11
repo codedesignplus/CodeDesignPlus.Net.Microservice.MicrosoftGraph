@@ -1,7 +1,7 @@
 using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CompleteProviderRegistration;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUserFromSSO;
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.TypeDocument.Queries.FindActiveByCode;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.TypeDocument.Queries.FindByCode;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Queries.GetByIdentityProviderId;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
@@ -19,9 +19,10 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
     /// Receives user attributes from an Entra External ID sign-up flow and creates the user aggregate synchronously.
     /// </summary>
     /// <remarks>
-    /// El tipo de documento llega como el codigo del catalogo que eligio la persona en la lista desplegable del registro
-    /// (atributo personalizado <c>DocumentType</c>) y se resuelve contra la copia local del catalogo de ms-catalogs: la
-    /// factura electronica lleva el tipo y el numero del adquiriente y la DIAN no admite uno por defecto (pendings/663).
+    /// El tipo de documento llega como el codigo que eligio la persona en la lista desplegable del registro (atributo
+    /// <c>extension_..._DocumentType</c>; en Colombia, el codigo DIAN) y se resuelve contra los tipos sembrados del pais,
+    /// los mismos de ms-catalogs: la factura electronica lleva el tipo y el numero del adquiriente y la DIAN no admite uno
+    /// por defecto (pendings/663).
     /// </remarks>
     [HttpPost("OnAttributeCollectionSubmit")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,7 +51,7 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
         InfrastructureGuard.IsNullOrEmpty(documentNumber!, Errors.DocumentNumberIsRequired);
         InfrastructureGuard.IsNullOrWhiteSpace(documentTypeCode!, Errors.DocumentTypeIsRequired);
 
-        var documentType = await mediator.Send(new FindActiveTypeDocumentByCodeQuery(documentTypeCode!), cancellationToken);
+        var documentType = await mediator.Send(new FindTypeDocumentByCodeQuery(documentTypeCode!), cancellationToken);
 
         InfrastructureGuard.IsNull(documentType!, Errors.DocumentTypeNotFound);
 

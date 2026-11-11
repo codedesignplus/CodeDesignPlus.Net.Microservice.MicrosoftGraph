@@ -49,7 +49,8 @@ public class StartupTest
             { "Graph:ClientId", "test-client-id" },
             { "Graph:ClientSecret", "test-client-secret" },
             { "Graph:TenantId", "test-tenant-id" },
-            { "Graph:BaseUrl", "https://graph.microsoft.com/v1.0/" }
+            { "Graph:BaseUrl", "https://graph.microsoft.com/v1.0/" },
+            { "Seed:Country", "co" }
         });
 
         var configuration = configurationBuilder.Build();
@@ -69,5 +70,27 @@ public class StartupTest
         Assert.NotNull(identityServer);
         Assert.Equal(ServiceLifetime.Singleton, graphClient.Lifetime);
         Assert.Equal(ServiceLifetime.Singleton, identityServer.Lifetime);
+        Assert.Contains(services, x => x.ServiceType == typeof(ITypeDocumentCatalog) && x.Lifetime == ServiceLifetime.Singleton);
+    }
+
+    /// <summary>
+    /// Sin pais no hay tipos de documento contra los que resolver el registro, y el micro no arranca (pendings/663).
+    /// </summary>
+    [Fact]
+    public void Startup_WithoutSeedCountry_Throws()
+    {
+        // Arrange
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            { "Graph:ClientId", "test-client-id" },
+            { "Graph:ClientSecret", "test-client-secret" },
+            { "Graph:TenantId", "test-tenant-id" },
+        }).Build();
+
+        // Act
+        var exception = Record.Exception(() => new Infrastructure.Startup().Initialize(new ServiceCollection(), configuration));
+
+        // Assert
+        Assert.IsType<InvalidOperationException>(exception);
     }
 }

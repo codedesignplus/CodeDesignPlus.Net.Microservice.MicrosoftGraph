@@ -1,4 +1,5 @@
-using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.TypeDocument.Queries.FindActiveByCode;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.TypeDocument.Queries.FindByCode;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Services;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUser;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUserFromSSO;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.ReplicateUser;
@@ -11,7 +12,7 @@ namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Test.TypeDo
 
 /// <summary>
 /// Los comandos que crean o actualizan un usuario piden el tipo de documento, y el codigo del registro se resuelve contra
-/// la copia del catalogo (pendings/663).
+/// los tipos sembrados del pais (pendings/663).
 /// </summary>
 public class DocumentTypeRequiredTest
 {
@@ -81,32 +82,18 @@ public class DocumentTypeRequiredTest
     }
 
     [Fact]
-    public async Task FindActiveTypeDocumentByCode_KnownCode_ReturnsTheCatalogEntry()
+    public async Task FindTypeDocumentByCode_KnownCode_ReturnsTheCountryType()
     {
         // Arrange
-        var entry = TypeDocumentAggregate.Create(Guid.NewGuid(), "Número de Identificación Tributaria", "NIT", true, false, SystemClock.Instance.GetCurrentInstant());
-        var repository = new Mock<ITypeDocumentRepository>();
-        repository.Setup(x => x.FindActiveByCodeAsync("nit", It.IsAny<CancellationToken>())).ReturnsAsync(entry);
-        var handler = new FindActiveTypeDocumentByCodeQueryHandler(repository.Object);
+        var cedula = new DocumentType(Guid.Parse("c0d0c000-0000-0000-0000-000000000013"), "Cédula de Ciudadanía", "13");
+        var catalog = new Mock<ITypeDocumentCatalog>();
+        catalog.Setup(x => x.FindByCode("13")).Returns(cedula);
+        var handler = new FindTypeDocumentByCodeQueryHandler(catalog.Object);
 
         // Act
-        var result = await handler.Handle(new FindActiveTypeDocumentByCodeQuery("nit"), CancellationToken.None);
+        var result = await handler.Handle(new FindTypeDocumentByCodeQuery("13"), CancellationToken.None);
 
         // Assert
-        Assert.Equal(new DocumentType(entry.Id, "Número de Identificación Tributaria", "NIT"), result);
-    }
-
-    [Fact]
-    public async Task FindActiveTypeDocumentByCode_UnknownCode_ReturnsNull()
-    {
-        // Arrange
-        var repository = new Mock<ITypeDocumentRepository>();
-        var handler = new FindActiveTypeDocumentByCodeQueryHandler(repository.Object);
-
-        // Act
-        var result = await handler.Handle(new FindActiveTypeDocumentByCodeQuery("XX"), CancellationToken.None);
-
-        // Assert
-        Assert.Null(result);
+        Assert.Equal(cedula, result);
     }
 }

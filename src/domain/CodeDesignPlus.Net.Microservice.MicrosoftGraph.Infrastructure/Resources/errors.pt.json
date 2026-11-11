@@ -11,6 +11,6 @@
     "307": "Não encontramos esse usuário.",
     "308": "O número do documento é obrigatório para criar o usuário.",
     "309": "O tipo de documento é obrigatório para criar o usuário.",
-    "310": "Esse tipo de documento não está no catálogo ou está inativo."
+    "310": "Esse tipo de documento não está no catálogo do país."
   }
 }

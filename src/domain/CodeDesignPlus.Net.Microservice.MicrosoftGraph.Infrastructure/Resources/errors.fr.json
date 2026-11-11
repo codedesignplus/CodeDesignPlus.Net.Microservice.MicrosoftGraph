@@ -11,6 +11,6 @@
     "307": "Utilisateur introuvable.",
     "308": "Le numéro de document est obligatoire pour créer l'utilisateur.",
     "309": "Le type de document est obligatoire pour créer l'utilisateur.",
-    "310": "Ce type de document n'est pas dans le catalogue ou est inactif."
+    "310": "Ce type de document n'est pas dans le catalogue du pays."
   }
 }
