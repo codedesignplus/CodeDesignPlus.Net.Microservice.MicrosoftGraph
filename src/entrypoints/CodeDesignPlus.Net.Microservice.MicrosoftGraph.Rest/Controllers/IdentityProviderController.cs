@@ -1,6 +1,7 @@
 using CodeDesignPlus.Net.Exceptions.Guards;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CompleteProviderRegistration;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUserFromSSO;
+using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.TypeDocument.Queries.FindActiveByCode;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Queries.GetByIdentityProviderId;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure;
 using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Rest.DataTransferObjects;
@@ -17,6 +18,11 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
     /// <summary>
     /// Receives user attributes from an Entra External ID sign-up flow and creates the user aggregate synchronously.
     /// </summary>
+    /// <remarks>
+    /// El tipo de documento llega como el codigo del catalogo que eligio la persona en la lista desplegable del registro
+    /// (atributo personalizado <c>DocumentType</c>) y se resuelve contra la copia local del catalogo de ms-catalogs: la
+    /// factura electronica lleva el tipo y el numero del adquiriente y la DIAN no admite uno por defecto (pendings/663).
+    /// </remarks>
     [HttpPost("OnAttributeCollectionSubmit")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -32,6 +38,7 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
         var phone = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key.Contains("phone", StringComparison.OrdinalIgnoreCase)).Value?.Value;
         var email = request.Data.UserSignUpInfo.Identities.FirstOrDefault(x => x.SignInType == "emailAddress")?.IssuerAssignedId;
         var documentNumber = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key.Contains("documentNumber", StringComparison.OrdinalIgnoreCase)).Value?.Value;
+        var documentTypeCode = request.Data.UserSignUpInfo.Attributes.FirstOrDefault(x => x.Key.Contains("documentType", StringComparison.OrdinalIgnoreCase)).Value?.Value;
 
         if (string.IsNullOrEmpty(displayName))
             displayName = $"{givenName} {surname}";
@@ -41,8 +48,13 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
         InfrastructureGuard.IsNullOrEmpty(surname!, Errors.SurnameIsRequired);
         InfrastructureGuard.IsNullOrEmpty(phone!, Errors.PhoneIsRequired);
         InfrastructureGuard.IsNullOrEmpty(documentNumber!, Errors.DocumentNumberIsRequired);
+        InfrastructureGuard.IsNullOrWhiteSpace(documentTypeCode!, Errors.DocumentTypeIsRequired);
 
-        await mediator.Send(new CreateUserFromSSOCommand(givenName!, surname!, email!, phone!, displayName!, documentNumber!, null, true), cancellationToken);
+        var documentType = await mediator.Send(new FindActiveTypeDocumentByCodeQuery(documentTypeCode!), cancellationToken);
+
+        InfrastructureGuard.IsNull(documentType!, Errors.DocumentTypeNotFound);
+
+        await mediator.Send(new CreateUserFromSSOCommand(givenName!, surname!, email!, phone!, displayName!, documentNumber!, documentType!, true), cancellationToken);
 
         var response = OnAttributeCollectionSubmitResponse.Create();
 

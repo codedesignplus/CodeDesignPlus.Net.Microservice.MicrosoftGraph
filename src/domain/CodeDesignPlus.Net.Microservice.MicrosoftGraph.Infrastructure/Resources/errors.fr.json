@@ -9,6 +9,8 @@
     "305": "Le téléphone est obligatoire pour créer l'utilisateur.",
     "306": "Les données d'inscription de l'utilisateur ne sont pas valides.",
     "307": "Utilisateur introuvable.",
-    "308": "Le numéro de document est obligatoire pour créer l'utilisateur."
+    "308": "Le numéro de document est obligatoire pour créer l'utilisateur.",
+    "309": "Le type de document est obligatoire pour créer l'utilisateur.",
+    "310": "Ce type de document n'est pas dans le catalogue ou est inactif."
   }
 }

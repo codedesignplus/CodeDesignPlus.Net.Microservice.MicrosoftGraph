@@ -54,7 +54,7 @@ public class RemoveGroupToUserCommandHandlerTest
     public async Task Handle_UserNotExistInIdentityServer_ThrowsException()
     {
         // Arrange
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC"), "key", "cipher", false, true);
         var request = new RemoveGroupToUserCommand(user.Id, Guid.NewGuid());
 
         userRepositoryMock
@@ -77,7 +77,7 @@ public class RemoveGroupToUserCommandHandlerTest
     {
         // Arrange: el rol viaja con el identificador del catalogo y este micro lo traduce al grupo, que
         // es lo unico que entiende el proveedor de identidad.
-        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
+        var user = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC"), "key", "cipher", false, true);
         var rol = Guid.Parse("20000000-0000-0000-0000-000000000007");
         var grupo = Guid.Parse("d13dc2fd-59ce-4462-ae03-2a830a243c56");
         user.AddRole(grupo);

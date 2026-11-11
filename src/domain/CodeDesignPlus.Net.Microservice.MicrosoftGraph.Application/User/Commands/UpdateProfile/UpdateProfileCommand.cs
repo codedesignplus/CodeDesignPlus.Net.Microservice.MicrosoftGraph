@@ -3,7 +3,7 @@ using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateProfile;
 
 [DtoGenerator]
-public record UpdateProfileCommand(Guid Id, string FirstName, string LastName, string? DisplayName, string Email, string Phone, string DocumentNumber, DocumentType? DocumentType, ContactInfo Contact, JobInfo Job, bool IsActive) : IRequest;
+public record UpdateProfileCommand(Guid Id, string FirstName, string LastName, string? DisplayName, string Email, string Phone, string DocumentNumber, DocumentType DocumentType, ContactInfo Contact, JobInfo Job, bool IsActive) : IRequest;
 
 public class Validator : AbstractValidator<UpdateProfileCommand>
 {
@@ -14,6 +14,9 @@ public class Validator : AbstractValidator<UpdateProfileCommand>
         RuleFor(x => x.LastName).NotEmpty().NotNull();
         RuleFor(x => x.Email).NotEmpty().NotNull().EmailAddress();
         RuleFor(x => x.Phone).NotEmpty().NotNull();
+        RuleFor(x => x.DocumentNumber).NotEmpty().NotNull();
+        RuleFor(x => x.DocumentType).NotNull();
+        RuleFor(x => x.DocumentType!.Code).NotEmpty().When(x => x.DocumentType is not null);
         RuleFor(x => x.Contact).NotEmpty().NotNull();
         RuleFor(x => x.Job).NotEmpty().NotNull();
     }

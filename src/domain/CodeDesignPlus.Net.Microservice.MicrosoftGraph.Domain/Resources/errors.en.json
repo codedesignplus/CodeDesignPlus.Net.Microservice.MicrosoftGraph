@@ -15,6 +15,8 @@
     "111": "The phone is required",
     "112": "The password is required",
     "113": "The id identity provider is invalid",
-    "114": "The identity provider is invalid"
+    "114": "The identity provider is invalid",
+    "115": "The document number is required.",
+    "116": "The document type is required."
   }
 }

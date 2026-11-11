@@ -16,3 +16,4 @@ global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Role.Dat
 
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;
+global using DocumentType = CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects.DocumentType;

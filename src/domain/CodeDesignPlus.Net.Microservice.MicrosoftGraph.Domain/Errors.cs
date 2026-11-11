@@ -23,4 +23,6 @@ public class Errors: IErrorCodes
 
     public static readonly Error IdIdentityProviderIsInvalid = new("113");
     public static readonly Error IdentityProviderIsInvalid = new("114");
+    public static readonly Error DocumentNumberIsRequired = new("115");
+    public static readonly Error DocumentTypeIsRequired = new("116");
 }

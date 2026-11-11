@@ -9,6 +9,8 @@
     "305": "Phone number is required for user creation.",
     "306": "Invalid user sign-up information.",
     "307": "User not found",
-    "308": "Document number is required for user creation."
+    "308": "Document number is required for user creation.",
+    "309": "Document type is required for user creation.",
+    "310": "That document type is not in the catalog or is inactive."
   }
 }

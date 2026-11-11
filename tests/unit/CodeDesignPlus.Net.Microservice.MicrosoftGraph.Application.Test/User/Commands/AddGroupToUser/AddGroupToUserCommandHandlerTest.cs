@@ -102,5 +102,5 @@ public class AddGroupToUserCommandHandlerTest
 
     private static UserAggregate UnUsuario() => UserAggregate.Create(
         Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId,
-        "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
+        "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC"), "key", "cipher", false, true);
 }

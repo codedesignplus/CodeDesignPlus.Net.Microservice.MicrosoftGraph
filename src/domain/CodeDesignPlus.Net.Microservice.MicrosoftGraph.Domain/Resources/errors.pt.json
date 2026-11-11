@@ -15,6 +15,8 @@
     "111": "O telefone é obrigatório.",
     "112": "A senha é obrigatória.",
     "113": "O identificador do provedor de identidade não é válido.",
-    "114": "O provedor de identidade não é válido."
+    "114": "O provedor de identidade não é válido.",
+    "115": "O número do documento é obrigatório.",
+    "116": "O tipo de documento é obrigatório."
   }
 }

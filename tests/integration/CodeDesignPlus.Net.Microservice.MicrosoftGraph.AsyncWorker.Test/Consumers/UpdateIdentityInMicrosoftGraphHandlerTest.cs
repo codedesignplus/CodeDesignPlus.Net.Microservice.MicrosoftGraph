@@ -39,8 +39,8 @@ public class UpdateIdentityInMicrosoftGraphHandler(Server<Program> server) : Con
         // Arrange
         var userRepository = this.Services.GetRequiredService<IUserRepository>();
         var pubsub = this.Services.GetRequiredService<IPubSub>();
-        var userAggregate = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", null, "key", "cipher", false, true);
-        var domainEvent = new UserUpdatedDomainEvent(userAggregate.Id, "Joe New", "Doe New", "joe-new@fake.com", "3105631234", "Joe New Doe New", "1234567890", null, false);
+        var userAggregate = UserAggregate.Create(Guid.NewGuid(), Guid.NewGuid(), Domain.Enums.IdentityProvider.MicrosoftEntraExternalId, "Joe", "Doe", "joee.doenew@fake.com", "3107545252", "Joe Doe", "1234567890", new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC"), "key", "cipher", false, true);
+        var domainEvent = new UserUpdatedDomainEvent(userAggregate.Id, "Joe New", "Doe New", "joe-new@fake.com", "3105631234", "Joe New Doe New", "1234567890", new DocumentType(Guid.NewGuid(), "Cédula de Ciudadanía", "CC"), false);
 
         var userModel = new Domain.Models.User
         {

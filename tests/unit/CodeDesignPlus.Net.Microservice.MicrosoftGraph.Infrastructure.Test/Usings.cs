@@ -12,3 +12,4 @@ global using NodaTime;
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Infrastructure.Repositories;
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 
+global using DocumentType = CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects.DocumentType;

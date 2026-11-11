@@ -15,6 +15,8 @@
     "111": "Le téléphone est obligatoire.",
     "112": "Le mot de passe est obligatoire.",
     "113": "L'identifiant du fournisseur d'identité n'est pas valide.",
-    "114": "Le fournisseur d'identité n'est pas valide."
+    "114": "Le fournisseur d'identité n'est pas valide.",
+    "115": "Le numéro de document est obligatoire.",
+    "116": "Le type de document est obligatoire."
   }
 }

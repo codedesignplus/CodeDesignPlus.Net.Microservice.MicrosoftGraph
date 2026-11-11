@@ -9,6 +9,8 @@
     "305": "El teléfono es obligatorio para crear el usuario.",
     "306": "Los datos de registro del usuario no son válidos.",
     "307": "No encontramos ese usuario.",
-    "308": "El número de documento es obligatorio para crear el usuario."
+    "308": "El número de documento es obligatorio para crear el usuario.",
+    "309": "El tipo de documento es obligatorio para crear el usuario.",
+    "310": "Ese tipo de documento no está en el catálogo o está inactivo."
   }
 }

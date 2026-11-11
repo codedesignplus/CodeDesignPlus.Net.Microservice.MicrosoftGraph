@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUserFromSSO;
 
 [DtoGenerator]
-public record CreateUserFromSSOCommand(string FirstName, string LastName, string Email, string Phone, string? DisplayName, string DocumentNumber, DocumentType? DocumentType, bool IsActive) : IRequest<Guid>;
+public record CreateUserFromSSOCommand(string FirstName, string LastName, string Email, string Phone, string? DisplayName, string DocumentNumber, DocumentType DocumentType, bool IsActive) : IRequest<Guid>;
 
 public class Validator : AbstractValidator<CreateUserFromSSOCommand>
 {
@@ -12,5 +12,7 @@ public class Validator : AbstractValidator<CreateUserFromSSOCommand>
         RuleFor(x => x.Email).NotEmpty().NotNull().EmailAddress();
         RuleFor(x => x.Phone).NotEmpty().NotNull();
         RuleFor(x => x.DocumentNumber).NotEmpty().NotNull();
+        RuleFor(x => x.DocumentType).NotNull();
+        RuleFor(x => x.DocumentType!.Code).NotEmpty().When(x => x.DocumentType is not null);
     }
 }

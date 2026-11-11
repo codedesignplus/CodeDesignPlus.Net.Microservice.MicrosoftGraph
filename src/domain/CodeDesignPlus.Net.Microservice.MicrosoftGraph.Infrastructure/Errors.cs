@@ -13,4 +13,6 @@ public class Errors: IErrorCodes
     public static readonly Error InvalidSignUpInfo = new("306");
     public static readonly Error UserNotFound = new("307");
     public static readonly Error DocumentNumberIsRequired = new("308");
+    public static readonly Error DocumentTypeIsRequired = new("309");
+    public static readonly Error DocumentTypeNotFound = new("310");
 }

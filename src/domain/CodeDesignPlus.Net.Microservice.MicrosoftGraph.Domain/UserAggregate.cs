@@ -14,11 +14,15 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     public string Phone { get; private set; } = null!;
     public string? DisplayName { get; private set; } = null!;
     public string DocumentNumber { get; private set; } = null!;
+    /// <summary>
+    /// El tipo de documento del catalogo de ms-catalogs. Obligatorio al crear (pendings/663): la factura electronica lleva
+    /// el tipo y el numero del adquiriente. Sigue anulable en la propiedad por los usuarios guardados antes.
+    /// </summary>
     public DocumentType? DocumentType { get; private set; }
     public Guid[] IdRoles { get; private set; } = [];
     public bool WasCreatedFromSSO { get; private set; }
 
-    public static UserAggregate Create(Guid id, Guid idIdentityProvider, IdentityProvider identityProvider, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType? documentType, string? passwordKey, string? passwordCipher, bool wasCreatedFromSSO, bool isActive)
+    public static UserAggregate Create(Guid id, Guid idIdentityProvider, IdentityProvider identityProvider, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType documentType, string? passwordKey, string? passwordCipher, bool wasCreatedFromSSO, bool isActive)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.GuidIsEmpty(idIdentityProvider, Errors.IdIdentityProviderIsInvalid);
@@ -27,6 +31,9 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(lastName, Errors.LastNameIsRequired);
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneIsRequired);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
+        DomainGuard.IsNullOrEmpty(documentNumber, Errors.DocumentNumberIsRequired);
+        DomainGuard.IsNull(documentType, Errors.DocumentTypeIsRequired);
+        DomainGuard.IsNullOrWhiteSpace(documentType.Code, Errors.DocumentTypeIsRequired);
 
         var aggregate = new UserAggregate(id)
         {
@@ -49,13 +56,16 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     }
 
 
-    public static UserAggregate CreateFromSSO(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType? documentType, bool isActive)
+    public static UserAggregate CreateFromSSO(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType documentType, bool isActive)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.IsNullOrEmpty(firstName, Errors.FirstNameIsRequired);
         DomainGuard.IsNullOrEmpty(lastName, Errors.LastNameIsRequired);
         DomainGuard.IsNullOrEmpty(phone, Errors.PhoneIsRequired);
         DomainGuard.IsNullOrEmpty(email, Errors.EmailIsInvalid);
+        DomainGuard.IsNullOrEmpty(documentNumber, Errors.DocumentNumberIsRequired);
+        DomainGuard.IsNull(documentType, Errors.DocumentTypeIsRequired);
+        DomainGuard.IsNullOrWhiteSpace(documentType.Code, Errors.DocumentTypeIsRequired);
 
         var aggregate = new UserAggregate(id)
         {
@@ -83,7 +93,7 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
         IdentityProviderId = identityProviderId;
         UpdatedAt = SystemClock.Instance.GetCurrentInstant();
 
-        this.AddEvent(UserCreatedDomainEvent.Create(Id, FirstName, LastName, Email, Phone, DisplayName, DocumentNumber, DocumentType, null, null, WasCreatedFromSSO, IsActive));
+        this.AddEvent(UserCreatedDomainEvent.Create(Id, FirstName, LastName, Email, Phone, DisplayName, DocumentNumber, DocumentType!, null, null, WasCreatedFromSSO, IsActive));
     }
 
     public void AddRole(Guid idRoleIdentityServer)

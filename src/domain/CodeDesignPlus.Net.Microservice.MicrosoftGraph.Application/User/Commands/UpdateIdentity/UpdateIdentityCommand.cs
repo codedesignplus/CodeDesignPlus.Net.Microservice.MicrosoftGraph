@@ -1,7 +1,7 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.UpdateIdentity;
 
 [DtoGenerator]
-public record UpdateIdentityCommand(Guid Id, string FirstName, string LastName, string? DisplayName, string Email, string Phone, string DocumentNumber, DocumentType? DocumentType, bool IsActive) : IRequest;
+public record UpdateIdentityCommand(Guid Id, string FirstName, string LastName, string? DisplayName, string Email, string Phone, string DocumentNumber, DocumentType DocumentType, bool IsActive) : IRequest;
 
 public class Validator : AbstractValidator<UpdateIdentityCommand>
 {
@@ -13,5 +13,7 @@ public class Validator : AbstractValidator<UpdateIdentityCommand>
         RuleFor(x => x.Email).NotEmpty().NotNull();
         RuleFor(x => x.Phone).NotEmpty().NotNull();
         RuleFor(x => x.DocumentNumber).NotEmpty().NotNull();
+        RuleFor(x => x.DocumentType).NotNull();
+        RuleFor(x => x.DocumentType!.Code).NotEmpty().When(x => x.DocumentType is not null);
     }
 }
