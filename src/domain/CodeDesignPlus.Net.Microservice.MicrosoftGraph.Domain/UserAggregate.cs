@@ -56,7 +56,7 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
     }
 
 
-    public static UserAggregate CreateFromSSO(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType documentType, bool isActive)
+    public static UserAggregate CreateFromSSO(Guid id, string firstName, string lastName, string email, string phone, string? displayName, string documentNumber, DocumentType documentType, bool isActive, DocumentCheckDigitRules documentRules)
     {
         DomainGuard.GuidIsEmpty(id, Errors.IdIsInvalid);
         DomainGuard.IsNullOrEmpty(firstName, Errors.FirstNameIsRequired);
@@ -66,6 +66,9 @@ public class UserAggregate(Guid id) : AggregateRootBase(id)
         DomainGuard.IsNullOrEmpty(documentNumber, Errors.DocumentNumberIsRequired);
         DomainGuard.IsNull(documentType, Errors.DocumentTypeIsRequired);
         DomainGuard.IsNullOrWhiteSpace(documentType.Code, Errors.DocumentTypeIsRequired);
+        DomainGuard.IsNull(documentRules, Errors.DocumentRulesAreRequired);
+
+        documentRules.Ensure(documentType.Code, documentNumber);
 
         var aggregate = new UserAggregate(id)
         {

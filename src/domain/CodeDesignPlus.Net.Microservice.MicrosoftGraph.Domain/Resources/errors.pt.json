@@ -17,6 +17,10 @@
     "113": "O identificador do provedor de identidade não é válido.",
     "114": "O provedor de identidade não é válido.",
     "115": "O número do documento é obrigatório.",
-    "116": "O tipo de documento é obrigatório."
+    "116": "O tipo de documento é obrigatório.",
+    "117": "Este tipo de documento é escrito com hífen e dígito verificador. Se {0} é o número sem o dígito, escreva assim: {0}-{1}.",
+    "118": "O dígito verificador não corresponde: o de {0} é {1}, não {2}. Escreva assim: {0}-{1}.",
+    "119": "Este tipo de documento é escrito apenas com dígitos, seguidos de um hífen e do dígito verificador, sem pontos nem espaços.",
+    "120": "Faltam as regras do dígito verificador do documento."
   }
 }

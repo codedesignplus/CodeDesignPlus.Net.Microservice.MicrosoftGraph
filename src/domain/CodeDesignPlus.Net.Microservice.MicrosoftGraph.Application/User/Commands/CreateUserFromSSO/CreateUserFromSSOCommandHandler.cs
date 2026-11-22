@@ -1,6 +1,6 @@
 namespace CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.User.Commands.CreateUserFromSSO;
 
-public class CreateUserFromSSOCommandHandler(IUserRepository repository) : IRequestHandler<CreateUserFromSSOCommand, Guid>
+public class CreateUserFromSSOCommandHandler(IUserRepository repository, IOptions<UserDocumentOptions> documentOptions) : IRequestHandler<CreateUserFromSSOCommand, Guid>
 {
     public async Task<Guid> Handle(CreateUserFromSSOCommand request, CancellationToken cancellationToken)
     {
@@ -12,7 +12,7 @@ public class CreateUserFromSSOCommandHandler(IUserRepository repository) : IRequ
 
         var userId = Guid.NewGuid();
 
-        var aggregate = UserAggregate.CreateFromSSO(userId, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, request.DocumentNumber, request.DocumentType, request.IsActive);
+        var aggregate = UserAggregate.CreateFromSSO(userId, request.FirstName, request.LastName, request.Email, request.Phone, request.DisplayName, request.DocumentNumber, request.DocumentType, request.IsActive, documentOptions.Value.ToRules());
 
         await repository.CreateAsync(aggregate, cancellationToken);
 

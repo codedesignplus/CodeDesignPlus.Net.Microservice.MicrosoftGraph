@@ -15,4 +15,9 @@ public class Errors: IErrorCodes
     public static readonly Error DocumentNumberIsRequired = new("308");
     public static readonly Error DocumentTypeIsRequired = new("309");
     public static readonly Error DocumentTypeNotFound = new("310");
+
+    /// <summary>
+    /// El aviso general del formulario de registro cuando un dato no pasa la validación; el motivo va junto al campo.
+    /// </summary>
+    public static readonly Error SignUpHasInvalidAttributes = new("311");
 }

@@ -30,7 +30,7 @@ public class DocumentTypeRequiredTest
     public void CreateFromSSO_WithoutDocumentType_ThrowsDocumentTypeIsRequired(DocumentType? documentType)
     {
         // Act
-        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.CreateFromSSO(Guid.NewGuid(), "Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", "1023456781", documentType!, true));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.CreateFromSSO(Guid.NewGuid(), "Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", "1023456781", documentType!, true, DocumentCheckDigitRules.None));
 
         // Assert
         Assert.Equal(Errors.DocumentTypeIsRequired.GetCode(), exception.Code);
@@ -42,7 +42,7 @@ public class DocumentTypeRequiredTest
     public void CreateFromSSO_WithoutDocumentNumber_ThrowsDocumentNumberIsRequired(string? documentNumber)
     {
         // Act
-        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.CreateFromSSO(Guid.NewGuid(), "Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", documentNumber!, Cedula, true));
+        var exception = Assert.Throws<CodeDesignPlusException>(() => UserAggregate.CreateFromSSO(Guid.NewGuid(), "Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", documentNumber!, Cedula, true, DocumentCheckDigitRules.None));
 
         // Assert
         Assert.Equal(Errors.DocumentNumberIsRequired.GetCode(), exception.Code);
@@ -52,7 +52,7 @@ public class DocumentTypeRequiredTest
     public void CompleteProviderRegistration_UserFromSSO_AnnouncesTheDocumentType()
     {
         // Arrange
-        var user = UserAggregate.CreateFromSSO(Guid.NewGuid(), "Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", "1023456781", Cedula, true);
+        var user = UserAggregate.CreateFromSSO(Guid.NewGuid(), "Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", "1023456781", Cedula, true, DocumentCheckDigitRules.None);
 
         // Act
         user.CompleteProviderRegistration(Guid.NewGuid());

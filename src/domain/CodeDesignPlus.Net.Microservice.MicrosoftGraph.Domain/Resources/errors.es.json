@@ -17,6 +17,10 @@
     "113": "El identificador del proveedor de identidad no es válido.",
     "114": "El proveedor de identidad no es válido.",
     "115": "El número de documento es obligatorio.",
-    "116": "El tipo de documento es obligatorio."
+    "116": "El tipo de documento es obligatorio.",
+    "117": "Este tipo de documento se escribe con guion y dígito de verificación. Si {0} es el número sin el dígito, escríbelo así: {0}-{1}.",
+    "118": "El dígito de verificación no corresponde: el de {0} es {1}, no {2}. Escríbelo así: {0}-{1}.",
+    "119": "Este tipo de documento se escribe solo con dígitos, seguidos de un guion y el dígito de verificación, sin puntos ni espacios.",
+    "120": "Faltan las reglas del dígito de verificación del documento."
   }
 }

@@ -25,4 +25,24 @@ public class Errors: IErrorCodes
     public static readonly Error IdentityProviderIsInvalid = new("114");
     public static readonly Error DocumentNumberIsRequired = new("115");
     public static readonly Error DocumentTypeIsRequired = new("116");
+
+    /// <summary>
+    /// El tipo de documento lleva dígito de verificación y el número vino sin guion. Argumentos: el número y su dígito.
+    /// </summary>
+    public static readonly Error DocumentCheckDigitIsMissing = new("117");
+
+    /// <summary>
+    /// El dígito de verificación no es el del número. Argumentos: el número, el dígito que le corresponde y el escrito.
+    /// </summary>
+    public static readonly Error DocumentCheckDigitDoesNotMatch = new("118");
+
+    /// <summary>
+    /// El número de un documento con dígito de verificación no es «solo dígitos, guion y un dígito».
+    /// </summary>
+    public static readonly Error DocumentNumberFormatIsInvalid = new("119");
+
+    /// <summary>
+    /// El agregado recibió el documento sin las reglas del dígito de verificación: es un error de programación.
+    /// </summary>
+    public static readonly Error DocumentRulesAreRequired = new("120");
 }

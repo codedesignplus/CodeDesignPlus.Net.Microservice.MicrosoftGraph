@@ -16,4 +16,6 @@ global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain;
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.ValueObjects;
 
 global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Domain.Repositories;
+global using CodeDesignPlus.Net.Microservice.MicrosoftGraph.Application.Options;
+global using Microsoft.Extensions.Options;
 

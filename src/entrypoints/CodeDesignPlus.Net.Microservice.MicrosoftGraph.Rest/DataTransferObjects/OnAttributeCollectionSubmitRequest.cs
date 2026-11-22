@@ -15,6 +15,36 @@ public class OnAttributeCollectionSubmitData
     public string Type { get; set; } = string.Empty;
     [JsonProperty("userSignUpInfo")]
     public UserSignUpInfo? UserSignUpInfo { get; set; }
+
+    /// <summary>
+    /// El contexto del registro. De aquí sale el idioma del formulario: Entra no manda <c>Accept-Language</c>.
+    /// </summary>
+    [JsonProperty("authenticationContext")]
+    public SignUpAuthenticationContext? AuthenticationContext { get; set; }
+}
+
+/// <summary>
+/// Lo que Entra cuenta de la sesión en la que alguien se está registrando.
+/// </summary>
+public class SignUpAuthenticationContext
+{
+    /// <summary>
+    /// El navegador de quien se registra.
+    /// </summary>
+    [JsonProperty("client")]
+    public SignUpClient? Client { get; set; }
+}
+
+/// <summary>
+/// El navegador de quien se registra.
+/// </summary>
+public class SignUpClient
+{
+    /// <summary>
+    /// El idioma en el que Entra le está mostrando el formulario, por ejemplo <c>es-co</c>.
+    /// </summary>
+    [JsonProperty("locale")]
+    public string? Locale { get; set; }
 }
 
 public class UserSignUpInfo
