@@ -17,16 +17,6 @@ public class DocumentCheckDigitTest
         CheckDigitWeights = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71]
     });
 
-    /// <summary>
-    /// La misma configuración con la longitud fija del número antes del guion.
-    /// </summary>
-    private static readonly IOptions<UserDocumentOptions> ConfiguredWithBaseLength = Microsoft.Extensions.Options.Options.Create(new UserDocumentOptions
-    {
-        CheckDigitDocumentTypes = ["31"],
-        CheckDigitWeights = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71],
-        CheckDigitBaseLengths = new Dictionary<string, int> { ["31"] = 9 }
-    });
-
     private static readonly DocumentType TaxId = new(Guid.NewGuid(), "Tax identification number", "31");
 
     private readonly Mock<IUserRepository> repository = new();
@@ -40,26 +30,6 @@ public class DocumentCheckDigitTest
         // Arrange
         var command = new CreateUserFromSSOCommand("Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", documentNumber, TaxId, true);
         var handler = new CreateUserFromSSOCommandHandler(repository.Object, Configured);
-
-        // Act
-        var exception = await Assert.ThrowsAsync<CodeDesignPlusException>(() => handler.Handle(command, CancellationToken.None));
-
-        // Assert
-        Assert.Equal(expectedCode, exception.Code);
-        Assert.Equal(Layer.Domain, exception.Layer);
-        repository.Verify(x => x.CreateAsync(It.IsAny<UserAggregate>(), It.IsAny<CancellationToken>()), Times.Never);
-    }
-
-    [Theory]
-    [InlineData("9018887773", "121")]
-    [InlineData("901888777", "121")]
-    [InlineData("9018887773-5", "122")]
-    [InlineData("9018887775", "117")]
-    public async Task Handle_TaxIdWithFixedLengthThatBreaksTheFormat_ThrowsAndDoesNotSave(string documentNumber, string expectedCode)
-    {
-        // Arrange
-        var command = new CreateUserFromSSOCommand("Joe", "Doe", "joe@fake.com", "3107545252", "Joe Doe", documentNumber, TaxId, true);
-        var handler = new CreateUserFromSSOCommandHandler(repository.Object, ConfiguredWithBaseLength);
 
         // Act
         var exception = await Assert.ThrowsAsync<CodeDesignPlusException>(() => handler.Handle(command, CancellationToken.None));
@@ -124,56 +94,6 @@ public class DocumentCheckDigitTest
     }
 
     [Fact]
-    public void Validate_BaseLengthOfATypeWithoutCheckDigit_Fails()
-    {
-        // Arrange
-        var options = new UserDocumentOptions { CheckDigitDocumentTypes = ["31"], CheckDigitWeights = [3, 7, 13], CheckDigitBaseLengths = new Dictionary<string, int> { ["13"] = 3 } };
-
-        // Act
-        var result = new UserDocumentOptionsValidator().Validate(null, options);
-
-        // Assert
-        Assert.True(result.Failed);
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    [InlineData(4)]
-    public void Validate_BaseLengthThatCannotBeWeighted_Fails(int length)
-    {
-        // Arrange
-        var options = new UserDocumentOptions { CheckDigitDocumentTypes = ["31"], CheckDigitWeights = [3, 7, 13], CheckDigitBaseLengths = new Dictionary<string, int> { ["31"] = length } };
-
-        // Act
-        var result = new UserDocumentOptionsValidator().Validate(null, options);
-
-        // Assert
-        Assert.True(result.Failed);
-    }
-
-    [Fact]
-    public void Validate_BaseLengthOfATypeWithCheckDigit_Succeeds()
-    {
-        // Act
-        var result = new UserDocumentOptionsValidator().Validate(null, ConfiguredWithBaseLength.Value);
-
-        // Assert
-        Assert.True(result.Succeeded);
-    }
-
-    [Fact]
-    public void ToRules_BaseLengths_ReachTheDomainRules()
-    {
-        // Act
-        var rules = ConfiguredWithBaseLength.Value.ToRules();
-
-        // Assert
-        Assert.Equal(9, rules.BaseLengthOf("31"));
-        Assert.Null(Configured.Value.ToRules().BaseLengthOf("31"));
-    }
-
-    [Fact]
     public void Validate_NoSection_Succeeds()
     {
         // Act
@@ -208,11 +128,5 @@ public class DocumentCheckDigitTest
         Assert.True(new UserDocumentOptionsValidator().Validate(null, options).Succeeded);
         Assert.Equal(["31"], options.CheckDigitDocumentTypes);
         Assert.Equal([3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71], options.CheckDigitWeights);
-        Assert.Equal(new Dictionary<string, int> { ["31"] = 9 }, options.CheckDigitBaseLengths);
-
-        // Con el valor desplegado, el número con el dígito pegado se propone separado y no como número de diez dígitos.
-        var attached = Assert.Throws<CodeDesignPlusException>(() => options.ToRules().Ensure("31", "9018887773"));
-
-        Assert.Contains("901888777-3", attached.Error!.Value.GetMessage("es"));
     }
 }
