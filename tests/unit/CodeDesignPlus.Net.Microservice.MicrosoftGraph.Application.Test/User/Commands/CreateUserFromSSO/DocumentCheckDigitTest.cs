@@ -22,7 +22,8 @@ public class DocumentCheckDigitTest
     private readonly Mock<IUserRepository> repository = new();
 
     [Theory]
-    [InlineData("901888777", "117")]
+    [InlineData("900765432", "117")]
+    [InlineData("9018887773", "121")]
     [InlineData("901888777-5", "118")]
     [InlineData("901.888.777-3", "119")]
     public async Task Handle_TaxIdThatBreaksTheFormat_ThrowsAndDoesNotSave(string documentNumber, string expectedCode)

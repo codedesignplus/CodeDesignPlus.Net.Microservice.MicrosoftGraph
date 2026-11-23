@@ -62,6 +62,21 @@ public class IdentityProviderDocumentNumberTest
     }
 
     [Fact]
+    public async Task CreateUser_CheckDigitMayBeAttached_ShowsBothReadingsOnTheDocumentNumber()
+    {
+        // Arrange
+        this.TheDomainRejectsWith(DomainErrors.DocumentCheckDigitMayBeAttached.With("9018887773", "901888777", '3', 5));
+
+        // Act
+        var response = await controller.CreateUser(BuildRequest("9018887773", "es-co"), CancellationToken.None);
+
+        // Assert
+        var action = Assert.IsType<ShowValidationError>(Assert.Single(response.Data.Actions));
+
+        Assert.Equal("Este tipo de documento se escribe con guion y dígito de verificación. Si 9018887773 ya incluye el dígito, escríbelo así: 901888777-3. Si no lo incluye, así: 9018887773-5.", action.AttributeErrors[DocumentNumberKey]);
+    }
+
+    [Fact]
     public async Task CreateUser_NumberFormatIsInvalid_ShowsTheReasonOnTheDocumentNumber()
     {
         // Arrange
