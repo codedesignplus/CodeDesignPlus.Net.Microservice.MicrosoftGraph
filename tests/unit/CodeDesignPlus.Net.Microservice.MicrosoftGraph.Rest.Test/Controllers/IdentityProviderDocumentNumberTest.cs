@@ -62,6 +62,36 @@ public class IdentityProviderDocumentNumberTest
     }
 
     [Fact]
+    public async Task CreateUser_CheckDigitIsNotSeparated_ProposesTheNumberWithItsDigit()
+    {
+        // Arrange
+        this.TheDomainRejectsWith(DomainErrors.DocumentCheckDigitIsNotSeparated.With("901888777", '3'));
+
+        // Act
+        var response = await controller.CreateUser(BuildRequest("9018887773", "es-co"), CancellationToken.None);
+
+        // Assert
+        var action = Assert.IsType<ShowValidationError>(Assert.Single(response.Data.Actions));
+
+        Assert.Equal("Este tipo de documento se escribe con guion y dígito de verificación. Escríbelo así: 901888777-3.", action.AttributeErrors[DocumentNumberKey]);
+    }
+
+    [Fact]
+    public async Task CreateUser_BaseLengthIsInvalid_SaysHowManyDigitsGoBeforeTheDash()
+    {
+        // Arrange
+        this.TheDomainRejectsWith(DomainErrors.DocumentBaseLengthIsInvalid.With(9, 10));
+
+        // Act
+        var response = await controller.CreateUser(BuildRequest("9018887773-5", "es-co"), CancellationToken.None);
+
+        // Assert
+        var action = Assert.IsType<ShowValidationError>(Assert.Single(response.Data.Actions));
+
+        Assert.Equal("Este tipo de documento lleva 9 dígitos antes del guion, y el número que escribiste tiene 10.", action.AttributeErrors[DocumentNumberKey]);
+    }
+
+    [Fact]
     public async Task CreateUser_NumberFormatIsInvalid_ShowsTheReasonOnTheDocumentNumber()
     {
         // Arrange

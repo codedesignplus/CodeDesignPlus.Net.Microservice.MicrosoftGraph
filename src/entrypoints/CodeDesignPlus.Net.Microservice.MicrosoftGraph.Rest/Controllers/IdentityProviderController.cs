@@ -91,7 +91,7 @@ public class IdentityProviderController(IMediator mediator, ILogger<IdentityProv
         return exception.Error is not null && exception.Layer == Layer.Domain && DocumentNumberRejections.Contains(exception.Code);
     }
 
-    private static readonly string[] DocumentNumberRejections = [DomainErrors.DocumentCheckDigitIsMissing.Code, DomainErrors.DocumentCheckDigitDoesNotMatch.Code, DomainErrors.DocumentNumberFormatIsInvalid.Code];
+    private static readonly string[] DocumentNumberRejections = [DomainErrors.DocumentCheckDigitIsMissing.Code, DomainErrors.DocumentCheckDigitDoesNotMatch.Code, DomainErrors.DocumentNumberFormatIsInvalid.Code, DomainErrors.DocumentCheckDigitIsNotSeparated.Code, DomainErrors.DocumentBaseLengthIsInvalid.Code];
 
     /// <summary>
     /// Handles the custom claims provider token issuance event. Completes the provider registration
