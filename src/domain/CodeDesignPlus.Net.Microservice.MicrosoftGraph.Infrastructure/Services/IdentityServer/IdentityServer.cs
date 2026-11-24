@@ -276,16 +276,41 @@ public class IdentityServer(IGraphClient graph, IMapper mapper, ILogger<Identity
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task UpdateUserAsync(Guid id, Domain.Models.User user, CancellationToken cancellationToken)
     {
-        var updateUser = new Microsoft.Graph.Models.User
+        return graph.Client.Users[id.ToString()].PatchAsync(UpdateBody(graphOptions.Value, user), cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Lo que se envía a Graph al actualizar un usuario.
+    /// </summary>
+    /// <remarks>
+    /// La cuenta queda habilitada o no según <c>IsActive</c> de ms-users. Antes se forzaba a habilitada en cada
+    /// actualización: editar el perfil de una cuenta que ms-users había desactivado la volvía a dejar entrar.
+    /// </remarks>
+    /// <param name="options">Las opciones de Graph, con los nombres de los atributos de extensión.</param>
+    /// <param name="user">El usuario.</param>
+    /// <returns>El cuerpo del PATCH.</returns>
+    public static Microsoft.Graph.Models.User UpdateBody(GraphOptions options, Domain.Models.User user)
+    {
+        return new Microsoft.Graph.Models.User
         {
             DisplayName = user.DisplayName,
             GivenName = user.FirstName,
             Surname = user.LastName,
-            AccountEnabled = true,
-            AdditionalData = AtributosDeExtension(graphOptions.Value, user),
+            AccountEnabled = user.IsActive,
+            AdditionalData = AtributosDeExtension(options, user),
         };
+    }
 
-        return graph.Client.Users[id.ToString()].PatchAsync(updateUser, cancellationToken: cancellationToken);
+    /// <summary>
+    /// Habilita o deshabilita la cuenta: una deshabilitada no puede iniciar sesión.
+    /// </summary>
+    /// <param name="id">El identificador del usuario en el proveedor de identidad.</param>
+    /// <param name="enabled">Si puede iniciar sesión.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task SetAccountEnabledAsync(Guid id, bool enabled, CancellationToken cancellationToken)
+    {
+        return graph.Client.Users[id.ToString()].PatchAsync(new Microsoft.Graph.Models.User { AccountEnabled = enabled }, cancellationToken: cancellationToken);
     }
 
     /// <summary>

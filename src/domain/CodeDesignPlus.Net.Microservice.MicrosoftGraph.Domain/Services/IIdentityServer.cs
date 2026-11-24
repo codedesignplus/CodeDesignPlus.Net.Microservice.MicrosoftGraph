@@ -105,6 +105,15 @@ public interface IIdentityServer
     Task UpdateUserAsync(Guid id, User user, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Enables or disables the account: a disabled account cannot sign in.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user in the identity provider.</param>
+    /// <param name="enabled">Whether the account can sign in.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task SetAccountEnabledAsync(Guid id, bool enabled, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Deletes a user by their unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the user to delete.</param>

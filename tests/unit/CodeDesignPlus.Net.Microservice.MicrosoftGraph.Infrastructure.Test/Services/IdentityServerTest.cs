@@ -108,6 +108,28 @@ public class IdentityServerTest
         Assert.Null(atributos["extension_appid_Phone"]);
     }
 
+    /// <summary>
+    /// Una cuenta que ms-users desactivó no vuelve a entrar porque alguien edite su perfil: antes cada actualización la
+    /// dejaba habilitada.
+    /// </summary>
+    [Fact]
+    public void UpdateBody_InactiveUser_KeepsTheAccountDisabled()
+    {
+        var usuario = Usuario(null);
+        usuario.IsActive = false;
+
+        Assert.False(IdentityServer.UpdateBody(Opciones(), usuario).AccountEnabled);
+    }
+
+    [Fact]
+    public void UpdateBody_ActiveUser_EnablesTheAccount()
+    {
+        var usuario = Usuario(null);
+        usuario.IsActive = true;
+
+        Assert.True(IdentityServer.UpdateBody(Opciones(), usuario).AccountEnabled);
+    }
+
     private static GraphOptions Opciones() => new()
     {
         DocumentNumberClaim = "extension_appid_DocumentNumber",
