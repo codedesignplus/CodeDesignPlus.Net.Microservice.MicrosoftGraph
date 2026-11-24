@@ -28,6 +28,7 @@ public class IdentityServerFake : IIdentityServer
     public Dictionary<string, object[]> UpdateJobInfoInvokeHistory { get; } = [];
     public Dictionary<string, object[]> UpdateUserInvokeHistory { get; } = [];
     public Dictionary<string, object[]> UpdateUserPhoneInvokeHistory { get; } = [];
+    public Dictionary<string, object[]> SetAccountEnabledInvokeHistory { get; } = [];
 
     public void SetValues(Role role, User user, ContactInfo contactInfo, JobInfo jobInfo)
     {
@@ -188,5 +189,12 @@ public class IdentityServerFake : IIdentityServer
         }
 
         return null!;
+    }
+
+    public Task SetAccountEnabledAsync(Guid id, bool enabled, CancellationToken cancellationToken)
+    {
+        SetAccountEnabledInvokeHistory.Add(id.ToString(), [id, enabled, cancellationToken]);
+
+        return Task.CompletedTask;
     }
 }
